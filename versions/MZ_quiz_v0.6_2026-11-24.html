@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: тёплый, премиальный, игровой — «открой свою карту».
+   IDEA: прохождение = нанизывание бусин на цепочку; результат = карта героя + шкатулка с украшениями.
+   PICTURE: эмблема типа на цветном поле карты, иллюстрации изделий как «добыча».
+   COLOUR/TYPE: слоновая кость + золото; у каждого типа своё поле; Cormorant Garamond + Manrope.
+   LAYOUT: одна колонка, мобильный первый, действие в зоне большого пальца. */
+:root{--bg:#f6efe4;--card:#fffdf8;--ink:#1d1812;--muted:#6e6456;--line:#e7dccb;--gold:#b28a45;--gold2:#d8b06a;--soft:#f2e7d5;--warn:#9a4b2f;
+--tc1:#2f4a3a;--tc2:#5d7d5e}
+*{box-sizing:border-box;min-width:0}
+html,body{overflow-x:clip}
+body{margin:0;background:radial-gradient(120% 60% at 50% 0%,#fbf6ee 0%,var(--bg) 60%);color:var(--ink);font:16px/1.5 Manrope,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 56px}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;color:var(--muted)}
+.brand{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-size:15px}
+.tabs{display:flex;gap:6px}
+.tab{border:1px solid var(--line);background:transparent;border-radius:20px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted);min-height:34px}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 20px;box-shadow:0 10px 30px -18px rgba(80,50,10,.35)}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;margin:0 0 10px;line-height:1.08;text-wrap:balance}
+h1{font-size:clamp(32px,8vw,42px)} h2{font-size:28px} h3{font-size:22px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font:600 16px Manrope,sans-serif;cursor:pointer;background:var(--ink);color:#fff;min-height:50px;text-decoration:none}
+.btn.gold{background:linear-gradient(135deg,#d9b46c,#a77b33);color:#fff;box-shadow:0 8px 20px -10px #a77b33}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn:focus-visible,.tab:focus-visible,.dot:focus-visible{outline:3px solid #5b8def;outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hidden{display:none!important}
+/* интро */
+.intro-art{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 18px}
+.intro-art div{aspect-ratio:1;border-radius:16px;padding:8px;display:flex;align-items:center;justify-content:center;transform:rotate(var(--r));box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
+.intro-art svg{width:100%;height:100%}
+.facts{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:2px 0 18px}
+.facts b{color:var(--ink)}
+/* бусины-прогресс */
+.necklace{width:100%;height:56px;display:block;margin:-6px 0 6px}
+.qnum{font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.qlead{color:var(--gold);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 6px}
+.qtext{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(25px,6.6vw,31px);line-height:1.18;margin-bottom:26px;min-height:3.6em}
+.scale{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.dot{border-radius:50%;border:2.5px solid;background:#fff;cursor:pointer;padding:0;transition:transform .15s,background .15s;flex:none}
+.dot:hover{transform:scale(1.08)}
+.dot.sel{transform:scale(1.12)}
+.scale-legend{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-top:10px}
+.scale-legend span:first-child{color:#7c6f9e}.scale-legend span:last-child{color:var(--gold)}
+.anchor{min-height:22px;text-align:center;font-size:14px;color:var(--muted);margin-top:8px}
+.nav{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
+.cheer{font-size:13px;color:var(--gold);text-align:center;min-height:20px;margin-top:10px;font-weight:600}
+.scene{border:1.5px dashed var(--gold2);border-radius:16px;background:repeating-linear-gradient(135deg,#fffaf0 0 14px,#fbf3e4 14px 28px);padding:12px 13px;margin:4px 0 6px}
+.sc-top{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.sc-badge{font:700 10.5px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--gold);color:#fff;border-radius:6px;padding:3px 7px}
+.sc-badge.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold2)}
+.sc-pic{font-size:14px;line-height:1.4}
+.sc-cap{font:600 italic 15px Manrope,sans-serif;color:#7a5a20;margin:6px 0}
+.sc-meta{font-size:12px;color:var(--muted);line-height:1.4}
+.sc-alt{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.sc-stat{font-size:11.5px;color:#8a7a5c}
+.sc-alt summary{color:var(--gold);font-weight:600;cursor:pointer}
+.sc-alt-i{margin-top:6px}
+.sc-alt-i i{color:#7a5a20}
+/* reveal */
+.reveal{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;text-align:center}
+.spin{width:120px;height:120px;border-radius:50%;background:conic-gradient(from 0deg,#fff3c4,#d8b06a,#9c6b1e,#d8b06a,#fff3c4);animation:sp 1.1s linear infinite;-webkit-mask:radial-gradient(circle,transparent 46px,#000 47px);mask:radial-gradient(circle,transparent 46px,#000 47px);margin-bottom:22px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* карта героя */
+.hero{border-radius:26px;padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 22px 40px -22px rgba(0,0,0,.55)}
+.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(80% 50% at 85% 0%,rgba(255,255,255,.22),transparent 60%);pointer-events:none}
+.hero .cls{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero h1{color:#fff;margin:6px 0 10px}
+.hero .emb{width:150px;height:150px;margin:2px auto 6px}
+.hero .emb svg{width:100%;height:100%}
+.hero p{color:rgba(255,255,255,.92);font-size:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 11px;font-size:13px;white-space:nowrap}
+.chip b{font-weight:700}
+.flip{animation:fl .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes fl{from{transform:perspective(900px) rotateY(80deg) scale(.9);opacity:0}to{transform:none;opacity:1}}
+.powers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0 4px}
+.power{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
+.power .ic{font-family:"Cormorant Garamond",serif;font-size:26px;line-height:1;color:var(--gold)}
+.power b{display:block;font-size:14px;margin-top:4px}
+.power span{display:block;font-size:12px;line-height:1.3;color:var(--muted);margin-top:3px}
+.why{background:var(--soft);border-radius:16px;padding:13px 15px;font-size:15px;margin:12px 0}
+.note{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;margin:12px 0}
+.note.warn{background:#f6e3da;color:var(--warn)}
+.sec{margin-top:26px}
+.draft{display:inline-block;background:#fff3cd;color:#7a5b00;border-radius:6px;font:600 11px Manrope,sans-serif;padding:3px 7px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;margin-left:6px}
+.loot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px 8px 12px;text-align:center;animation:pop .5s both}
+.item:nth-child(2){animation-delay:.12s}.item:nth-child(3){animation-delay:.24s}
+@keyframes pop{from{transform:translateY(14px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+.item .pic{aspect-ratio:1;border-radius:12px;background:radial-gradient(circle at 50% 40%,#fffaf0,#f3eadb)}
+.item .pic svg{width:100%;height:100%}
+.item b{display:block;font-size:13.5px;line-height:1.25;margin-top:6px}
+.item span{display:block;font-size:12px;color:var(--muted);line-height:1.3;margin-top:3px}
+.share{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stars{display:flex;gap:8px;margin:6px 0 4px}
+.stars button{border:1px solid var(--line);background:#fff;border-radius:12px;width:46px;height:46px;cursor:pointer;font:600 16px Manrope,sans-serif}
+.stars button.sel{background:var(--ink);color:#fff}
+input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;font:16px Manrope,sans-serif;margin:4px 0 10px;background:#fff}
+.chk{display:flex;gap:8px;font-size:13px;color:var(--muted);align-items:flex-start;margin-bottom:12px}
+details summary{cursor:pointer}
+.bars{margin:14px 0 6px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:14px;margin:9px 0}
+.bar .t{grid-column:1/3;height:8px;background:var(--line);border-radius:6px;position:relative}
+.bar .t i{position:absolute;left:0;top:0;bottom:0;background:var(--gold2);border-radius:6px}
+.bar .lv{color:var(--muted);font-size:12px;text-align:right}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:9}
+.dev{margin-top:18px;border:1px dashed #9aa4b2;border-radius:14px;padding:14px;background:#f5f7fa;font-size:13px}
+.dev table{border-collapse:collapse;width:100%;margin:6px 0 10px}
+.dev td,.dev th{border:1px solid #dde2ea;padding:4px 6px;text-align:left}
+.dev pre{white-space:pre-wrap;word-break:break-all;background:#fff;border:1px solid #dde2ea;border-radius:8px;padding:8px;max-height:260px;overflow:auto;font-size:11px}
+.devbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.devbar button{border:1px dashed #9aa4b2;background:#fff;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer}
+/* методичка */
+.doc{font-size:14.5px}
+.doc h2,.doc h3{font-family:"Cormorant Garamond",Georgia,serif}
+.doc table{display:block;overflow-x:auto;border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 14px}
+.doc td,.doc th{border:1px solid var(--line);padding:6px 7px;vertical-align:top;text-align:left}
+.doc th{background:var(--soft);font-weight:600}
+.doc code{background:var(--soft);padding:1px 4px;border-radius:4px}
+.doc ol.ln{counter-reset:ln;list-style:none;padding-left:0}
+.doc ol.ln>li{counter-increment:ln;position:relative;padding-left:34px;margin:4px 0}
+.doc ol.ln>li:before{content:counter(ln,decimal-leading-zero);position:absolute;left:0;color:var(--gold);font-family:ui-monospace,Menlo,monospace;font-size:12px;top:2px}
+.doc svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;margin:6px 0 14px}
+.fn{font-size:12px;color:var(--muted)}
+sup a{color:var(--gold);text-decoration:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span style="display:flex;flex-direction:column;line-height:1.1"><span class="brand">Магия золота</span><span id="verTag" style="font-size:11px;color:var(--muted);letter-spacing:.02em"></span></span>
+    <span class="tabs">
+      <button class="tab on" data-tab="quiz">Тест</button>
+      <button class="tab" data-tab="doc">Методичка</button>
+      <button class="tab" id="devToggle" aria-label="Режим проверки">⚙︎</button>
+    </span>
+  </header>
+
+  <main id="quiz">
+    <!-- ИНТРО -->
+    <section class="card" id="s-intro">
+      <div class="intro-art" id="introArt"></div>
+      <h1>Какое украшение отражает ваш характер?</h1>
+      <p>Украшение говорит о нас раньше слов. Ответьте на 10 вопросов — соберите своё ожерелье и откройте карту своего типа с подборкой украшений.</p>
+      <div class="facts"><span><b>2</b> минуты</span><span><b>4</b> типа характера</span><span><b>3</b> украшения в подборке</span></div>
+      <button class="btn gold full" id="startBtn">Открыть свою карту</button>
+      <p class="small muted" style="margin-top:14px">Тест основан на научной модели личности «Большая пятёрка»<sup><a href="#fn1" data-goto-doc>1</a></sup> и исследовании четырёх типов личности<sup><a href="#fn3" data-goto-doc>3</a></sup>. Это не психологическая диагностика, а повод взглянуть на себя по-новому.</p>
+      <div class="devbar dev-only hidden">
+        <span class="small muted">Быстрый прогон:</span>
+        <button data-preset="T1">→ Т1</button><button data-preset="T2">→ Т2</button>
+        <button data-preset="T3">→ Т3</button><button data-preset="T4">→ Т4</button>
+        <button data-preset="mix">→ промежуточный</button><button data-preset="rnd">→ случайно</button>
+        <button data-preset="straight">→ все «4»</button>
+        <button id="wordBtn">Формулировки: потребительские</button>
+      </div>
+    </section>
+
+    <!-- ВОПРОС -->
+    <section class="card hidden" id="s-q">
+      <svg class="necklace" id="necklace" viewBox="0 0 520 56" aria-hidden="true"></svg>
+      <div class="qnum"><span id="qnum"></span><span id="qleft"></span></div>
+      <div class="scene" id="scene"></div>
+      <div class="qlead" id="qlead">Насколько это про вас?</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="scale" id="scale" role="radiogroup" aria-label="Насколько это про вас"></div>
+      <div class="scale-legend"><span></span><span></span></div>
+      <div class="anchor" id="anchor"></div>
+      <div class="cheer" id="cheer"></div>
+      <div class="nav">
+        <button class="btn ghost" id="backBtn">Назад</button>
+        <button class="btn" id="nextBtn" disabled>Далее</button>
+      </div>
+      <p class="small dev-only hidden" id="qorig" style="color:#56606e;margin-top:10px"></p>
+    </section>
+
+    <!-- РАСКРЫТИЕ -->
+    <section class="card hidden" id="s-reveal">
+      <div class="reveal"><div class="spin"></div><h2 id="revealText">Нанизываем ответы…</h2><p class="muted small">Ещё мгновение</p></div>
+    </section>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <section class="hidden" id="s-res">
+      <div class="hero flip" id="hero">
+        <div class="cls" id="rCls"></div>
+        <div class="emb" id="rEmb"></div>
+        <h1 id="rName"></h1>
+        <p id="rLead"></p>
+        <div class="chips" id="rChips"></div>
+      </div>
+
+      <div class="card sec hidden" id="rDuo" style="margin-top:16px"></div>
+      <div class="powers" id="rPowers"></div>
+      <div class="why" id="rWhy"></div>
+      <div id="rMixed"></div>
+      <div id="rQuality"></div>
+
+      <div class="card sec">
+        <h2>Ваша шкатулка <span class="draft">черновик</span></h2>
+        <p class="muted" id="rStyle"></p>
+        <div class="loot" id="rLoot"></div>
+        <p class="small muted" style="margin-top:10px">Иллюстрации — вместо них будут фото изделий из каталога.</p>
+        <button class="btn gold full" id="toForm" style="margin-top:6px">Хочу подборку с ценами</button>
+      </div>
+
+      <div class="card sec">
+        <h3>Челлендж: а кто твоя подруга?</h3>
+        <p class="small muted">Отправьте тест подруге — она увидит ваш тип и узнает, какая вы пара. Или выложите карточку в сторис.</p>
+        <input type="text" id="inviteName" placeholder="Ваше имя для приглашения (необязательно)" maxlength="20" autocomplete="given-name">
+        <div class="share">
+          <button class="btn" id="storyBtn">Карточка для сторис</button>
+          <button class="btn gold" id="inviteBtn">Позвать подругу</button>
+        </div>
+        <div id="storyPrev" class="hidden" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card sec">
+        <h3>Узнали себя?</h3>
+        <div class="stars" id="stars"></div>
+        <p class="small muted">1 — совсем не про меня, 5 — точно про меня.</p>
+      </div>
+
+      <div class="card sec" id="formCard">
+        <h3>Персональная подборка</h3>
+        <p class="small muted">Пришлём украшения для вашего типа — с фото и ценами.</p>
+        <input type="text" id="cName" placeholder="Имя" autocomplete="given-name">
+        <input type="text" id="cContact" placeholder="Телефон или @telegram" autocomplete="tel">
+        <label class="chk"><input type="checkbox" id="cConsent"> <span>Даю согласие на обработку персональных данных (текст согласия — уточнить у юриста)</span></label>
+        <button class="btn gold full" id="sendBtn" disabled>Получить подборку</button>
+        <div id="sent" class="note hidden">Готово! В прототипе данные никуда не отправляются — их видно в режиме проверки (⚙︎).</div>
+      </div>
+
+      <div class="card sec">
+        <details>
+          <summary class="small muted">Как это посчитано</summary>
+          <p class="small" id="rDocLead" style="margin-top:10px;font-style:italic"></p>
+          <p id="rTraits" class="small"></p>
+          <p id="rBehav" class="small"></p>
+          <div class="bars" id="rBars"></div>
+          <p class="small muted">Шкалы от 1 до 7. Уровни: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5.</p>
+        </details>
+        <button class="btn ghost full" id="againBtn" style="margin-top:14px">Пройти заново</button>
+      </div>
+
+      <div class="dev dev-only hidden" id="devPanel"></div>
+    </section>
+  </main>
+
+  <!-- ============ МЕТОДИЧКА ============ -->
+  <main id="doc" class="hidden">
+    <section class="card doc">
+      <h2>Методическая справка прототипа</h2>
+      <p class="muted small">Версия 0.6 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+
+      <h3>1. Сценарий (базовый use case)</h3>
+      <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a7834a"/></marker></defs>
+        <g fill="#fffdf9" stroke="#a7834a">
+          <rect x="10" y="20" width="120" height="54" rx="10"/><rect x="160" y="20" width="120" height="54" rx="10"/>
+          <rect x="310" y="20" width="130" height="54" rx="10"/><rect x="470" y="20" width="130" height="54" rx="10"/>
+          <rect x="630" y="20" width="120" height="54" rx="10"/>
+          <rect x="630" y="130" width="120" height="54" rx="10"/><rect x="470" y="130" width="130" height="54" rx="10"/>
+          <rect x="310" y="130" width="130" height="54" rx="10"/><rect x="160" y="130" width="120" height="54" rx="10"/>
+          <rect x="10" y="130" width="120" height="54" rx="10" stroke-dasharray="4 3"/>
+        </g>
+        <g fill="#1f1b16" text-anchor="middle">
+          <text x="70" y="43">Вход</text><text x="70" y="60" fill="#6f665a">блогер · UTM</text>
+          <text x="220" y="43">Интро</text><text x="220" y="60" fill="#6f665a">обращение ж/м</text>
+          <text x="375" y="43">10 утверждений</text><text x="375" y="60" fill="#6f665a">шкала 1–7</text>
+          <text x="535" y="43">Расчёт 5 шкал</text><text x="535" y="60" fill="#6f665a">реверс 2,4,6,8,10</text>
+          <text x="690" y="43">Классификатор</text><text x="690" y="60" fill="#6f665a">ближайший тип</text>
+          <text x="690" y="153">Результат</text><text x="690" y="170" fill="#6f665a">тип ± второй</text>
+          <text x="535" y="153">Рекомендации</text><text x="535" y="170" fill="#6f665a">тип → категории</text>
+          <text x="375" y="153">Оценка «похоже?»</text><text x="375" y="170" fill="#6f665a">1–5, калибровка</text>
+          <text x="220" y="153">Контакт</text><text x="220" y="170" fill="#6f665a">+ согласие ПДн</text>
+          <text x="70" y="153">CRM / Frontbox</text><text x="70" y="170" fill="#6f665a">следующий этап</text>
+        </g>
+        <g stroke="#a7834a" stroke-width="1.5" marker-end="url(#ar)" fill="none">
+          <path d="M130,47 H158"/><path d="M280,47 H308"/><path d="M440,47 H468"/><path d="M600,47 H628"/>
+          <path d="M690,74 V128"/><path d="M630,157 H602"/><path d="M470,157 H442"/><path d="M310,157 H282"/><path d="M160,157 H132" stroke-dasharray="4 3"/>
+        </g>
+        <text x="10" y="230" fill="#6f665a">Пунктир — вне прототипа: интеграцию выбираем после утверждения логики (сайт / Facebook Instant Form / Telegram).</text>
+        <text x="10" y="250" fill="#6f665a">Выход сессии — JSON-payload (ответы, шкалы, тип, расстояния, качество, оценка, контакт, UTM) — он же контракт для ТЗ Ивану.</text>
+        <text x="10" y="270" fill="#6f665a">Рекомендации сейчас — черновик стилевых направлений; ~50 SKU подбирает Вазген.</text>
+      </svg>
+
+      <h3>2. Онтология (что с чем связано)</h3>
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6f665a"/></marker></defs>
+        <g fill="#fffdf9" stroke="#1f1b16">
+          <rect x="10" y="20" width="110" height="36" rx="6"/><rect x="170" y="20" width="110" height="36" rx="6"/>
+          <rect x="330" y="20" width="110" height="36" rx="6"/><rect x="490" y="20" width="110" height="36" rx="6"/>
+          <rect x="640" y="20" width="110" height="36" rx="6"/>
+          <rect x="640" y="120" width="110" height="36" rx="6"/><rect x="490" y="120" width="110" height="36" rx="6"/>
+          <rect x="330" y="120" width="110" height="36" rx="6"/><rect x="170" y="120" width="110" height="36" rx="6"/>
+          <rect x="10" y="120" width="110" height="36" rx="6"/>
+        </g>
+        <g text-anchor="middle" fill="#1f1b16">
+          <text x="65" y="43">Респондент</text><text x="225" y="43">Сессия</text><text x="385" y="43">Ответ ×10</text>
+          <text x="545" y="43">Шкала ×5</text><text x="695" y="43">Прототип ×4</text>
+          <text x="695" y="143">Тип</text><text x="545" y="143">Стиль-направление</text><text x="385" y="143">Категория ×3</text>
+          <text x="225" y="143">SKU (каталог)</text><text x="65" y="143">Лид + источник</text>
+        </g>
+        <g stroke="#6f665a" marker-end="url(#ar2)" fill="none"><path d="M120,38 H168"/><path d="M280,38 H328"/><path d="M440,38 H488"/><path d="M600,38 H638"/><path d="M695,56 V118"/><path d="M640,138 H602"/><path d="M490,138 H442"/><path d="M330,138 H282"/><path d="M225,56 C200,90 90,90 65,118"/></g>
+        <g fill="#6f665a" font-size="11" text-anchor="middle"><text x="144" y="32">проходит</text><text x="304" y="32">содержит</text><text x="464" y="32">дают</text><text x="619" y="32">vs</text><text x="725" y="92">ближайший</text><text x="621" y="132">задаёт</text><text x="466" y="132">включает</text><text x="306" y="132">наполняет</text><text x="140" y="92">порождает</text></g>
+        <text x="10" y="195" fill="#6f665a">Респондент = тот, кто проходит тест, он же получатель украшения. «Подарок другому» — Q-03.</text>
+        <text x="10" y="215" fill="#6f665a">Тип — свойство Сессии, не человека: повторное прохождение даёт новую Сессию.</text><text x="10" y="235" fill="#6f665a">Тип → Стиль 1:1 · Стиль → Категории 1:N · Категория → SKU N:M.</text>
+      </svg>
+
+      <h3>3. Алгоритм (как считает прототип)</h3>
+      <ol class="ln">
+        <li>Пункты 2, 4, 6, 8, 10 переворачиваются: <code>8 − ответ</code> (документ, шаг 1).</li>
+        <li>Шкала = среднее пары: E (1, 6R), A (2R, 7), C (3, 8R), ES (4R, 9), O (5, 10R). Диапазон 1,0–7,0, шаг 0,5 (шаг 2).</li>
+        <li>Уровень: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5 (шаг 3, см. G-01).</li>
+        <li>Градации матрицы переводятся в числа: Низкая 3,0 · Ниже среднего 4,0 · Средняя 4,5 · Выше среднего 5,0 · Высокая 6,0 (G-02).</li>
+        <li>Тип = прототип с минимальным евклидовым расстоянием по 5 шкалам (G-03).</li>
+        <li>Если второй прототип дальше первого менее чем на 0,3 — показываем промежуточный профиль «тип А с чертами типа Б» (G-04).</li>
+        <li>Ответы проверяются на однотипность и противоречия в парах; тип не меняется, выводится мягкая пометка (G-07).</li>
+      </ol>
+
+      <h3>4. Разрывы, закрытые в прототипе</h3>
+      <table>
+        <tr><th>Код</th><th>Разрыв в исходном документе</th><th>Решение в прототипе</th></tr>
+        <tr><td>G-01</td><td>Границы уровней размыты и не стыкуются: «ниже 3,8–4,0», «4,0–5,2», «выше 5,3–5,5».</td><td>Шкала принимает значения с шагом 0,5, поэтому границы однозначны: ≤ 3,5 / 4,0–5,0 / ≥ 5,5.</td></tr>
+        <tr><td>G-02</td><td>Шаг 3 даёт 3 уровня, а матрица типов использует 5 градаций («выше/ниже среднего»).</td><td>Числовые якоря 3,0 / 4,0 / 4,5 / 5,0 / 6,0 — допущение, калибруется на пилоте (Q-01).</td></tr>
+        <tr><td>G-03</td><td>Матрица описывает 4 профиля из 3⁵ = 243 возможных комбинаций уровней; правило «выберите наиболее близкий» не формализовано.</td><td>Ближайший прототип по расстоянию — так же типы получены в исходном исследовании<sup><a href="#fn3">3</a></sup>.</td></tr>
+        <tr><td>G-04</td><td>Методическая справка упоминает промежуточный профиль, но не задаёт правило.</td><td>Порог 0,3: на симуляции промежуточный профиль получают ≈ 32% прохождений (при 0,5 — 49%).</td></tr>
+        <tr><td>G-05</td><td>Женская форма дана только для пункта 1, остальные пункты — в мужском роде.</td><td>Потребительские формулировки гендерно-нейтральны (G-10); для оригинала TIPI-RU в режиме проверки дописаны женские формы всех 10 пунктов.</td></tr>
+        <tr><td>G-06</td><td>Нет связки «тип → изделия» — а это цель теста.</td><td>Слой рекомендаций: тип → стиль → 3 категории → слоты SKU. Содержание — черновик для Вазгена.</td></tr>
+        <tr><td>G-07</td><td>Нет контроля качества ответов (все «4», «согласен» с противоположностями).</td><td>Пометка при однотипных ответах или ≥ 2 противоречивых парах.</td></tr>
+        <tr><td>G-08</td><td>Нет выхода на лид и источник трафика (договорённость: UTM на каждого блогера).</td><td>Форма контакта + согласие; <code>utm_*</code> из ссылки пишется в payload.</td></tr>
+        <tr><td>G-10</td><td>Формулировки бланка («Я воспринимаю себя как… критичного, склонного спорить», «согласен/не согласен») звучат как анкета, а не как обращение к покупателю.</td><td>Пункты переписаны от первого лица жизненными ситуациями; шкала «Совсем не про меня → Точно про меня». Черта, полюс, ключ и номер пункта не меняются (таблица в разделе 4а). Оригинал доступен в режиме проверки ⚙︎.</td></tr>
+        <tr><td>G-09</td><td>Порядок шкал в расчёте (E, A, C, ES, O) и в матрице (ES, E, O, A, C) разный.</td><td>Везде порядок матрицы.</td></tr>
+      </table>
+
+      <h3>4а. Потребительская адаптация пунктов</h3>
+      <table id="cxTable"></table>
+      <h3>5. Открытые вопросы</h3>
+      <table>
+        <tr><th>Код</th><th>Вопрос</th><th>Кому</th></tr>
+        <tr><td>Q-01</td><td>Якоря градаций (G-02): оставить или перейти на z-оценки по нормам TIPI-RU<sup><a href="#fn2">2</a></sup> / по пилотной выборке?</td><td>Леонид</td></tr>
+        <tr><td>Q-02</td><td>«Лёгкий на подъём лидер» требует высоких баллов по всем 5 шкалам; при случайных ответах выпадает ≈ 1–2%. Нормально ли, что самый «продающий» тип будет редким?</td><td>Леонид, Вазген</td></tr>
+        <tr><td>Q-03</td><td>Новогодний сценарий «подарок другому»: нужен режим «я оцениваю близкого человека» (формулировки от 3-го лица)?</td><td>Антон, Леонид</td></tr>
+        <tr><td>Q-04</td><td>Три типа из четырёх — с низкой открытостью опыту. Люди с высокой открытостью почти всегда получают «Лидера» или промежуточный профиль — проверить на пилоте.</td><td>Леонид</td></tr>
+        <tr><td>Q-05</td><td>Показывать ли шкалы пользователю? Формулировка «низкая эмоциональная стабильность» может отталкивать.</td><td>Леонид, Алина</td></tr>
+        <tr><td>Q-06</td><td>Рекомендации: стилевые направления (раздел 6) и ~50 SKU по типам.</td><td>Вазген</td></tr>
+        <tr><td>Q-07</td><td>Текст согласия на обработку ПДн (152-ФЗ) и дисклеймер «не является психодиагностикой».</td><td>юрист</td></tr>
+        <tr><td>Q-09</td><td>Адаптированные формулировки отходят от валидированного TIPI-RU<sup><a href="#fn2">2</a></sup>. Проверить каждую пару по смыслу; на пилоте сравнить варианты: часть трафика на оригинал, совпадение типов и оценка «Узнали себя?». Поле <code>wording</code> в данных сессии уже есть.</td><td>Леонид</td></tr>
+        <tr><td>Q-08</td><td>Площадка: сайт (Frontbox), Facebook Instant Form из рекламы в Instagram или Telegram-бот.</td><td>Антон, Иван</td></tr>
+      </table>
+
+      <h3>6. Черновик рекомендаций (на согласование с Вазгеном)</h3>
+      <div id="docRecs"></div>
+
+      <h3>7. Контракт данных сессии (для ТЗ на интеграцию)</h3>
+      <pre style="white-space:pre-wrap;font-size:12px;background:var(--soft);border-radius:10px;padding:10px">{ session_id, ts, version, utm: {source, medium, campaign, content},
+  wording: "cx"|"tipi", answers: {1..10: 1..7}, scores: {ES,E,O,A,C},
+  levels: {ES..C: "low"|"mid"|"high"}, type: "T1".."T4", secondary: "T1".."T4"|null,
+  distances: [{id, d}], quality: {straight, contradictions[], ok},
+  self_rating: 1..5|null, contact: {name, contact, consent} }</pre>
+
+      <h3>8. Экспертная панель v0.3: решения по опыту прохождения</h3>
+      <p class="small muted">Решения прошли четыре роли: UX/UI-дизайнер, геймдизайнер, психолог и социолог/исследователь. Методика (пункты, ключи, классификатор) не менялась: игровой слой лежит поверх расчёта.</p>
+      <svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b28a45"/></marker></defs>
+        <g fill="#fffdf8" stroke="#b28a45">
+          <rect x="10" y="30" width="130" height="62" rx="12"/><rect x="160" y="30" width="130" height="62" rx="12"/><rect x="310" y="30" width="130" height="62" rx="12"/>
+          <rect x="460" y="30" width="130" height="62" rx="12"/><rect x="610" y="30" width="140" height="62" rx="12"/>
+        </g>
+        <g text-anchor="middle" fill="#1d1812">
+          <text x="75" y="54" font-weight="bold">1. Крючок</text><text x="75" y="72" fill="#6e6456">4 карты, «откройте</text><text x="75" y="86" fill="#6e6456">свою»</text>
+          <text x="225" y="54" font-weight="bold">2. Вызов</text><text x="225" y="72" fill="#6e6456">10 бусин на цепочке,</text><text x="225" y="86" fill="#6e6456">подбадривания</text>
+          <text x="375" y="54" font-weight="bold">3. Награда</text><text x="375" y="72" fill="#6e6456">раскрытие 2 с,</text><text x="375" y="86" fill="#6e6456">карта героя</text>
+          <text x="525" y="54" font-weight="bold">4. Коллекция</text><text x="525" y="72" fill="#6e6456">шкатулка из 3</text><text x="525" y="86" fill="#6e6456">украшений → лид</text>
+          <text x="680" y="54" font-weight="bold">5. Социальное</text><text x="680" y="72" fill="#6e6456">сторис 9:16,</text><text x="680" y="86" fill="#6e6456">«позвать подругу»</text>
+        </g>
+        <g stroke="#b28a45" stroke-width="1.5" marker-end="url(#ar3)" fill="none"><path d="M140,61 H158"/><path d="M290,61 H308"/><path d="M440,61 H458"/><path d="M590,61 H608"/><path d="M680,92 C680,170 75,170 75,94" stroke-dasharray="4 3"/></g>
+        <text x="380" y="190" text-anchor="middle" fill="#6e6456">Новый игрок приходит по ссылке подруги (utm_source=invite): цикл замыкается — метрика K-фактор.</text>
+        <text x="380" y="210" text-anchor="middle" fill="#6e6456">Октализ: 1 — любопытство (CD7), 2 — достижение (CD2), 3–4 — владение (CD4), 5 — социальное влияние (CD5).</text>
+      </svg>
+      <table>
+        <tr><th>Код</th><th>Роль</th><th>Решение</th><th>Основание</th></tr>
+        <tr><td>D-01</td><td>Геймдизайн</td><td>Прогресс показан бусинами на цепочке: каждый ответ — бусина, последняя крупнее. Метафора совпадает с продуктом.</td><td>Видимый прогресс повышает доведение до конца: эффект «подаренного прогресса» в полевом эксперименте дал 34% против 19%<sup><a href="#fn6">6</a></sup>; CD2 «Достижение»<sup><a href="#fn7">7</a></sup>.</td></tr>
+        <tr><td>D-02</td><td>UX/UI</td><td>Шкала из 7 кругов: крайние крупнее, цвет от лилового «не про меня» к золотому «про меня»; без автоперехода: выбор отмечается, переход — только кнопкой «Далее» (можно спокойно передумать); клавиши 1–7 и Enter на компьютере; цели нажатия ≥ 28 px, крайние 46 px.</td><td>Один вопрос на экран и минимум трения между ответами — практика тестов с высокой долей завершения<sup><a href="#fn10">10</a></sup>.</td></tr>
+        <tr><td>D-03</td><td>UX/UI</td><td>10 вопросов, счётчик оставшегося времени, кнопка «Назад» без потери ответов.</td><td>Рекомендуемый диапазон для тестов личности — 5–10/8–12 вопросов<sup><a href="#fn9">9</a></sup><sup><a href="#fn10">10</a></sup>.</td></tr>
+        <tr><td>D-04</td><td>Геймдизайн</td><td>Подбадривания на 3, 5, 8 и 10-й бусине («Половина ожерелья собрана!»).</td><td>Точки отсечки на середине — главный риск отвала; короткая обратная связь удерживает темп.</td></tr>
+        <tr><td>D-05</td><td>Геймдизайн</td><td>Раскрытие результата: 2 с «Нанизываем ответы → Плавим золото → Подбираем камень», затем переворот карты.</td><td>Предвкушение перед наградой — CD7 «Любопытство и непредсказуемость»<sup><a href="#fn7">7</a></sup>; длительность ограничена, чтобы не раздражать.</td></tr>
+        <tr><td>D-06</td><td>Геймдизайн + бренд</td><td>Карта героя: игровой класс (Хранитель, Вдохновитель, Звезда, Искатель), эмблема, талисманы «металл · камень · стихия». Название типа Леонида — главный заголовок.</td><td>Имена типов, которые хочется «присвоить», и своя графика результата — главный двигатель распространения<sup><a href="#fn9">9</a></sup>. Талисманы — сторителлинг бренда, не психометрия.</td></tr>
+        <tr><td>D-07</td><td>Психолог</td><td>Только сильные стороны: «суперсилы» вместо слабостей; низкая эмоциональная стабильность подаётся как «чуткость». Баллы шкал спрятаны в «Как это посчитано».</td><td>Белая сторона Октализа (позитивная мотивация) вместо давления<sup><a href="#fn7">7</a></sup>; снижение риска стигматизации.</td></tr>
+        <tr><td>D-08</td><td>Психолог</td><td>Строка «Почему так» строится из двух самых выраженных шкал респондента (отклонение от 4 ≥ 1 балла).</td><td>Против эффекта Барнума: человек видит связь результата со своими ответами, а не общие фразы<sup><a href="#fn8">8</a></sup>. Схема «что значит → почему верно → одно действие».</td></tr>
+        <tr><td>D-09</td><td>Социолог / маркетинг</td><td>Карточка 9:16 для сторис (PNG 1080×1920) и кнопка «Позвать подругу» со ссылкой <code>utm_source=invite</code>.</td><td>Трафик тестов в основном мобильный и из соцсетей; результат должен «скриншотиться» в сторис<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-10</td><td>Социолог</td><td>Контакт запрашивается после результата, а не до; одно основное действие — «Хочу подборку с ценами».</td><td>Форма до результата увеличивает долю лидов, но теряет тех, кто закроет страницу<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-11</td><td>Социолог</td><td>Метрики пилота: доля завершивших, отвал по бусинам, доля «Узнали себя?» ≥ 4, доля поделившихся (<code>shared</code>), лиды, распределение типов, K-фактор по <code>invite</code>.</td><td>Доля поделившихся и K-фактор — стандартные метрики вирусности тестов<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-12</td><td>UX/UI</td><td>Иллюстрации изделий — оригинальные SVG (12 шт., 3 на тип) с металлом и камнем по талисману типа; заменяются фото SKU.</td><td>Картинка-результат сильнее текста; синтетика даёт единый стиль до появления фото каталога.</td></tr>
+        <tr><td>D-13</td><td>Социолог / геймдизайн</td><td>Челлендж «А кто ты?»: в ссылке-приглашении передаётся тип и имя пригласившей (<code>ref=T2&amp;n=Аня</code>). Подруга видит «Аня — Вдохновитель. А кто вы?», после прохождения получает «вашу пару» (10 сочетаний: «Солнце и Луна», «Две звезды»…) и парное украшение; может отправить результат обратно.</td><td>CD5 «Социальное влияние» и CD7 «Любопытство»<sup><a href="#fn7">7</a></sup>; сравнение с другом — сильнейший повод поделиться; парное украшение — готовый повод для подарка. Метрики: доля <code>ref</code> среди прохождений, K-фактор<sup><a href="#fn9">9</a></sup>.</td></tr>
+      </table>
+      <table>
+        <tr><th>Код</th><th>Открытый вопрос v0.3</th><th>Кому</th></tr>
+        <tr><td>Q-10</td><td>Игровые классы и талисманы (камни, стихии) — согласовать с бренд-платформой «Магии золота»: не противоречат ли тону бренда.</td><td>Вазген, Владислав</td></tr>
+        <tr><td>Q-11</td><td>Строки «Почему так» (раздел D-08) — проверить формулировки по каждому полюсу шкалы.</td><td>Леонид</td></tr>
+        <tr><td>Q-13</td><td>Тексты 10 пар и парные изделия — черновик; подобрать реальные парные SKU (подвески-половинки, парные браслеты).</td><td>Вазген</td></tr>
+        <tr><td>Q-12</td><td>Сбор данных: куда отправлять payload (таблица, CRM, Frontbox) — без этого метрики D-11 не посчитать.</td><td>Антон, Иван</td></tr>
+      </table>
+
+      <h3>9. Сцены к вопросам (v0.6): основной мем по данным + альтернативы 1–2</h3>
+      <p class="small muted">У каждого вопроса — три варианта сцены (А — основной, Б и В — альтернативы): что изображено, подпись и мем этого или прошлого года. Все варианты одной строки решают одну задачу кадра (JTBD). В тесте он показан рамкой «здесь будет картинка». Мемы подобраны по рейтингам Brand Analytics и «Медиалогии» за 2025–2026 годы<sup><a href="#fn11">11</a></sup><sup><a href="#fn12">12</a></sup><sup><a href="#fn13">13</a></sup><sup><a href="#fn14">14</a></sup>.</p>
+      <table id="sceneTable"></table>
+      <table>
+        <tr><th>Код</th><th>Правило для сцен</th><th>Почему</th></tr>
+        <tr><td>R-1</td><td>Мем — только формат-референс. Рисуем своими персонажами (героиня бренда, звери, предметы). Не используем фото реальных людей, кадры фильмов и персонажей чужих франшиз, тексты песен.</td><td>Права на изображение человека и на персонажей; реклама с чужим лицом или героем — юридический риск. Проверить с юристом (Q-07).</td></tr>
+        <tr><td>R-2</td><td>Сцена показывает ситуацию, а не «правильный» ответ: обе стороны шкалы должны выглядеть одинаково симпатично.</td><td>Картинка может подталкивать к ответу (социальная желательность) и сдвигать тип. На пилоте сравнить прохождения с картинками и без (Q-14).</td></tr>
+        <tr><td>R-3</td><td>Мем живёт 1–3 месяца. У каждой сцены держим запасную подпись без мема; ротация подписей раз в квартал по свежему рейтингу.</td><td>Лидеры рейтингов меняются каждый квартал: «Воздухан» во II кв., «Вот такие дела, собачка» в III кв. 2026<sup><a href="#fn11">11</a></sup><sup><a href="#fn12">12</a></sup>.</td></tr>
+        <tr><td>R-4</td><td>Героиня — одна на все 10 сцен (единый персонаж бренда), разные ситуации; в каждой сцене есть украшение.</td><td>Сквозной персонаж связывает тест в историю и продаёт продукт в каждом кадре.</td></tr>
+      </table>
+      <table>
+        <tr><th>Код</th><th>Открытый вопрос v0.4</th><th>Кому</th></tr>
+        <tr><td>Q-14</td><td>Пилот A/B: сцены есть / сцен нет — сравнить долю завершивших, распределение типов и «Узнали себя?».</td><td>Леонид, Антон</td></tr>
+        <tr><td>Q-15</td><td>Кто рисует: иллюстратор (10 сцен + героиня) или генерация ИИ с ручной доводкой; стиль — под карты типов.</td><td>Антон, Алина</td></tr>
+        <tr><td>Q-16</td><td>Мемы с реальными людьми и киноперсонажами (Юра Борисов, Колобок из «Последнего богатыря», тигр с Собчак) — не использовать или только после юриста.</td><td>юрист</td></tr>
+      </table>
+
+      <h3>10. Рейтинг мемов по реальным реакциям (Apify, 24.11.2026)</h3>
+      <svg viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b28a45"/></marker></defs>
+        <g fill="#fffdf8" stroke="#b28a45"><rect x="10" y="20" width="160" height="70" rx="10"/><rect x="200" y="20" width="160" height="70" rx="10"/><rect x="390" y="20" width="160" height="70" rx="10"/><rect x="580" y="20" width="170" height="70" rx="10"/></g>
+        <g text-anchor="middle" fill="#1d1812"><text x="90" y="42" font-weight="bold">1. Кандидаты</text><text x="90" y="60" fill="#6e6456">15 мемов из рейтингов</text><text x="90" y="76" fill="#6e6456">Brand Analytics 2025–26</text>
+        <text x="280" y="42" font-weight="bold">2. Сбор реакций</text><text x="280" y="60" fill="#6e6456">TikTok: 30 роликов × 15</text><text x="280" y="76" fill="#6e6456">Reels: 99 роликов × 5</text>
+        <text x="470" y="42" font-weight="bold">3. Индекс</text><text x="470" y="60" fill="#6e6456">просмотры 40% · репосты</text><text x="470" y="76" fill="#6e6456">30% · свежесть 30%</text>
+        <text x="665" y="42" font-weight="bold">4. Расстановка</text><text x="665" y="60" fill="#6e6456">лучший по индексу + смысл;</text><text x="665" y="76" fill="#6e6456">мем основной ≤ 2 раз</text></g>
+        <g stroke="#b28a45" stroke-width="1.5" marker-end="url(#ar4)"><path d="M170,55 H198"/><path d="M360,55 H388"/><path d="M550,55 H578"/></g>
+        <text x="380" y="125" text-anchor="middle" fill="#6e6456">Затраты Apify ≈ $2 из бюджета $5. Срез на 24.11.2026 — обновлять раз в квартал (R-3).</text>
+      </svg>
+      <p class="small muted">Методика: по каждому мему — 30 роликов из поиска TikTok (clockworks/tiktok-scraper) и выдача Reels по 8 запросам (data-slayer/instagram-search-reels; по «воздухан», «можно а зачем», «мой 2016» Reels вернул пустую выдачу). В расчёт идут ролики с 01.01.2025. Индекс 0–100 = 40% × лог-медиана просмотров + 30% × медианная доля репостов (сигнал «хочется скинуть») + 30% × доля роликов за последние 90 дней; каждая метрика нормирована на максимум. Ограничения: поиск — не вся генеральная совокупность; по «пиббл» и «сикс-севен» в выдаче много зарубежных роликов; «котость» не берём, пока не ясен смысл. Сырые данные: <code>research/</code> в репозитории.</p>
+      <table id="memeRating"></table>
+
+      <hr>
+      <div class="fn">
+        <p id="fn1">1. Gosling S. D., Rentfrow P. J., Swann W. B. A very brief measure of the Big-Five personality domains // Journal of Research in Personality. 2003. Vol. 37. P. 504–528. <a href="https://doi.org/10.1016/S0092-6566(03)00046-1" target="_blank">doi:10.1016/S0092-6566(03)00046-1</a></p>
+        <p id="fn2">2. Сергеева А. С., Кириллов Б. А., Джумагулова А. Ф. Перевод и адаптация краткого пятифакторного опросника личности (TIPI-RU) // Экспериментальная психология. 2016. Т. 9, № 3. С. 138–154.</p>
+        <p id="fn3">3. Gerlach M., Farb B., Revelle W., Nunes Amaral L. A. A robust data-driven approach identifies four personality types across four large data sets // Nature Human Behaviour. 2018. Vol. 2. P. 735–742. <a href="https://doi.org/10.1038/s41562-018-0419-z" target="_blank">doi:10.1038/s41562-018-0419-z</a> — типы Reserved, Role model, Self-centred, Average соответствуют Т1–Т4.</p>
+        <p id="fn4">4. Гороховатский Л. Психодиагностический инструментарий и типология: методика TIPI-RU и определение психотипов (docx, ноябрь 2026). Названия типов — авторские.</p>
+        <p id="fn5">5. Krisp: «B2B Weekly Sync», 23.11.2026 — тест определяет психотип, Вазген подбирает изделия (старт ~50 позиций), кликабельная версия на утверждение.</p>
+              <p id="fn6">6. Nunes J. C., Drèze X. The Endowed Progress Effect: How Artificial Advancement Increases Effort // Journal of Consumer Research. 2006. Vol. 32, № 4. P. 504–512. <a href="https://doi.org/10.1086/500480" target="_blank">doi:10.1086/500480</a></p>
+        <p id="fn7">7. Chou Y. Actionable Gamification: Beyond Points, Badges and Leaderboards. Octalysis Media, 2015 (фреймворк Octalysis, 8 мотивационных драйверов). <a href="https://yukaichou.com/octalysis.html" target="_blank">yukaichou.com/octalysis</a></p>
+        <p id="fn8">8. Forer B. R. The fallacy of personal validation // Journal of Abnormal and Social Psychology. 1949. Vol. 44. P. 118–123 (эффект Барнума). <a href="https://en.wikipedia.org/wiki/Barnum_effect" target="_blank">обзор</a></p>
+        <p id="fn9">9. Woobox: How to create a personality quiz; Viral quiz mechanics; Quiz result page best practices (2026). <a href="https://cdn.woobox.com/articles/quiz-result-page-best-practices" target="_blank">woobox.com</a></p>
+        <p id="fn10">10. involve.me: Reasons why people don’t finish your quiz (один вопрос на экран, 5–12 вопросов). <a href="https://involve.me/blog/reasons-why-people-dont-finish-your-quiz" target="_blank">involve.me</a></p>
+        <p id="fn11">11. Brand Analytics, III квартал 2026: «Вот такие дела, собачка» (113,4 тыс.), «Я тебя могну», «Сова на скакалке», «Колобок». <a href="https://uznayvse.ru/interesting-facts/vot-takie-dela-sobachka-istoriya-mema-127821.html" target="_blank">uznayvse.ru</a></p>
+        <p id="fn12">12. Brand Analytics, II квартал 2026: «воздухан» (367,6 тыс.), «черемша», «бурмалда», «котость»; тренды «советский брейнрот», бэкрумс. <a href="https://adindex.ru/news/researches/2026/07/23/347446.phtml" target="_blank">AdIndex, 23.07.2026</a></p>
+        <p id="fn13">13. Brand Analytics, начало 2026: «Можно, а зачем?», «Фа втфа пепе шнейне», тренд «Мой 2016-й». <a href="https://360.ru/tekst/interesnoe/kakie-memy-i-trendy-na-pike-populjarnosti-v-2026-godu/" target="_blank">360.ru</a>; опрос Rambler&amp;Co, ноябрь 2026 (Колобок, «собачка», «6-7», пингвин-нигилист): <a href="https://360.ru/news/interesnoe/analitiki-nazvali-samye-populjarnye-memy-2026-goda/" target="_blank">360.ru, 17.11.2026</a></p>
+        <p id="fn14">14. Мемы 2025 года: «Бобр», итальянский брейнрот, «Юра Борисов за столом», «окак». <a href="https://360.ru/tekst/interesnoe/glavnye-memy-2025-kak-my-bojalis-dolinu-sijali-kak-maga-i-tantsevali-filjaj-filjaj/" target="_blank">360.ru</a>; <a href="https://hi-tech.mail.ru/review/136896-samye-populyarnye-memy-v-2025-godu/" target="_blank">Hi-Tech Mail</a></p>
+        <p id="fn15">15. Brand Analytics, I кв. 2026 (топ-15): «Можно, а зачем?» 294,2 тыс., «Фа втфа пепе шнейне» 292,6 тыс., «Мой 2016» 241,1 тыс. и др. <a href="https://lifehacker.ru/luchshie-memy-2026-goda/" target="_blank">Лайфхакер</a>; описания мемов 2026 («Пухосос», «Черемша», Пиббл, «Сова на скакалке»): <a href="https://media.halvacard.ru/entertainment/populiarnye-memy-2026" target="_blank">Халва Медиа</a>; «Сикс-севен» 1,26 млн упоминаний (Медиалогия, I пол. 2026): <a href="https://hi-tech.mail.ru/news/153789-v-rossii-opredelili-samyj-obsuzhdaemyj-mem/" target="_blank">Hi-Tech Mail</a></p>
+</div>
+    </section>
+  </main>
+</div>
+
+<script>
+{
+// ===== CORE: TIPI-RU scoring + type classifier (источник: документ Л. Гороховатского, разделы 3–4) =====
+const SCALES = [
+  { key: 'ES', name: 'Эмоциональная стабильность', items: [4, 9], reversed: [4] },
+  { key: 'E',  name: 'Экстраверсия',               items: [1, 6], reversed: [6] },
+  { key: 'O',  name: 'Открытость опыту',           items: [5, 10], reversed: [10] },
+  { key: 'A',  name: 'Доброжелательность',         items: [2, 7], reversed: [2] },
+  { key: 'C',  name: 'Добросовестность',           items: [3, 8], reversed: [8] },
+];
+const REVERSED = [2, 4, 6, 8, 10];
+
+// Шаг 3 документа. Средние двух целых пунктов принимают только значения с шагом 0.5,
+// поэтому размытые границы «3.8–4.0» и «5.3–5.5» сводятся к однозначным: ≤3.5 / 4.0–5.0 / ≥5.5.
+function level(v) {
+  if (v < 4.0) return 'low';
+  if (v <= 5.25) return 'mid';
+  return 'high';
+}
+const LEVEL_RU = { low: 'Низкий', mid: 'Средний', high: 'Высокий' };
+
+// Числовые якоря для 5 градаций из матрицы (раздел 4). Допущение прототипа — откалибровать на пилоте.
+const ANCHOR = { 'Низкая': 3.0, 'Ниже среднего': 4.0, 'Средняя': 4.5, 'Выше среднего': 5.0, 'Высокая': 6.0 };
+
+const TYPES = [
+  { id: 'T1', name: 'Доброжелательный консерватор', gerlach: 'Reserved',
+    matrix: { ES: 'Высокая', E: 'Ниже среднего', O: 'Низкая', A: 'Выше среднего', C: 'Выше среднего' } },
+  { id: 'T2', name: 'Лёгкий на подъём лидер', gerlach: 'Role model',
+    matrix: { ES: 'Высокая', E: 'Высокая', O: 'Высокая', A: 'Высокая', C: 'Высокая' } },
+  { id: 'T3', name: 'Знающий себе цену созидатель', gerlach: 'Self-centred',
+    matrix: { ES: 'Средняя', E: 'Высокая', O: 'Низкая', A: 'Низкая', C: 'Низкая' } },
+  { id: 'T4', name: 'Вдумчивый искатель истины', gerlach: 'Average',
+    matrix: { ES: 'Низкая', E: 'Высокая', O: 'Низкая', A: 'Средняя', C: 'Средняя' } },
+];
+
+const MIXED_GAP = 0.3;   // если 2-й тип дальше 1-го менее чем на 0.3 — промежуточный профиль (~1/3 случаев на симуляции)
+const ATYPICAL_DIST = 3.0; // если до ближайшего прототипа дальше 3.0 — профиль нетипичный
+
+function score(answers) { // answers: {1..10: 1..7}
+  for (let i = 1; i <= 10; i++) {
+    const a = answers[i];
+    if (!Number.isInteger(a) || a < 1 || a > 7) throw new Error('Нет ответа на пункт ' + i);
+  }
+  const adj = {};
+  for (let i = 1; i <= 10; i++) adj[i] = REVERSED.includes(i) ? 8 - answers[i] : answers[i];
+  const scores = {}, levels = {};
+  for (const s of SCALES) {
+    scores[s.key] = (adj[s.items[0]] + adj[s.items[1]]) / 2;
+    levels[s.key] = level(scores[s.key]);
+  }
+  return { adj, scores, levels };
+}
+
+function classify(scores) {
+  const dist = TYPES.map(t => {
+    let d2 = 0;
+    for (const s of SCALES) d2 += (scores[s.key] - ANCHOR[t.matrix[s.key]]) ** 2;
+    return { id: t.id, name: t.name, d: Math.round(Math.sqrt(d2) * 100) / 100 };
+  }).sort((a, b) => a.d - b.d || a.id.localeCompare(b.id));
+  const primary = dist[0], second = dist[1];
+  return {
+    primary: primary.id,
+    secondary: (second.d - primary.d) < MIXED_GAP ? second.id : null,
+    atypical: primary.d > ATYPICAL_DIST,
+    distances: dist,
+  };
+}
+
+// Контроль качества ответов (не меняет тип, только помечает):
+//  - straight-lining: все 10 ответов одинаковые;
+//  - противоречие в паре: согласие (≥6) и с прямым, и с обратным утверждением одной шкалы.
+function quality(answers) {
+  const vals = Object.values(answers);
+  const straight = vals.every(v => v === vals[0]);
+  const contradictions = SCALES.filter(s => {
+    const direct = s.items.find(i => !s.reversed.includes(i));
+    return answers[direct] >= 6 && answers[s.reversed[0]] >= 6;
+  }).map(s => s.key);
+  return { straight, contradictions, ok: !straight && contradictions.length < 2 };
+}
+
+if (typeof module !== 'undefined') module.exports = { SCALES, TYPES, ANCHOR, score, classify, quality, level, MIXED_GAP, ATYPICAL_DIST };
+
+// ===== ART: оригинальные SVG-иллюстрации (эмблемы типов и изделия). Не фото товаров — заменяются фото SKU из каталога. =====
+const METAL = {
+  y: ['#fff3c4', '#e2b35a', '#9c6b1e'],  // жёлтое золото
+  r: ['#ffe0d2', '#df9478', '#9e5640'],  // красное (розовое) золото
+  w: ['#ffffff', '#d7dce3', '#8c96a3'],  // белое золото
+};
+const STONE = {
+  sapphire: ['#9ec5ff', '#2753b8', '#0f2560'], citrine: ['#fff1a8', '#f0b42a', '#a86a08'],
+  ruby: ['#ff9aa8', '#c8143c', '#5e0618'], emerald: ['#a8f0c8', '#1f9a62', '#0a4a2c'],
+  diamond: ['#ffffff', '#dff1ff', '#9fb8cc'], moon: ['#ffffff', '#dcd8f2', '#9c95c9'],
+};
+let _gid = 0;
+function gradDefs(metal, stone) {
+  const id = 'a' + (++_gid), m = METAL[metal], s = STONE[stone || 'diamond'];
+  return { id, defs: `<defs>
+    <linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${m[0]}"/><stop offset=".45" stop-color="${m[1]}"/><stop offset="1" stop-color="${m[2]}"/></linearGradient>
+    <linearGradient id="${id}m2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m[0]}"/><stop offset=".5" stop-color="${m[1]}"/><stop offset="1" stop-color="${m[2]}"/></linearGradient>
+    <radialGradient id="${id}s" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${s[0]}"/><stop offset=".5" stop-color="${s[1]}"/><stop offset="1" stop-color="${s[2]}"/></radialGradient>
+    <radialGradient id="${id}p" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#f3ece4"/><stop offset="1" stop-color="#cbbfb3"/></radialGradient>
+    <radialGradient id="${id}sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  </defs>`, M: `url(#${id}m)`, M2: `url(#${id}m2)`, S: `url(#${id}s)`, P: `url(#${id}p)`, SH: `url(#${id}sh)` };
+}
+const shadow = g => `<ellipse cx="60" cy="108" rx="34" ry="5" fill="${g.SH}"/>`;
+const svg = (g, body) => `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">${g.defs}${shadow(g)}${body}</svg>`;
+const gem = (cx, cy, w, g) => { const h = w * .7; return `<polygon points="${cx - w / 2},${cy} ${cx + w / 2},${cy} ${cx + w * .3},${cy - h * .45} ${cx - w * .3},${cy - h * .45}" fill="${g.S}" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/><polygon points="${cx - w / 2},${cy} ${cx + w / 2},${cy} ${cx},${cy + h}" fill="${g.S}" stroke="#fff" stroke-opacity=".5" stroke-width=".8"/><path d="M${cx - w * .3},${cy - h * .45} L${cx},${cy + h} L${cx + w * .3},${cy - h * .45}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".7"/>`; };
+const band = (cx, cy, r, g, sw = 6) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * .92}" fill="none" stroke="${g.M}" stroke-width="${sw}"/><ellipse cx="${cx}" cy="${cy}" rx="${r - sw / 2 + 1}" ry="${(r - sw / 2 + 1) * .92}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>`;
+const chain = (g, y2 = 62) => `<path d="M14,14 Q60,${y2 + 22} 106,14" fill="none" stroke="${g.M}" stroke-width="2.4" stroke-dasharray="3.2 1.6" stroke-linecap="round"/>`;
+
+const ITEM_ART = {
+  solitaire: (m = 'y', s = 'diamond') => { const g = gradDefs(m, s); return svg(g, band(60, 72, 28, g) + `<path d="M50,46 L54,38 M70,46 L66,38" stroke="${g.M}" stroke-width="3" stroke-linecap="round"/>` + gem(60, 38, 26, g)); },
+  studs: (m = 'y', s = 'diamond') => { const g = gradDefs(m, s); const one = x => `<circle cx="${x}" cy="60" r="15" fill="${g.M}"/><circle cx="${x}" cy="60" r="11" fill="${g.S}"/><circle cx="${x - 4}" cy="56" r="3" fill="#fff" opacity=".8"/>`; return svg(g, one(38) + one(82)); },
+  pendant: (m = 'y', s = 'sapphire') => { const g = gradDefs(m, s); return svg(g, chain(g) + `<circle cx="60" cy="70" r="5" fill="none" stroke="${g.M}" stroke-width="2.5"/><circle cx="60" cy="88" r="13" fill="${g.M}"/><circle cx="60" cy="88" r="9" fill="${g.S}"/><circle cx="57" cy="85" r="2.5" fill="#fff" opacity=".8"/>`); },
+  stack: () => { const a = gradDefs('y'), b = gradDefs('w'), c = gradDefs('r'); return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${a.defs}${b.defs}${c.defs}${shadow(a)}${band(60, 50, 28, a, 5)}${band(60, 64, 28, b, 5)}${band(60, 78, 28, c, 5)}${[0, 1, 2, 3, 4].map(i => `<circle cx="${44 + i * 8}" cy="${38 + Math.abs(i - 2) * 1.5}" r="2" fill="#fff"/>`).join('')}</svg>`; },
+  colorRing: (m = 'w', s = 'citrine') => { const g = gradDefs(m, s); return svg(g, band(60, 74, 27, g) + `<ellipse cx="60" cy="42" rx="17" ry="13" fill="${g.M}"/><ellipse cx="60" cy="42" rx="13" ry="10" fill="${g.S}"/><ellipse cx="55" cy="38" rx="4" ry="2.5" fill="#fff" opacity=".75"/>`); },
+  hoops: () => { const a = gradDefs('y'), b = gradDefs('w'); const h = (x, g) => `<path d="M${x},28 v6" stroke="${g.M}" stroke-width="2"/><ellipse cx="${x}" cy="62" rx="20" ry="26" fill="none" stroke="${g.M}" stroke-width="6"/>`; return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${a.defs}${b.defs}${shadow(a)}${h(36, a)}${h(84, b)}</svg>`; },
+  signet: (m = 'r') => { const g = gradDefs(m); return svg(g, band(60, 74, 27, g, 9) + `<rect x="40" y="26" width="40" height="30" rx="9" fill="${g.M}"/><rect x="45" y="31" width="30" height="20" rx="6" fill="${g.M2}"/><path d="M53,41 h14 M60,35 v12" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/>`); },
+  bracelet: (m = 'y') => { const g = gradDefs(m); let s = ''; for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2, x = 60 + Math.cos(a) * 34, y = 60 + Math.sin(a) * 30; s += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="9" ry="5.5" transform="rotate(${(a * 180 / Math.PI + 90).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="none" stroke="${i % 2 ? g.M2 : g.M}" stroke-width="4"/>`; } return svg(g, s); },
+  cocktail: (m = 'r', s = 'ruby') => { const g = gradDefs(m, s); let halo = ''; for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; halo += `<circle cx="${(60 + Math.cos(a) * 20).toFixed(1)}" cy="${(40 + Math.sin(a) * 20).toFixed(1)}" r="2.6" fill="#fff" stroke="${g.M}" stroke-width=".8"/>`; } return svg(g, band(60, 78, 25, g, 7) + `<circle cx="60" cy="40" r="23" fill="${g.M}"/>` + halo + `<circle cx="60" cy="40" r="15" fill="${g.S}"/><circle cx="55" cy="35" r="4" fill="#fff" opacity=".7"/>`); },
+  moon: (m = 'w', s = 'moon') => { const g = gradDefs(m, s); return svg(g, chain(g) + `<circle cx="60" cy="70" r="4" fill="none" stroke="${g.M}" stroke-width="2.5"/><path d="M68,76 A18,18 0 1 0 68,104 A13,13 0 1 1 68,76 Z" fill="${g.M}"/><circle cx="74" cy="86" r="2.2" fill="${g.S}"/><path d="M80,95 l1.5,3 3,1.5 -3,1.5 -1.5,3 -1.5,-3 -3,-1.5 3,-1.5z" fill="${g.M}"/>`); },
+  bar: (m = 'y') => { const g = gradDefs(m); return svg(g, chain(g) + `<circle cx="60" cy="70" r="4" fill="none" stroke="${g.M}" stroke-width="2.5"/><rect x="52" y="74" width="16" height="34" rx="3" fill="${g.M}"/><path d="M57,81 h6 M57,86 h6 M57,91 h4 M57,96 h6 M57,101 h3" stroke="#fff" stroke-opacity=".6" stroke-width="1.3" stroke-linecap="round"/>`); },
+  pearls: (m = 'y') => { const g = gradDefs(m); const one = x => `<path d="M${x},22 q8,0 6,10 l-6,10" fill="none" stroke="${g.M}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x}" cy="44" r="4" fill="${g.M}"/><circle cx="${x}" cy="66" r="17" fill="${g.P}"/><circle cx="${x - 5}" cy="60" r="4" fill="#fff" opacity=".9"/>`; return svg(g, one(38) + one(82)); },
+};
+
+// Эмблемы типов (viewBox 0 0 160 160), рисуются светлым по цветному фону карточки
+const EMBLEM = {
+  T1: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="44" fill="none" stroke="#fff3c4" stroke-width="5"/><circle cx="80" cy="80" r="30" fill="#fff3c4" opacity=".16"/>${[0,1,2,3,4,5].map(i=>{const y=118-i*13;return `<ellipse cx="${46-i*1.5}" cy="${y}" rx="9" ry="4.2" transform="rotate(${-55+i*8} ${46-i*1.5} ${y})" fill="#fff3c4" opacity=".9"/><ellipse cx="${114+i*1.5}" cy="${y}" rx="9" ry="4.2" transform="rotate(${55-i*8} ${114+i*1.5} ${y})" fill="#fff3c4" opacity=".9"/>`}).join('')}<path d="M80,58 l6,16 17,0 -14,10 5,16 -14,-10 -14,10 5,-16 -14,-10 17,0z" fill="#fff3c4"/></svg>`,
+  T2: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">${[...Array(16)].map((_,i)=>{const a=i/16*Math.PI*2,l=i%2?14:24;return `<line x1="${(80+Math.cos(a)*40).toFixed(1)}" y1="${(80+Math.sin(a)*40).toFixed(1)}" x2="${(80+Math.cos(a)*(40+l)).toFixed(1)}" y2="${(80+Math.sin(a)*(40+l)).toFixed(1)}" stroke="#fff6dc" stroke-width="5" stroke-linecap="round"/>`}).join('')}<circle cx="80" cy="80" r="32" fill="#fff6dc"/><circle cx="80" cy="80" r="22" fill="none" stroke="#f08a4b" stroke-width="3" opacity=".6"/></svg>`,
+  T3: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M44,104 L38,58 L60,76 L80,44 L100,76 L122,58 L116,104 Z" fill="#ffd9a0"/><rect x="44" y="108" width="72" height="10" rx="3" fill="#ffd9a0"/><circle cx="80" cy="44" r="6" fill="#fff"/><circle cx="38" cy="58" r="5" fill="#fff"/><circle cx="122" cy="58" r="5" fill="#fff"/><circle cx="80" cy="90" r="9" fill="#c8143c" stroke="#fff" stroke-width="2"/></svg>`,
+  T4: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M96,36 A46,46 0 1 0 96,124 A36,36 0 1 1 96,36 Z" fill="#efeaff"/>${[[108,56,5],[120,84,3.5],[104,104,4],[126,118,2.5]].map(([x,y,r])=>`<path d="M${x},${y-r*2} L${x+r*.6},${y-r*.6} ${x+r*2},${y} ${x+r*.6},${y+r*.6} ${x},${y+r*2} ${x-r*.6},${y+r*.6} ${x-r*2},${y} ${x-r*.6},${y-r*.6}Z" fill="#efeaff"/>`).join('')}</svg>`,
+};
+
+const ITEMS = { // [мужская форма, женская форма] — п.1 женская форма из документа, остальные — G-05
+  1: ['открытого, полного энтузиазма', 'открытую, полную энтузиазма'],
+  2: ['критичного, склонного спорить', 'критичную, склонную спорить'],
+  3: ['надёжного и дисциплинированного', 'надёжную и дисциплинированную'],
+  4: ['тревожного, меня легко расстроить', 'тревожную, меня легко расстроить'],
+  5: ['открытого для нового опыта, сложного', 'открытую для нового опыта, сложную'],
+  6: ['замкнутого, тихого', 'замкнутую, тихую'],
+  7: ['сочувствующего, сердечного', 'сочувствующую, сердечную'],
+  8: ['неорганизованного, беспечного', 'неорганизованную, беспечную'],
+  9: ['спокойного, эмоционально устойчивого', 'спокойную, эмоционально устойчивую'],
+  10: ['обыкновенного, не творческого', 'обыкновенную, не творческую'],
+};
+const ANCHORS_TIPI = { m: ['Совершенно не согласен','Не согласен','Немного не согласен','Ни то, ни другое','Немного согласен','Согласен','Абсолютно согласен'],
+                  f: ['Совершенно не согласна','Не согласна','Немного не согласна','Ни то, ни другое','Немного согласна','Согласна','Абсолютно согласна'] };
+
+// Потребительская адаптация (G-10). Каждый пункт сохраняет черту, полюс и обе характеристики пары TIPI-RU;
+// формулировки гендерно-нейтральны, поэтому выбор рода не нужен. Требует проверки Леонидом (Q-09).
+const ITEMS_CX = {
+  1: 'Я легко загораюсь новым и заряжаю энтузиазмом всех вокруг',
+  2: 'Мне часто есть что возразить, и поспорить я не боюсь',
+  3: 'На меня можно положиться: я держу слово и люблю порядок в делах',
+  4: 'Я часто волнуюсь, и выбить меня из колеи несложно',
+  5: 'Меня тянет ко всему новому и необычному, простые решения мне скучны',
+  6: 'В шумной компании я скорее тихо наблюдаю со стороны',
+  7: 'Я тонко чувствую людей, и мне важно поддержать близких',
+  8: 'Строгие планы — не моё: живу легко и порой что-то забываю',
+  9: 'Меня сложно вывести из равновесия, даже когда вокруг суета',
+  10: 'Мне ближе проверенное и привычное, чем эксперименты и творчество',
+};
+const ANCHORS_CX = ['Совсем не про меня','Не про меня','Скорее не про меня','И да, и нет','Скорее про меня','Про меня','Точно про меня'];
+
+// Текст результата для покупателя (2-е лицо). Научное описание из документа — в блоке «Как это посчитано».
+const LEAD_CX = {
+  T1: 'Вы — опора для близких: спокойствие, надёжность и тепло. Вы цените то, что проверено временем, и выбираете вещи, которые остаются с вами на годы.',
+  T2: 'Вы легко загораетесь новым и умеете вести за собой, не теряя собранности. Людей тянет к вашей энергии, а перемены вас только вдохновляют.',
+  T3: 'Вы знаете, чего хотите, и не боитесь быть в центре внимания. Свои правила, свой масштаб, свой результат — и украшения, которые заметны.',
+  T4: 'Вы чувствуете глубже других и ищете смысл во всём, что вас окружает. Для вас важны близкие люди и вещи со своей историей.',
+};
+let WORDING = 'cx'; // 'cx' — потребительская, 'tipi' — оригинал TIPI-RU (только в режиме проверки)
+
+// Описания — дословно из документа, раздел 5
+const DESC = {
+  T1: { lead: 'Спокойный, надёжный и эмоционально устойчивый человек, который ценит стабильность, порядок и проверенные решения.',
+        traits: 'высокая эмоциональная стабильность, доброжелательность и добросовестность выше среднего; экстраверсия ниже среднего, низкая открытость новому опыту.',
+        behav: 'не склонен к импульсивности и резким перепадам настроения, умеет поддерживать ровные, тёплые отношения, предпочитает предсказуемость и системность спонтанным экспериментам.' },
+  T2: { lead: 'Энергичный, гибкий и социально зрелый человек, который легко адаптируется к переменам и ведёт за собой других.',
+        traits: 'высокие показатели по всем пяти шкалам (высокая эмоциональная стабильность, экстраверсия, открытость опыту, доброжелательность и добросовестность).',
+        behav: 'быстро загорается новыми идеями, но при этом сохраняет организованность и самоконтроль. Легко находит общий язык с разными людьми и спокойно справляется со стрессом.' },
+  T3: { lead: 'Амбициозный, яркий и независимый человек, ориентированный на собственные цели, масштаб и свободу действий.',
+        traits: 'высокая экстраверсия, средняя эмоциональная стабильность, низкие показатели по открытости опыту, доброжелательности и добросовестности.',
+        behav: 'любит быть в центре внимания и действовать по собственным правилам, не оглядываясь на чужие ожидания или строгие рамки. Прямолинеен, напорист и фокусируется на личном результате.' },
+  T4: { lead: 'Общительный, глубоко переживающий и рефлексирующий человек, для которого важны смыслы и проверенные жизненные опоры.',
+        traits: 'высокая экстраверсия, низкая эмоциональная стабильность (высокая чувствительность), низкая открытость опыту; доброжелательность и добросовестность на среднем уровне.',
+        behav: 'остро воспринимает происходящее, склонен к глубокому анализу своих эмоций и поиску ответов на внутренние вопросы. Нуждается в общении и поддержке, но с осторожностью относится к радикальным жизненным переменам.' },
+};
+
+const SCALE_ORDER = ['ES','E','O','A','C']; // G-09: порядок матрицы
+const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстраверсия', O:'Открытость опыту', A:'Доброжелательность', C:'Добросовестность' };
+
+
+// ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
+const VERSION = 'v0.6-2026-11-24';
+
+// Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
+const TYPE_UI = {
+  T1: { cls: 'Хранитель', bg: 'linear-gradient(150deg,#26402f,#4f7255)', ac: '#2f4a3a',
+        chips: [['Металл', 'жёлтое золото'], ['Камень', 'сапфир'], ['Стихия', 'Земля']],
+        powers: [['∞', 'Надёжность', 'на вас опираются'], ['☼', 'Тепло', 'рядом спокойно'], ['◎', 'Вкус к классике', 'вещи на годы']] },
+  T2: { cls: 'Вдохновитель', bg: 'linear-gradient(150deg,#d4552f,#f0a050)', ac: '#d4552f',
+        chips: [['Металл', 'белое + жёлтое'], ['Камень', 'цитрин'], ['Стихия', 'Огонь']],
+        powers: [['✦', 'Энергия', 'заряжаете других'], ['↗', 'Лидерство', 'ведёте за собой'], ['⟳', 'Гибкость', 'перемены в радость']] },
+  T3: { cls: 'Звезда', bg: 'linear-gradient(150deg,#3a0c1c,#8a2141)', ac: '#7a1f3a',
+        chips: [['Металл', 'красное золото'], ['Камень', 'рубин'], ['Стихия', 'Пламя']],
+        powers: [['★', 'Харизма', 'вас замечают'], ['➤', 'Напор', 'идёте к цели'], ['◆', 'Масштаб', 'мыслите крупно']] },
+  T4: { cls: 'Искатель', bg: 'linear-gradient(150deg,#262a66,#6a5fae)', ac: '#3b3a85',
+        chips: [['Металл', 'белое золото'], ['Камень', 'лунный камень'], ['Стихия', 'Вода']],
+        powers: [['☾', 'Чуткость', 'чувствуете глубже'], ['❖', 'Глубина', 'ищете смысл'], ['♡', 'Душевность', 'цените близких']] },
+};
+// Шкатулка: тип → стиль → 3 категории → иллюстрация (ЧЕРНОВИК для Вазгена, Q-06)
+const RECS = {
+  T1: { style: 'Классика и вещи «на годы»: проверенные формы, благородный металл, сдержанный блеск.', why: 'стабильность и порядок → вневременные формы',
+        items: [['Кольцо с солитером', 'классика, жёлтое золото', () => ITEM_ART.solitaire('y', 'diamond')], ['Серьги-пусеты', 'на каждый день', () => ITEM_ART.studs('y', 'sapphire')], ['Подвеска на цепочке', 'лаконичная база', () => ITEM_ART.pendant('y', 'sapphire')]] },
+  T2: { style: 'Универсальность с характером: модные линии, которые легко сочетать между собой.', why: 'открытость и энергия → новое, но собранное',
+        items: [['Наборные кольца', 'комбинируйте по настроению', () => ITEM_ART.stack()], ['Кольцо с цветным камнем', 'акцент без перегруза', () => ITEM_ART.colorRing('w', 'citrine')], ['Серьги-кольца двух металлов', 'белое + жёлтое золото', () => ITEM_ART.hoops()]] },
+  T3: { style: 'Заметные статусные вещи: масштаб, крупная форма, акцент на себе.', why: 'экстраверсия и ориентир на результат → «statement»-изделия',
+        items: [['Кольцо-печатка', 'объём и фактура', () => ITEM_ART.signet('r')], ['Массивный браслет-цепь', 'видно издалека', () => ITEM_ART.bracelet('y')], ['Коктейльное кольцо', 'крупный камень в центре', () => ITEM_ART.cocktail('r', 'ruby')]] },
+  T4: { style: 'Украшения со смыслом: символ, личная история, мягкие формы.', why: 'смыслы и опоры → символичные и памятные вещи',
+        items: [['Подвеска-луна', 'символ-талисман', () => ITEM_ART.moon('w', 'moon')], ['Подвеска с гравировкой', 'имя, дата, слово', () => ITEM_ART.bar('y')], ['Серьги с жемчугом', 'спокойная тёплая эстетика', () => ITEM_ART.pearls('y')]] },
+};
+// «Почему так» — из двух самых выраженных шкал (D-11, против эффекта Барнума)
+const WHY = {
+  ES: { high: 'вы сохраняете спокойствие там, где другие волнуются', low: 'вы тонко чувствуете всё, что происходит вокруг' },
+  E:  { high: 'вас заряжают люди и общение', low: 'вам нужна тишина, чтобы собраться с мыслями' },
+  O:  { high: 'вас тянет к новому и необычному', low: 'вы цените проверенное и надёжное' },
+  A:  { high: 'вы умеете поддержать и посочувствовать', low: 'вы прямо говорите, что думаете' },
+  C:  { high: 'на вас можно положиться', low: 'вы живёте легко и спонтанно' },
+};
+const CHEERS = { 3: 'Отличное начало ✦', 5: 'Половина ожерелья собрана!', 8: 'Осталось совсем чуть-чуть', 10: 'Последняя бусина — и ваша карта откроется' };
+const REVEAL_STEPS = ['Нанизываем ответы…', 'Плавим золото…', 'Подбираем камень…'];
+
+
+// ===== СЦЕНЫ к вопросам (v0.6): основной мем выбран по данным TikTok/Reels (Apify, 24.11.2026), альтернативы 1–2. Мем = формат-референс, рисуем своими персонажами (R-1). =====
+const SCENES = {
+"1": {
+"job": "узнать себя в роли заводилы",
+"v": [
+[
+"Пиббл на сёрфе",
+"Героиня в серьгах-кольцах несётся на доске по волне праздника, за ней — вся компания.",
+"«Завожу всех, как Пиббл волну»",
+"индекс 86 · TikTok: медиана 420 тыс. просм., репосты 7,63%",
+"https://www.tiktok.com/search?q=пиббл"
+],
+[
+"«Охаёшечки»",
+"Героиня влетает в дверь с распахнутыми руками, на запястьях звенят браслеты.",
+"«Охаёшечки! Я пришла — можно начинать»",
+"индекс 65 · TikTok: медиана 572 тыс. просм., репосты 2,32%",
+"https://www.tiktok.com/search?q=охаешечки"
+],
+[
+"«Я тебя могну»",
+"Девичник: героиня поднимает руку с новым кольцом, подруги визжат, конфетти.",
+"«Пришла на девичник и всех могнула»",
+"индекс 62 · TikTok: медиана 544 тыс. просм., репосты 0,78% · Reels: медиана 216 тыс.",
+"https://www.tiktok.com/search?q=я тебя могну"
+]
+]
+},
+"2": {
+"job": "улыбнуться своей привычке спорить",
+"v": [
+[
+"«Бурмалда»",
+"Подруга показывает спорную подделку под золото, героиня с лупой выносит вердикт.",
+"«Твой аргумент? Бурмалда»",
+"индекс 63 · TikTok: медиана 142 тыс. просм., репосты 2,45%",
+"https://www.tiktok.com/search?q=бурмалда"
+],
+[
+"«Вот такие дела, собачка»",
+"Тигр положил лапы на бортик бассейна и объясняет овчарке, что это не серебро, а белое золото.",
+"«Это белое золото. Вот такие дела, собачка»",
+"индекс 61 · TikTok: медиана 12 тыс. просм., репосты 0,6% · Reels: медиана 13 тыс.",
+"https://www.tiktok.com/search?q=вот такие дела собачка"
+],
+[
+"«Можно, а зачем?»",
+"Подруги хором советуют взять «как у всех», героиня скрестила руки.",
+"«Согласиться со всеми? Можно. А зачем?»",
+"индекс 44 · TikTok: медиана 83 тыс. просм., репосты 0,85%",
+"https://www.tiktok.com/search?q=можно а зачем"
+]
+]
+},
+"3": {
+"job": "гордость за порядок",
+"v": [
+[
+"«Тихо, не спеша, черемша»",
+"Героиня неторопливо раскладывает украшения по ячейкам, рядом лев-кролик с чек-листом.",
+"«Всё по плану. Тихо, не спеша, черемша»",
+"индекс 83 · TikTok: медиана 367 тыс. просм., репосты 7,0% · Reels: медиана 65 тыс.",
+"https://www.tiktok.com/search?q=черемша"
+],
+[
+"«Пухосос»",
+"Маленький робот-пухосос по расписанию сдувает пылинки с её колец.",
+"«Даже у моего пухососа есть график»",
+"индекс 42 · TikTok: медиана 52 тыс. просм., репосты 0,59%",
+"https://www.tiktok.com/search?q=пухосос"
+],
+[
+"«Ожидание / реальность»",
+"Две шкатулки: у героини всё по ячейкам с подписями, у подруги — клубок цепочек.",
+"«Ожидание = реальность. Шкатулка как у аудитора»",
+"нет данных (вечный формат)",
+""
+]
+]
+},
+"4": {
+"job": "посмеяться над тревожностью без стыда",
+"v": [
+[
+"«Вот такие дела, собачка»",
+"Тигр с серьёзным видом сообщает овчарке новость: серёжка в стиральной машине.",
+"«Серёжка в стиралке. Вот такие дела, собачка»",
+"индекс 61 · TikTok: медиана 12 тыс. просм., репосты 0,6% · Reels: медиана 13 тыс.",
+"https://www.tiktok.com/search?q=вот такие дела собачка"
+],
+[
+"«Воздухан» наоборот",
+"В голове у героини вентилятор мыслей крутится на максимум из-за одной смс.",
+"«В голове воздухан на пятой скорости»",
+"индекс 58 · TikTok: медиана 315 тыс. просм., репосты 1,96%",
+"https://www.tiktok.com/search?q=воздухан"
+],
+[
+"«Сова на скакалке»",
+"Героиня тянет карту из детской игры: выпала сова на скакалке. Серёжка катится под диван.",
+"«Выпала сова на скакалке — серёжка уже под диваном»",
+"индекс 51 · TikTok: медиана 157 тыс. просм., репосты 1,73% · Reels: медиана 21 тыс.",
+"https://www.tiktok.com/search?q=сова на скакалке"
+]
+]
+},
+"5": {
+"job": "почувствовать себя смелой в выборе",
+"v": [
+[
+"«Черемша»-гибрид",
+"Героиня примеряет серьги-гибриды: одна — луна, другая — звезда; рядом одобряет лев-кролик.",
+"«Моя шкатулка — как черемша: смешала, и работает»",
+"индекс 83 · TikTok: медиана 367 тыс. просм., репосты 7,0% · Reels: медиана 65 тыс.",
+"https://www.tiktok.com/search?q=черемша"
+],
+[
+"«Можно, а зачем?»",
+"У витрины классические пусеты скучают, героиня тянется к асимметричным серьгам.",
+"«Классика? Можно. А зачем?»",
+"индекс 44 · TikTok: медиана 83 тыс. просм., репосты 0,85%",
+"https://www.tiktok.com/search?q=можно а зачем"
+],
+[
+"«Пухосос»",
+"Героиня мечтает над витриной: золотой пухосос в бархатной коробочке.",
+"«Взяла бы пухосос. Если он из золота»",
+"индекс 42 · TikTok: медиана 52 тыс. просм., репосты 0,59%",
+"https://www.tiktok.com/search?q=пухосос"
+]
+]
+},
+"6": {
+"job": "узнать себя-интроверта без осуждения",
+"v": [
+[
+"Пингвин-нигилист",
+"Пингвин в маленьких серьгах уходит от шумной стаи к горам. На часах 22:00.",
+"«Я с вечеринки в 22:00»",
+"индекс 39 · TikTok: медиана 165 тыс. просм., репосты 0,44% · Reels: медиана 2,0 млн",
+"https://www.tiktok.com/search?q=пингвин нигилист"
+],
+[
+"«Тихо, не спеша, черемша»",
+"Шумная вечеринка, а героиня в углу с какао и котом.",
+"«Пока все танцуют: тихо, не спеша, черемша»",
+"индекс 83 · TikTok: медиана 367 тыс. просм., репосты 7,0% · Reels: медиана 65 тыс.",
+"https://www.tiktok.com/search?q=черемша"
+],
+[
+"«Мой 2016-й»",
+"Два фото: 2016 и 2026 — героиня в одном и том же углу вечеринки, только серьги новые.",
+"«2016-й: в углу. 2026-й: в углу, но в золоте»",
+"индекс 43 · TikTok: медиана 99 тыс. просм., репосты 0,17%",
+"https://www.tiktok.com/search?q=мой 2016"
+]
+]
+},
+"7": {
+"job": "тепло к близким, повод для парного украшения",
+"v": [
+[
+"«Вот такие дела, собачка»",
+"Подруга-тигр делится наболевшим, героиня-овчарка внимательно слушает.",
+"«Я — та самая собачка, которая всегда выслушает»",
+"индекс 61 · TikTok: медиана 12 тыс. просм., репосты 0,6% · Reels: медиана 13 тыс.",
+"https://www.tiktok.com/search?q=вот такие дела собачка"
+],
+[
+"Пиббл на сёрфе",
+"Подруга грустит, героиня подкатывает на сёрфе с коробочкой-подарком.",
+"«Лечу с позитивом и браслетом, как Пиббл»",
+"индекс 86 · TikTok: медиана 420 тыс. просм., репосты 7,63%",
+"https://www.tiktok.com/search?q=пиббл"
+],
+[
+"«Мой 2016-й»",
+"Коллаж: подруги в 2016-м с фенечками и сейчас — с одинаковыми золотыми браслетами.",
+"«Мой 2016-й: фенечки. Мой 2026-й: всё ещё вместе»",
+"индекс 43 · TikTok: медиана 99 тыс. просм., репосты 0,17%",
+"https://www.tiktok.com/search?q=мой 2016"
+]
+]
+},
+"8": {
+"job": "посмеяться над своей спонтанностью",
+"v": [
+[
+"«Воздухан»",
+"Героиня ищет серёжку в холодильнике, в миске кота, в кроссовке. Кот невозмутим.",
+"«Обещала разобрать шкатулку в прошлом году. Воздухан»",
+"индекс 58 · TikTok: медиана 315 тыс. просм., репосты 1,96%",
+"https://www.tiktok.com/search?q=воздухан"
+],
+[
+"«Сова на скакалке»",
+"Ежедневник пустой, а на нём лежит карта с совой на скакалке.",
+"«Планы на день? Выпала сова на скакалке»",
+"индекс 51 · TikTok: медиана 157 тыс. просм., репосты 1,73% · Reels: медиана 21 тыс.",
+"https://www.tiktok.com/search?q=сова на скакалке"
+],
+[
+"«6-7»",
+"Подруга спрашивает, где вторая серёжка, героиня пожимает плечами с фирменным жестом.",
+"«Где вторая серёжка? Сикс… севен…»",
+"индекс 48 · TikTok: медиана 521 тыс. просм., репосты 0,7%",
+"https://www.tiktok.com/search?q=сикс севен"
+]
+]
+},
+"9": {
+"job": "гордость за спокойствие",
+"v": [
+[
+"Пиббл на сёрфе",
+"Вокруг шторм новогодней суеты, а героиня в серьгах спокойно скользит на доске.",
+"«Все бегают, а я — Пиббл на волне»",
+"индекс 86 · TikTok: медиана 420 тыс. просм., репосты 7,63%",
+"https://www.tiktok.com/search?q=пиббл"
+],
+[
+"«Тихо, не спеша, черемша»",
+"Дедлайны летят, как листы бумаги, героиня пьёт чай.",
+"«Дедлайн горит? Тихо, не спеша, черемша»",
+"индекс 83 · TikTok: медиана 367 тыс. просм., репосты 7,0% · Reels: медиана 65 тыс.",
+"https://www.tiktok.com/search?q=черемша"
+],
+[
+"«Бобр» (2025)",
+"Предновогодняя суета: все с коробками, а героиня за столом с бобром.",
+"«Вокруг суета, а мы с бобром за столом»",
+"индекс 40 · TikTok: медиана 18 тыс. просм., репосты 0,49%",
+"https://www.tiktok.com/search?q=бобр за столом"
+]
+]
+},
+"10": {
+"job": "уверенность в любви к проверенному",
+"v": [
+[
+"«Можно, а зачем?»",
+"Бабушкино классическое кольцо против кольца-капибары в пачке. Героиня выбирает классику.",
+"«Кольцо-брейнрот? Можно. А зачем?»",
+"индекс 44 · TikTok: медиана 83 тыс. просм., репосты 0,85%",
+"https://www.tiktok.com/search?q=можно а зачем"
+],
+[
+"«Мой 2016-й»",
+"Фото 2016 и 2026: одно и то же классическое кольцо, и оба раза — идеально.",
+"«Моё кольцо 2016-го всё ещё в тренде»",
+"индекс 43 · TikTok: медиана 99 тыс. просм., репосты 0,17%",
+"https://www.tiktok.com/search?q=мой 2016"
+],
+[
+"«Пухосос»",
+"Продавец предлагает «умное кольцо с пухососом», героиня показывает на классическое.",
+"«Пухосос? Можно. А зачем?»",
+"индекс 42 · TikTok: медиана 52 тыс. просм., репосты 0,59%",
+"https://www.tiktok.com/search?q=пухосос"
+]
+]
+}
+};
+// Рейтинг мемов 2025–2026 (источники в сносках 11–15). Используем только форматы без реальных людей, детей и чужих персонажей (R-1).
+const MEME_RATING = [["пиббл", 86, 30, "420 тыс.", "22,6%", "7,63%", "50%", "—", "да — 1, 7, 9 (свой бульдог); часть роликов зарубежные"], ["черемша мем", 83, 30, "367 тыс.", "17,2%", "7,0%", "50%", "65 тыс.", "да — 3, 5, 6, 9 (свой гибрид)"], ["котость", 77, 30, "328 тыс.", "13,0%", "3,32%", "77%", "—", "смысл уточнить — пока не берём"], ["охаешечки", 65, 30, "572 тыс.", "11,4%", "2,32%", "47%", "—", "да — 1 (только фраза)"], ["бурмалда", 63, 30, "142 тыс.", "11,7%", "2,45%", "53%", "—", "да — 2"], ["я тебя могну", 62, 30, "544 тыс.", "5,7%", "0,78%", "57%", "216 тыс.", "да — 1"], ["вот такие дела собачка", 61, 30, "12 тыс.", "6,0%", "0,6%", "90%", "13 тыс.", "да — 2, 4, 7 (свои звери)"], ["воздухан", 58, 30, "315 тыс.", "9,9%", "1,96%", "37%", "—", "да — 4, 8"], ["сова на скакалке", 51, 30, "157 тыс.", "8,3%", "1,73%", "23%", "21 тыс.", "да — 4, 8 (своя сова)"], ["сикс севен", 48, 30, "521 тыс.", "2,6%", "0,7%", "17%", "—", "да — 8; много зарубежных роликов"], ["можно а зачем", 44, 30, "83 тыс.", "4,3%", "0,85%", "20%", "—", "да — 2, 5, 10"], ["мой 2016", 43, 27, "99 тыс.", "5,1%", "0,17%", "22%", "—", "да — 6, 7, 10"], ["пухосос", 42, 30, "52 тыс.", "6,2%", "0,59%", "20%", "—", "да — 3, 5, 10"], ["бобр за столом", 40, 28, "18 тыс.", "4,1%", "0,49%", "25%", "—", "да — 9 (без текста песни)"], ["пингвин нигилист", 39, 30, "165 тыс.", "4,3%", "0,44%", "3%", "2,0 млн", "да — 6; лидер в Reels"]];
+// ===== STATE =====
+const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null, shared: [] };
+const qs = new URLSearchParams(location.search);
+const UTM = {}; ['source', 'medium', 'campaign', 'content'].forEach(k => { const v = qs.get('utm_' + k); if (v) UTM[k] = v; });
+let dev = qs.get('debug') === '1' || location.hash === '#debug';
+const $ = id => document.getElementById(id);
+const typeById = id => TYPES.find(t => t.id === id);
+function show(id) { ['s-intro', 's-q', 's-reveal', 's-res'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0, 0); }
+function setDev(on) { dev = on; document.querySelectorAll('.dev-only').forEach(e => e.classList.toggle('hidden', !on)); $('devToggle').classList.toggle('on', on); if (on && st.result) renderDev(); if (!$('s-q').classList.contains('hidden')) renderQ(); }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+
+
+// ===== ДУЭТ (D-13: челлендж «А кто ты?» — сарафанный цикл) =====
+const PAIRS = { // ключ — отсортированная пара типов
+  T1T1: ['Две опоры', 'Вы обе — надёжный тыл друг для друга.', 'парные классические пусеты'],
+  T1T2: ['Опора и искра', 'Одна зажигает, другая держит курс — идеальный баланс.', 'подвески-половинки «круг и солнце»'],
+  T1T3: ['Надёжность и масштаб', 'Одна мечтает крупно, другая знает, как довести до конца.', 'кольца из одной коллекции в разных металлах'],
+  T1T4: ['Тишина и глубина', 'С вами двумя спокойно и по-настоящему душевно.', 'подвески с гравировкой друг для друга'],
+  T2T2: ['Два солнца', 'Где вы вдвоём — там праздник и новые идеи.', 'парные наборные кольца'],
+  T2T3: ['Огонь и пламя', 'Самый яркий дуэт: вас невозможно не заметить.', 'парные браслеты-цепи'],
+  T2T4: ['Солнце и Луна', 'Вы дополняете друг друга, как день и ночь.', 'подвески «солнце» и «луна»'],
+  T3T3: ['Две звезды', 'Дуэт с характером: каждая сияет по-своему.', 'коктейльные кольца с разными камнями'],
+  T3T4: ['Звезда и Луна', 'Блеск и глубина — вместе вы видите больше.', 'подвески «звезда» и «луна»'],
+  T4T4: ['Две луны', 'Вы понимаете друг друга без слов.', 'серьги с жемчугом для обеих'],
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const REF = (() => { const r = qs.get('ref'); if (!/^T[1-4]$/.test(r || '')) return null; const n = (qs.get('n') || '').trim().slice(0, 20); return { type: r, name: n }; })();
+const pairKey = (a, b) => [a, b].sort().join('');
+const refWho = () => REF.name ? esc(REF.name) : 'Ваша подруга';
+function renderRefIntro() {
+  if (!REF) return;
+  const ui = TYPE_UI[REF.type], t = typeById(REF.type);
+  const box = document.createElement('div');
+  box.className = 'note'; box.style.cssText = 'display:flex;gap:12px;align-items:center;margin:0 0 16px';
+  box.innerHTML = `<div style="width:64px;height:64px;flex:none;border-radius:14px;background:${ui.bg};padding:6px">${EMBLEM[REF.type]()}</div><div><b>${refWho()}</b> прошла тест: «${t.name}» · ${ui.cls}.<br>А кто вы? Узнайте, какая вы пара.</div>`;
+  $('s-intro').insertBefore(box, $('s-intro').querySelector('h1'));
+  $('startBtn').textContent = 'Узнать, кто я';
+}
+function renderDuo() {
+  const el = $('rDuo'); if (!REF) { el.classList.add('hidden'); return; }
+  const me = st.result.primary, [title, line, item] = PAIRS[pairKey(me, REF.type)];
+  el.classList.remove('hidden');
+  el.innerHTML = `<h3>Ваша пара: вы + ${REF.name ? esc(REF.name) : 'подруга'}</h3>
+    <div style="display:flex;justify-content:center;gap:10px;margin:8px 0 12px">${[me, REF.type].map(k => `<div style="width:84px;height:84px;border-radius:18px;background:${TYPE_UI[k].bg};padding:8px">${EMBLEM[k]()}</div>`).join('<div style="align-self:center;font:700 26px Cormorant Garamond,serif;color:var(--gold)">+</div>')}</div>
+    <h2 style="text-align:center">${title}</h2><p style="text-align:center">${line}</p>
+    <div class="why" style="text-align:center">Парное украшение для вас двоих: <b>${item}</b> <span class="draft">черновик</span></div>
+    <button class="btn gold full" id="duoShare">Отправить результат подруге</button>`;
+  $('duoShare').onclick = async () => {
+    const text = `Мы с тобой — «${title}»! Я — ${TYPE_UI[me].cls}, ты — ${TYPE_UI[REF.type].cls}. Смотри, какое у нас парное украшение:`;
+    st.shared.push('duo'); try { if (navigator.share) await navigator.share({ title: 'Наша пара — Магия золота', text, url: location.origin + location.pathname }); else { await navigator.clipboard.writeText(text + ' ' + location.origin + location.pathname); toast('Текст скопирован'); } } catch (e) {}
+  };
+}
+
+$('verTag').textContent = 'версия ' + VERSION.replace(/^v/, '').replace(/-(\d{4})-(\d{2})-(\d{2})$/, ' · $3.$2');
+
+// ===== АВТООБНОВЛЕНИЕ: если браузер показал старую сохранённую копию — сам перезагружает свежую =====
+(async () => {
+  if (location.protocol === 'file:') return;
+  try {
+    const r = await fetch(location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' });
+    const m = (await r.text()).match(/const VERSION = '([^']+)'/);
+    if (!m || m[1] === VERSION) return;
+    const p = new URLSearchParams(location.search);
+    if (p.get('v') === m[1]) return; // уже пробовали — не зацикливаемся
+    p.set('v', m[1]);
+    location.replace(location.pathname + '?' + p.toString() + location.hash);
+  } catch (e) {}
+})();
+
+// ===== INTRO =====
+$('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
+renderRefIntro();
+$('startBtn').onclick = () => { st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
+
+// ===== NECKLACE (D-01: прогресс = бусины на цепочке) =====
+function renderNecklace() {
+  const pts = []; for (let k = 0; k < 10; k++) { const t = (k + .5) / 10, x = 20 + t * 480, y = 8 + 30 * Math.sin(Math.PI * t); pts.push([x, y]); }
+  let s = `<defs><radialGradient id="bd" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#d8b06a"/><stop offset="1" stop-color="#9c6b1e"/></radialGradient></defs>`;
+  s += `<path d="M6,6 Q260,70 514,6" fill="none" stroke="#d8c3a0" stroke-width="1.6" stroke-dasharray="3 2"/>`;
+  s += `<circle cx="6" cy="6" r="4" fill="none" stroke="#b28a45" stroke-width="2"/><circle cx="514" cy="6" r="4" fill="none" stroke="#b28a45" stroke-width="2"/>`;
+  pts.forEach(([x, y], k) => {
+    const n = k + 1, done = st.answers[n] != null, cur = n === st.i;
+    s += done ? `<circle cx="${x}" cy="${y}" r="${n === 10 ? 11 : 8.5}" fill="url(#bd)"/><circle cx="${x - 2.5}" cy="${y - 2.5}" r="2.2" fill="#fff" opacity=".8"/>`
+              : `<circle cx="${x}" cy="${y}" r="${cur ? 8.5 : 5}" fill="#fff" stroke="${cur ? '#b28a45' : '#e2d4bc'}" stroke-width="${cur ? 2.5 : 1.5}"${cur ? ' stroke-dasharray="3 2"' : ''}/>`;
+  });
+  $('necklace').innerHTML = s;
+}
+
+// ===== QUESTIONS (D-02: шкала кругами, крайние крупнее) =====
+const DOT = [46, 40, 34, 28, 34, 40, 46];
+const DOT_C = ['#7c6f9e', '#8c80ab', '#a39abd', '#b9b1a6', '#c9a465', '#bd9242', '#b28a45'];
+function renderQ() {
+  const i = st.i, g = st.g, cx = WORDING === 'cx';
+  const A = cx ? ANCHORS_CX : ANCHORS_TIPI[g];
+  renderNecklace();
+  $('qnum').textContent = 'Бусина ' + i + ' из 10';
+  $('qleft').textContent = i < 10 ? '≈ ' + Math.max(1, Math.round((10 - i) * 10 / 60 * 10) / 10).toString().replace('.', ',') + ' мин' : 'последняя';
+  $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
+  $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
+  const sc0 = SCENES[i], vm = sc0.v[0]; $('scene').classList.toggle('hidden', !cx);
+  if (cx) $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Сцена ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(vm[1])}</div><div class="sc-cap">${esc(vm[2])}</div><div class="sc-meta"><b>Мем:</b> ${esc(vm[0])} — <span class="sc-stat">${esc(vm[3])}</span></div><div class="sc-alt">(${sc0.v.slice(1).map((x, k) => `<b>альтернатива ${k + 1}:</b> ${esc(x[0])} — <i>${esc(x[2])}</i> <span class="sc-stat">[${esc(x[3])}]</span>`).join('; ')})</div>`;
+  $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
+  const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = cx ? 'Не про меня' : A[0]; leg[1].textContent = cx ? 'Про меня' : A[6];
+  const sc = $('scale'); sc.innerHTML = '';
+  for (let v = 1; v <= 7; v++) {
+    const b = document.createElement('button'); b.className = 'dot'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', A[v - 1]);
+    b.style.width = b.style.height = DOT[v - 1] + 'px'; b.style.borderColor = DOT_C[v - 1];
+    if (st.answers[i] === v) { b.classList.add('sel'); b.style.background = DOT_C[v - 1]; b.setAttribute('aria-checked', 'true'); }
+    b.onclick = () => { st.answers[i] = v; renderQ(); $('nextBtn').focus({ preventScroll: true }); };
+    sc.appendChild(b);
+  }
+  $('anchor').textContent = st.answers[i] ? A[st.answers[i] - 1] : '';
+  $('cheer').textContent = CHEERS[i] && i > 1 ? CHEERS[i] : '';
+  $('nextBtn').disabled = !st.answers[i];
+  $('nextBtn').textContent = i === 10 ? 'Открыть карту' : 'Далее';
+}
+function next() { if (!st.answers[st.i]) return; if (st.i < 10) { st.i++; renderQ(); } else finish(); }
+$('nextBtn').onclick = next;
+$('backBtn').onclick = () => { if (st.i > 1) { st.i--; renderQ(); } else show('s-intro'); };
+document.addEventListener('keydown', e => { if ($('s-q').classList.contains('hidden')) return; const n = +e.key; if (n >= 1 && n <= 7) { st.answers[st.i] = n; renderQ(); } else if (e.key === 'Enter' && st.answers[st.i] && document.activeElement !== $('nextBtn') && document.activeElement !== $('backBtn')) { e.preventDefault(); next(); } });
+
+// ===== REVEAL (D-05: предвкушение → раскрытие) =====
+function finish(instant) {
+  const s = score(st.answers), c = classify(s.scores), q = quality(st.answers);
+  st.result = { ...s, ...c, quality: q, session_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ts: new Date().toISOString() };
+  st.rating = null; st.contact = null; st.shared = [];
+  if (instant) { renderResult(); show('s-res'); return; }
+  show('s-reveal'); let k = 0; $('revealText').textContent = REVEAL_STEPS[0];
+  const iv = setInterval(() => { k++; if (k < REVEAL_STEPS.length) $('revealText').textContent = REVEAL_STEPS[k]; else { clearInterval(iv); renderResult(); show('s-res'); } }, 650);
+}
+
+// ===== RESULT =====
+function whyLine(r) {
+  const ranked = SCALE_ORDER.map(k => ({ k, d: Math.abs(r.scores[k] - 4), dir: r.scores[k] >= 4 ? 'high' : 'low' })).filter(x => x.d >= 1).sort((a, b) => b.d - a.d).slice(0, 2);
+  if (!ranked.length) return 'Ваши ответы ровные: в вас понемногу от каждого типа. Ближе всего вам этот.';
+  return 'Почему так: по вашим ответам, ' + ranked.map(x => WHY[x.k][x.dir]).join(', а ещё ') + '.';
+}
+function renderResult() {
+  const r = st.result, t = typeById(r.primary), d = DESC[r.primary], ui = TYPE_UI[r.primary], rec = RECS[r.primary];
+  const hero = $('hero'); hero.style.background = ui.bg; hero.classList.remove('flip'); void hero.offsetWidth; hero.classList.add('flip');
+  $('rCls').textContent = 'Ваш тип · ' + ui.cls;
+  $('rEmb').innerHTML = EMBLEM[r.primary]();
+  $('rName').textContent = t.name;
+  $('rLead').textContent = LEAD_CX[r.primary];
+  $('rChips').innerHTML = ui.chips.map(([a, b]) => `<span class="chip">${a}: <b>${b}</b></span>`).join('');
+  $('rPowers').innerHTML = ui.powers.map(([ic, n, s]) => `<div class="power"><div class="ic" style="color:${ui.ac}">${ic}</div><b>${n}</b><span>${s}</span></div>`).join('');
+  $('rWhy').textContent = whyLine(r);
+  $('rMixed').innerHTML = r.secondary ? `<div class="note">В вашей карте есть и черты типа <b>«${typeById(r.secondary).name}» · ${TYPE_UI[r.secondary].cls}</b> — профиль промежуточный.</div>` : '';
+  $('rQuality').innerHTML = r.quality.ok ? '' : '<div class="note warn">' + (r.quality.straight ? 'Все ответы одинаковые — результат может быть неточным. Попробуйте ещё раз, выбирая разные оценки.' : 'В некоторых парах вы согласились с противоположными утверждениями — результат может быть неточным.') + '</div>';
+  $('rStyle').textContent = rec.style;
+  $('rLoot').innerHTML = rec.items.map(([n, s, art]) => `<div class="item"><div class="pic">${art()}</div><b>${n}</b><span>${s}</span></div>`).join('');
+  $('rDocLead').textContent = d.lead;
+  $('rTraits').innerHTML = '<b>Профиль черт:</b> ' + d.traits;
+  $('rBehav').innerHTML = '<b>Поведенческие особенности:</b> ' + d.behav;
+  $('rBars').innerHTML = SCALE_ORDER.map(k => { const v = r.scores[k], lv = { low: 'низкий', mid: 'средний', high: 'высокий' }[r.levels[k]];
+    return `<div class="bar"><span>${SCALE_SHORT[k]}</span><span class="lv">${v.toFixed(1).replace('.', ',')} · ${lv}</span><span class="t"><i style="width:${(v - 1) / 6 * 100}%"></i></span></div>`; }).join('');
+  renderDuo();
+  renderStars();
+  $('sent').classList.toggle('hidden', !st.contact);
+  $('storyPrev').classList.add('hidden');
+  if (dev) renderDev();
+}
+function renderStars() { const el = $('stars'); el.innerHTML = ''; for (let v = 1; v <= 5; v++) { const b = document.createElement('button'); b.textContent = v; if (st.rating === v) b.classList.add('sel'); b.onclick = () => { st.rating = v; renderStars(); if (dev) renderDev(); }; el.appendChild(b); } }
+$('toForm').onclick = () => $('formCard').scrollIntoView({ behavior: 'smooth' });
+['cName', 'cContact', 'cConsent'].forEach(id => $(id).addEventListener('input', () => { $('sendBtn').disabled = !($('cContact').value.trim() && $('cConsent').checked); }));
+$('sendBtn').onclick = () => { st.contact = { name: $('cName').value.trim(), contact: $('cContact').value.trim(), consent: $('cConsent').checked }; $('sent').classList.remove('hidden'); if (dev) renderDev(); };
+$('againBtn').onclick = () => { st.answers = {}; st.result = null; show('s-intro'); };
+
+// ===== SHARE (D-09: карточка 9:16 для сторис + приглашение) =====
+function wrap2(s) { const w = s.split(' '); if (s.length <= 16) return [s]; let a = '', i = 0; while (i < w.length && (a + ' ' + w[i]).trim().length <= 16) { a = (a + ' ' + w[i]).trim(); i++; } if (!a) { a = w[0]; i = 1; } let b = w.slice(i).join(' '); if (b.length > 18) b = b.slice(0, 17) + '…'; return b ? [a, b] : [a]; }
+function storySVG() {
+  const r = st.result, t = typeById(r.primary), ui = TYPE_UI[r.primary], rec = RECS[r.primary];
+  const stops = { T1: ['#26402f', '#4f7255'], T2: ['#d4552f', '#f0a050'], T3: ['#3a0c1c', '#8a2141'], T4: ['#262a66', '#6a5fae'] }[r.primary];
+  const words = t.name.split(' '); const l1 = words.slice(0, Math.ceil(words.length / 2)).join(' '), l2 = words.slice(Math.ceil(words.length / 2)).join(' ');
+  const emb = EMBLEM[r.primary]().replace('<svg ', '<svg x="340" y="300" width="400" height="400" ');
+  const items = rec.items.map(([n], k) => { const a = rec.items[k][2]().replace('<svg ', `<svg x="${90 + k * 310}" y="1240" width="280" height="280" `); return `<rect x="${90 + k * 310}" y="1240" width="280" height="280" rx="36" fill="#fffaf0"/>${a}${wrap2(n).map((ln, j) => `<text x="${230 + k * 310}" y="${1575 + j * 36}" font-size="29" text-anchor="middle" fill="#fff" font-family="Arial">${ln}</text>`).join('')}`; }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs><linearGradient id="bgS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${stops[0]}"/><stop offset="1" stop-color="${stops[1]}"/></linearGradient></defs>
+  <rect width="1080" height="1920" fill="url(#bgS)"/>
+  <circle cx="900" cy="160" r="360" fill="#fff" opacity=".07"/>
+  <text x="540" y="170" font-size="40" letter-spacing="10" text-anchor="middle" fill="#f3dca8" font-family="Georgia,serif" font-weight="bold">МАГИЯ ЗОЛОТА</text>
+  <text x="540" y="250" font-size="38" text-anchor="middle" fill="#fff" opacity=".85" font-family="Arial">Мой тип · ${ui.cls}</text>
+  ${emb}
+  <text x="540" y="850" font-size="92" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-weight="bold">${l1}</text>
+  <text x="540" y="960" font-size="92" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-weight="bold">${l2}</text>
+  <text x="540" y="1060" font-size="36" text-anchor="middle" fill="#fff" opacity=".9" font-family="Arial">${ui.powers.map(p => p[1]).join('  ·  ')}</text>
+  <text x="540" y="1190" font-size="34" text-anchor="middle" fill="#f3dca8" font-family="Arial">Мои украшения</text>
+  ${items}
+  <rect x="190" y="1700" width="700" height="110" rx="55" fill="#fff"/>
+  <text x="540" y="1770" font-size="40" text-anchor="middle" fill="${stops[0]}" font-family="Arial" font-weight="bold">А какой тип у тебя?</text>
+  </svg>`;
+}
+function storyPNG() {
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(new Blob([storySVG()], { type: 'image/svg+xml' }));
+    img.onload = () => { const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; c.getContext('2d').drawImage(img, 0, 0); URL.revokeObjectURL(url); c.toBlob(b => b ? res(b) : rej('blob'), 'image/png'); };
+    img.onerror = rej; img.src = url;
+  });
+}
+$('storyBtn').onclick = async () => {
+  try {
+    const blob = await storyPNG(); const file = new File([blob], 'magiya-zolota-moy-tip.png', { type: 'image/png' });
+    st.shared.push('story');
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Мой тип — Магия золота' }); }
+    else { const u = URL.createObjectURL(blob); $('storyPrev').innerHTML = `<img src="${u}" alt="Карточка для сторис" style="width:100%;border-radius:16px"><a class="btn ghost full" style="margin-top:8px" href="${u}" download="magiya-zolota-moy-tip.png">Скачать картинку</a><p class="small muted" style="margin-top:6px">На телефоне: долгое нажатие на картинку → «Сохранить».</p>`; $('storyPrev').classList.remove('hidden'); }
+    if (dev) renderDev();
+  } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось создать картинку'); }
+};
+$('inviteBtn').onclick = async () => {
+  const nm = $('inviteName').value.trim().slice(0, 20); const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend&ref=' + st.result.primary + (nm ? '&n=' + encodeURIComponent(nm) : ''), text = 'Я — ' + TYPE_UI[st.result.primary].cls + ' («' + typeById(st.result.primary).name + '»). А кто ты? Пройди тест за 2 минуты — узнаем, какая мы пара:';
+  st.shared.push('invite');
+  try { if (navigator.share) await navigator.share({ title: 'Магия золота — тест', text, url }); else { await navigator.clipboard.writeText(text + ' ' + url); toast('Ссылка скопирована'); } }
+  catch (e) { if (e && e.name !== 'AbortError') toast('Скопируйте ссылку из адресной строки'); }
+  if (dev) renderDev();
+};
+
+// ===== DEV =====
+function payload() {
+  const r = st.result;
+  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM, wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels,
+    type: r.primary, secondary: r.secondary, distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, shared: st.shared, ref: REF, contact: st.contact };
+}
+function renderDev() {
+  const r = st.result; if (!r) return;
+  const rows = Object.keys(st.answers).map(i => `<tr><td>${i}</td><td>${st.answers[i]}</td><td>${r.adj[i]}${REVERSED.includes(+i) ? ' (R)' : ''}</td></tr>`).join('');
+  const dist = r.distances.map(x => `<tr><td>${x.id}</td><td>${x.name}</td><td>${x.d}</td></tr>`).join('');
+  $('devPanel').innerHTML = `<b>Режим проверки</b> · ${VERSION}${r.atypical ? ' · <span style="color:#9a4b2f">нетипичный профиль: до ближайшего прототипа &gt; ' + ATYPICAL_DIST + '</span>' : ''}
+    <table><tr><th>№</th><th>Ответ</th><th>После реверса</th></tr>${rows}</table>
+    <table><tr><th>Тип</th><th>Название</th><th>Расстояние</th></tr>${dist}</table>
+    <div class="small">Промежуточный, если d₂ − d₁ &lt; ${MIXED_GAP}. Качество: ${JSON.stringify(r.quality)}</div>
+    <pre id="pl">${JSON.stringify(payload(), null, 2)}</pre><button class="btn ghost" id="copyPl" style="font-size:13px;padding:7px 12px;min-height:0">Скопировать JSON</button>`;
+  $('copyPl').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('pl').textContent).then(() => $('copyPl').textContent = 'Скопировано').catch(() => {});
+}
+function answersFor(target) { const a = {}; for (const s of SCALES) { const v = Math.round(target[s.key]); const d = s.items.find(i => !s.reversed.includes(i)); a[d] = v; a[s.reversed[0]] = 8 - v; } return a; }
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
+  const p = b.dataset.preset;
+  if (/^T\d$/.test(p)) { const t = typeById(p), tg = {}; SCALE_ORDER.forEach(k => tg[k] = ANCHOR[t.matrix[k]]); st.answers = answersFor(tg); }
+  else if (p === 'mix') st.answers = answersFor({ ES: 4, E: 6, O: 3, A: 4, C: 4 });
+  else if (p === 'straight') { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 4; }
+  else { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 1 + Math.floor(Math.random() * 7); }
+  finish(true);
+});
+$('wordBtn').onclick = () => { WORDING = WORDING === 'cx' ? 'tipi' : 'cx'; $('wordBtn').textContent = 'Формулировки: ' + (WORDING === 'cx' ? 'потребительские' : 'оригинал TIPI-RU'); };
+
+// ===== TABS / DOC =====
+function goTab(name) { $('quiz').classList.toggle('hidden', name !== 'quiz'); $('doc').classList.toggle('hidden', name !== 'doc'); document.querySelectorAll('[data-tab]').forEach(t => t.classList.toggle('on', t.dataset.tab === name)); }
+document.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => goTab(t.dataset.tab));
+document.querySelectorAll('[data-goto-doc]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTab('doc'); setTimeout(() => { const el = document.querySelector(a.getAttribute('href')); if (el) el.scrollIntoView(); }, 30); }));
+$('devToggle').onclick = () => setDev(!dev);
+$('docRecs').innerHTML = '<table><tr><th>Тип / класс</th><th>Стиль</th><th>Логика (черта → изделие)</th><th>Шкатулка</th><th>Талисманы</th></tr>' +
+  TYPES.map(t => `<tr><td>${t.id} ${t.name} / ${TYPE_UI[t.id].cls}</td><td>${RECS[t.id].style}</td><td>${RECS[t.id].why}</td><td>${RECS[t.id].items.map(c => c[0]).join('; ')}</td><td>${TYPE_UI[t.id].chips.map(c => c[1]).join(', ')}</td></tr>`).join('') + '</table>';
+$('cxTable').innerHTML = '<tr><th>№</th><th>Шкала / полюс</th><th>Оригинал TIPI-RU («Я воспринимаю себя как…»)</th><th>Для покупателя</th></tr>' +
+  Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); return `<tr><td>${i}</td><td>${s.key}${REVERSED.includes(+i) ? ' −' : ' +'}</td><td>…${ITEMS[i][0]}</td><td>${ITEMS_CX[i]}</td></tr>`; }).join('');
+$('sceneTable').innerHTML = '<tr><th>№</th><th>Утверждение</th><th>Вариант</th><th>Мем</th><th>Что на картинке</th><th>Подпись</th><th>Данные</th></tr>' + Object.keys(SCENES).map(i => SCENES[i].v.map((x, k) => `<tr>${k === 0 ? `<td rowspan="3">${i}</td><td rowspan="3">${ITEMS_CX[i]}<br><span class="small muted">задача кадра: ${SCENES[i].job}</span></td>` : ''}<td>${['основной', 'альт. 1', 'альт. 2'][k]}</td><td>${x[0]}${x[4] ? ` <a href="${x[4]}" target="_blank">поиск</a>` : ''}</td><td>${x[1]}</td><td>${x[2]}</td><td class="small">${x[3]}</td></tr>`).join('')).join('');
+$('memeRating').innerHTML = '<tr><th>#</th><th>Мем (запрос)</th><th>Индекс</th><th>Роликов</th><th>Медиана просмотров TikTok</th><th>Вовлечённость</th><th>Репосты</th><th>Свежие (90 дн.)</th><th>Медиана Reels</th><th>Берём?</th></tr>' + MEME_RATING.map((r, k) => `<tr><td>${k + 1}</td><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td style="white-space:nowrap">${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td style="white-space:nowrap">${r[7]}</td><td>${r[8]}</td></tr>`).join('');
+setDev(dev);
+
+}
+</script>
+</body>
+</html>
