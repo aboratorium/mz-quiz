@@ -3,77 +3,116 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — тест «Какое украшение вам подходит» · прототип v0.1</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f7f3ec;--card:#fffdf9;--ink:#1f1b16;--muted:#6f665a;--line:#e6ddcf;--gold:#a7834a;--gold2:#c9a96e;--soft:#f1e8d8;--warn:#9a4b2f;--ok:#3f6b4a}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-.wrap{max-width:600px;margin:0 auto;padding:16px 16px 48px}
-header.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font-size:13px;color:var(--muted)}
-.brand{font-family:Georgia,"Times New Roman",serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-size:13px}
+/* VOICE: тёплый, премиальный, игровой — «открой свою карту».
+   IDEA: прохождение = нанизывание бусин на цепочку; результат = карта героя + шкатулка с украшениями.
+   PICTURE: эмблема типа на цветном поле карты, иллюстрации изделий как «добыча».
+   COLOUR/TYPE: слоновая кость + золото; у каждого типа своё поле; Cormorant Garamond + Manrope.
+   LAYOUT: одна колонка, мобильный первый, действие в зоне большого пальца. */
+:root{--bg:#f6efe4;--card:#fffdf8;--ink:#1d1812;--muted:#6e6456;--line:#e7dccb;--gold:#b28a45;--gold2:#d8b06a;--soft:#f2e7d5;--warn:#9a4b2f;
+--tc1:#2f4a3a;--tc2:#5d7d5e}
+*{box-sizing:border-box;min-width:0}
+html,body{overflow-x:clip}
+body{margin:0;background:radial-gradient(120% 60% at 50% 0%,#fbf6ee 0%,var(--bg) 60%);color:var(--ink);font:16px/1.5 Manrope,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 56px}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;color:var(--muted)}
+.brand{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-size:15px}
 .tabs{display:flex;gap:6px}
-.tab{border:1px solid var(--line);background:transparent;border-radius:20px;padding:5px 11px;font-size:13px;cursor:pointer;color:var(--muted)}
+.tab{border:1px solid var(--line);background:transparent;border-radius:20px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--muted);min-height:34px}
 .tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
-h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:normal;margin:0 0 10px}
-h1{font-size:28px;line-height:1.2}
-h2{font-size:22px}
-h3{font-size:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 20px;box-shadow:0 10px 30px -18px rgba(80,50,10,.35)}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;margin:0 0 10px;line-height:1.08;text-wrap:balance}
+h1{font-size:clamp(32px,8vw,42px)} h2{font-size:28px} h3{font-size:22px}
 p{margin:0 0 12px}
-.muted{color:var(--muted)}
-.small{font-size:13px}
-.btn{display:inline-block;border:0;border-radius:12px;padding:13px 18px;font-size:16px;cursor:pointer;background:var(--ink);color:#fff;text-decoration:none}
-.btn.gold{background:var(--gold)}
+.muted{color:var(--muted)} .small{font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:14px 20px;font:600 16px Manrope,sans-serif;cursor:pointer;background:var(--ink);color:#fff;min-height:50px;text-decoration:none}
+.btn.gold{background:linear-gradient(135deg,#d9b46c,#a77b33);color:#fff;box-shadow:0 8px 20px -10px #a77b33}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.full{width:100%}
 .btn:disabled{opacity:.35;cursor:not-allowed}
+.btn:focus-visible,.tab:focus-visible,.dot:focus-visible{outline:3px solid #5b8def;outline-offset:2px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.seg{display:flex;gap:8px;margin:8px 0 16px}
-.seg label{flex:1;border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center;cursor:pointer}
-.seg input{display:none}
-.seg input:checked+span{font-weight:600}
-.seg label:has(input:checked){border-color:var(--gold);background:var(--soft)}
-.progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:0 0 18px}
-.progress i{display:block;height:100%;background:var(--gold);transition:width .25s}
-.qnum{font-size:13px;color:var(--muted);margin-bottom:6px}
-.qlead{color:var(--muted);font-size:15px;margin-bottom:2px}
-.qtext{font-family:Georgia,serif;font-size:23px;line-height:1.3;margin-bottom:20px}
-.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.scale button{aspect-ratio:1/1;border:1px solid var(--line);background:#fff;border-radius:12px;font-size:17px;cursor:pointer}
-.scale button.sel{background:var(--gold);color:#fff;border-color:var(--gold)}
-.scale-legend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
-.anchor{min-height:22px;text-align:center;font-size:14px;color:var(--gold);margin-top:10px}
-.nav{display:flex;justify-content:space-between;margin-top:20px}
-.type-badge{display:inline-block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold2);border-radius:20px;padding:3px 10px;margin-bottom:10px}
-.lead{font-style:italic;color:var(--muted)}
+.hidden{display:none!important}
+/* интро */
+.intro-art{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 18px}
+.intro-art div{aspect-ratio:1;border-radius:16px;padding:8px;display:flex;align-items:center;justify-content:center;transform:rotate(var(--r));box-shadow:0 8px 18px -12px rgba(0,0,0,.5)}
+.intro-art svg{width:100%;height:100%}
+.facts{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:2px 0 18px}
+.facts b{color:var(--ink)}
+/* бусины-прогресс */
+.necklace{width:100%;height:56px;display:block;margin:-6px 0 6px}
+.qnum{font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.qlead{color:var(--gold);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 6px}
+.qtext{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(25px,6.6vw,31px);line-height:1.18;margin-bottom:26px;min-height:3.6em}
+.scale{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.dot{border-radius:50%;border:2.5px solid;background:#fff;cursor:pointer;padding:0;transition:transform .15s,background .15s;flex:none}
+.dot:hover{transform:scale(1.08)}
+.dot.sel{transform:scale(1.12)}
+.scale-legend{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-top:10px}
+.scale-legend span:first-child{color:#7c6f9e}.scale-legend span:last-child{color:var(--gold)}
+.anchor{min-height:22px;text-align:center;font-size:14px;color:var(--muted);margin-top:8px}
+.nav{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
+.cheer{font-size:13px;color:var(--gold);text-align:center;min-height:20px;margin-top:10px;font-weight:600}
+/* reveal */
+.reveal{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;text-align:center}
+.spin{width:120px;height:120px;border-radius:50%;background:conic-gradient(from 0deg,#fff3c4,#d8b06a,#9c6b1e,#d8b06a,#fff3c4);animation:sp 1.1s linear infinite;-webkit-mask:radial-gradient(circle,transparent 46px,#000 47px);mask:radial-gradient(circle,transparent 46px,#000 47px);margin-bottom:22px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* карта героя */
+.hero{border-radius:26px;padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;box-shadow:0 22px 40px -22px rgba(0,0,0,.55)}
+.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(80% 50% at 85% 0%,rgba(255,255,255,.22),transparent 60%);pointer-events:none}
+.hero .cls{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+.hero h1{color:#fff;margin:6px 0 10px}
+.hero .emb{width:150px;height:150px;margin:2px auto 6px}
+.hero .emb svg{width:100%;height:100%}
+.hero p{color:rgba(255,255,255,.92);font-size:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 11px;font-size:13px;white-space:nowrap}
+.chip b{font-weight:700}
+.flip{animation:fl .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes fl{from{transform:perspective(900px) rotateY(80deg) scale(.9);opacity:0}to{transform:none;opacity:1}}
+.powers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0 4px}
+.power{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
+.power .ic{font-family:"Cormorant Garamond",serif;font-size:26px;line-height:1;color:var(--gold)}
+.power b{display:block;font-size:14px;margin-top:4px}
+.power span{display:block;font-size:12px;line-height:1.3;color:var(--muted);margin-top:3px}
+.why{background:var(--soft);border-radius:16px;padding:13px 15px;font-size:15px;margin:12px 0}
+.note{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;margin:12px 0}
+.note.warn{background:#f6e3da;color:var(--warn)}
+.sec{margin-top:26px}
+.draft{display:inline-block;background:#fff3cd;color:#7a5b00;border-radius:6px;font:600 11px Manrope,sans-serif;padding:3px 7px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;margin-left:6px}
+.loot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px 8px 12px;text-align:center;animation:pop .5s both}
+.item:nth-child(2){animation-delay:.12s}.item:nth-child(3){animation-delay:.24s}
+@keyframes pop{from{transform:translateY(14px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+.item .pic{aspect-ratio:1;border-radius:12px;background:radial-gradient(circle at 50% 40%,#fffaf0,#f3eadb)}
+.item .pic svg{width:100%;height:100%}
+.item b{display:block;font-size:13.5px;line-height:1.25;margin-top:6px}
+.item span{display:block;font-size:12px;color:var(--muted);line-height:1.3;margin-top:3px}
+.share{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stars{display:flex;gap:8px;margin:6px 0 4px}
+.stars button{border:1px solid var(--line);background:#fff;border-radius:12px;width:46px;height:46px;cursor:pointer;font:600 16px Manrope,sans-serif}
+.stars button.sel{background:var(--ink);color:#fff}
+input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;font:16px Manrope,sans-serif;margin:4px 0 10px;background:#fff}
+.chk{display:flex;gap:8px;font-size:13px;color:var(--muted);align-items:flex-start;margin-bottom:12px}
+details summary{cursor:pointer}
 .bars{margin:14px 0 6px}
 .bar{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:14px;margin:9px 0}
-.bar .t{grid-column:1/3}
-.bar .t{height:8px;background:var(--line);border-radius:6px;position:relative}
+.bar .t{grid-column:1/3;height:8px;background:var(--line);border-radius:6px;position:relative}
 .bar .t i{position:absolute;left:0;top:0;bottom:0;background:var(--gold2);border-radius:6px}
 .bar .lv{color:var(--muted);font-size:12px;text-align:right}
-.note{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:14px;margin:12px 0}
-.note.warn{background:#f6e6de;color:var(--warn)}
-.draft{display:inline-block;background:#fff3cd;color:#7a5b00;border-radius:6px;font-size:11px;padding:2px 7px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;margin-left:6px}
-.recs{display:grid;gap:10px;margin-top:10px}
-.rec{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}
-.rec b{display:block;margin-bottom:2px}
-.slots{display:flex;gap:6px;margin-top:8px}
-.slot{flex:1;aspect-ratio:1/1;border:1px dashed var(--gold2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);text-align:center;padding:4px}
-.stars{display:flex;gap:6px;margin:6px 0 4px}
-.stars button{border:1px solid var(--line);background:#fff;border-radius:10px;width:42px;height:42px;cursor:pointer;font-size:16px}
-.stars button.sel{background:var(--ink);color:#fff}
-input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;margin:4px 0 10px;background:#fff}
-.chk{display:flex;gap:8px;font-size:13px;color:var(--muted);align-items:flex-start;margin-bottom:12px}
-hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:9}
 .dev{margin-top:18px;border:1px dashed #9aa4b2;border-radius:14px;padding:14px;background:#f5f7fa;font-size:13px}
 .dev table{border-collapse:collapse;width:100%;margin:6px 0 10px}
 .dev td,.dev th{border:1px solid #dde2ea;padding:4px 6px;text-align:left}
 .dev pre{white-space:pre-wrap;word-break:break-all;background:#fff;border:1px solid #dde2ea;border-radius:8px;padding:8px;max-height:260px;overflow:auto;font-size:11px}
-.devbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.devbar button{border:1px dashed #9aa4b2;background:#fff;border-radius:8px;padding:6px 9px;font-size:12px;cursor:pointer}
-.hidden{display:none!important}
+.devbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.devbar button{border:1px dashed #9aa4b2;background:#fff;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer}
 /* методичка */
 .doc{font-size:14.5px}
+.doc h2,.doc h3{font-family:"Cormorant Garamond",Georgia,serif}
 .doc table{display:block;overflow-x:auto;border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 14px}
 .doc td,.doc th{border:1px solid var(--line);padding:6px 7px;vertical-align:top;text-align:left}
 .doc th{background:var(--soft);font-weight:600}
@@ -84,7 +123,7 @@ hr{border:0;border-top:1px solid var(--line);margin:22px 0}
 .doc svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;margin:6px 0 14px}
 .fn{font-size:12px;color:var(--muted)}
 sup a{color:var(--gold);text-decoration:none}
-@media (max-width:430px){.qtext{font-size:21px}h1{font-size:25px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -94,19 +133,19 @@ sup a{color:var(--gold);text-decoration:none}
     <span class="tabs">
       <button class="tab on" data-tab="quiz">Тест</button>
       <button class="tab" data-tab="doc">Методичка</button>
-      <button class="tab" id="devToggle" title="Режим проверки для команды">⚙︎</button>
+      <button class="tab" id="devToggle" aria-label="Режим проверки">⚙︎</button>
     </span>
   </header>
 
-  <!-- ============ ТЕСТ ============ -->
   <main id="quiz">
-    <!-- Интро -->
+    <!-- ИНТРО -->
     <section class="card" id="s-intro">
+      <div class="intro-art" id="introArt"></div>
       <h1>Какое украшение отражает ваш характер?</h1>
-      <p>Украшение говорит о нас раньше слов. Ответьте на 10 коротких вопросов о себе — и мы подскажем, какие украшения подчеркнут именно вас.</p>
-      <p class="muted small">2 минуты · без регистрации · подборка в конце</p>
-      <button class="btn gold" id="startBtn">Узнать свой тип</button>
-      <p class="small muted" style="margin-top:16px">Тест основан на научной модели личности «Большая пятёрка»<sup><a href="#fn1" data-goto-doc>1</a></sup> и исследовании четырёх типов личности<sup><a href="#fn3" data-goto-doc>3</a></sup>. Это не психологическая диагностика, а повод взглянуть на себя по-новому.</p>
+      <p>Украшение говорит о нас раньше слов. Ответьте на 10 вопросов — соберите своё ожерелье и откройте карту своего типа с подборкой украшений.</p>
+      <div class="facts"><span><b>2</b> минуты</span><span><b>4</b> типа характера</span><span><b>3</b> украшения в подборке</span></div>
+      <button class="btn gold full" id="startBtn">Открыть свою карту</button>
+      <p class="small muted" style="margin-top:14px">Тест основан на научной модели личности «Большая пятёрка»<sup><a href="#fn1" data-goto-doc>1</a></sup> и исследовании четырёх типов личности<sup><a href="#fn3" data-goto-doc>3</a></sup>. Это не психологическая диагностика, а повод взглянуть на себя по-новому.</p>
       <div class="devbar dev-only hidden">
         <span class="small muted">Быстрый прогон:</span>
         <button data-preset="T1">→ Т1</button><button data-preset="T2">→ Т2</button>
@@ -117,60 +156,88 @@ sup a{color:var(--gold);text-decoration:none}
       </div>
     </section>
 
-    <!-- Вопрос -->
+    <!-- ВОПРОС -->
     <section class="card hidden" id="s-q">
-      <div class="progress"><i id="prog"></i></div>
-      <div class="qnum" id="qnum"></div>
+      <svg class="necklace" id="necklace" viewBox="0 0 520 56" aria-hidden="true"></svg>
+      <div class="qnum"><span id="qnum"></span><span id="qleft"></span></div>
       <div class="qlead" id="qlead">Насколько это про вас?</div>
       <div class="qtext" id="qtext"></div>
-      <div class="scale" id="scale"></div>
+      <div class="scale" id="scale" role="radiogroup" aria-label="Насколько это про вас"></div>
       <div class="scale-legend"><span></span><span></span></div>
       <div class="anchor" id="anchor"></div>
+      <div class="cheer" id="cheer"></div>
       <div class="nav">
         <button class="btn ghost" id="backBtn">Назад</button>
         <button class="btn" id="nextBtn" disabled>Далее</button>
       </div>
-      <p class="small muted" style="margin-top:14px" id="qhint">Отвечайте первое, что приходит в голову — правильных ответов нет.</p>
-      <p class="small dev-only hidden" id="qorig" style="color:#56606e;margin-top:6px"></p>
+      <p class="small dev-only hidden" id="qorig" style="color:#56606e;margin-top:10px"></p>
     </section>
 
-    <!-- Результат -->
-    <section class="card hidden" id="s-res">
-      <span class="type-badge">Ваш тип</span>
-      <h1 id="rName"></h1>
-      <p id="rLead" style="font-size:17px"></p>
+    <!-- РАСКРЫТИЕ -->
+    <section class="card hidden" id="s-reveal">
+      <div class="reveal"><div class="spin"></div><h2 id="revealText">Нанизываем ответы…</h2><p class="muted small">Ещё мгновение</p></div>
+    </section>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <section class="hidden" id="s-res">
+      <div class="hero flip" id="hero">
+        <div class="cls" id="rCls"></div>
+        <div class="emb" id="rEmb"></div>
+        <h1 id="rName"></h1>
+        <p id="rLead"></p>
+        <div class="chips" id="rChips"></div>
+      </div>
+
+      <div class="powers" id="rPowers"></div>
+      <div class="why" id="rWhy"></div>
       <div id="rMixed"></div>
       <div id="rQuality"></div>
-      <details style="margin-top:8px">
-        <summary class="small muted" style="cursor:pointer">Как это посчитано</summary>
-        <p class="lead" id="rDocLead" style="margin-top:10px"></p>
-        <p id="rTraits" class="small"></p>
-        <p id="rBehav" class="small"></p>
-        <div class="bars" id="rBars"></div>
-        <p class="small muted">Шкалы от 1 до 7. Уровни: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5.</p>
-      </details>
 
-      <hr>
-      <h2>Ваши украшения <span class="draft">черновик</span></h2>
-      <p class="muted" id="rStyle"></p>
-      <div class="recs" id="rRecs"></div>
-
-      <hr>
-      <h3>Узнали себя?</h3>
-      <div class="stars" id="stars"></div>
-      <p class="small muted">1 — совсем не про меня, 5 — точно про меня.</p>
-
-      <hr>
-      <h3>Хотите персональную подборку?</h3>
-      <p class="small muted">Пришлём украшения, которые подходят вашему типу, — с фото и ценами.</p>
-      <input type="text" id="cName" placeholder="Имя">
-      <input type="text" id="cContact" placeholder="Телефон или @telegram">
-      <label class="chk"><input type="checkbox" id="cConsent"> <span>Даю согласие на обработку персональных данных (текст согласия — уточнить у юриста)</span></label>
-      <div class="row">
-        <button class="btn gold" id="sendBtn" disabled>Получить подборку</button>
-        <button class="btn ghost" id="againBtn">Пройти заново</button>
+      <div class="card sec">
+        <h2>Ваша шкатулка <span class="draft">черновик</span></h2>
+        <p class="muted" id="rStyle"></p>
+        <div class="loot" id="rLoot"></div>
+        <p class="small muted" style="margin-top:10px">Иллюстрации — вместо них будут фото изделий из каталога.</p>
+        <button class="btn gold full" id="toForm" style="margin-top:6px">Хочу подборку с ценами</button>
       </div>
-      <div id="sent" class="note hidden">Готово. В прототипе данные никуда не отправляются — их видно в режиме проверки (⚙︎).</div>
+
+      <div class="card sec">
+        <h3>Поделитесь своей картой</h3>
+        <p class="small muted">Сохраните карточку в сторис и узнайте, какой тип у подруги.</p>
+        <div class="share">
+          <button class="btn" id="storyBtn">Карточка для сторис</button>
+          <button class="btn ghost" id="inviteBtn">Позвать подругу</button>
+        </div>
+        <div id="storyPrev" class="hidden" style="margin-top:12px"></div>
+      </div>
+
+      <div class="card sec">
+        <h3>Узнали себя?</h3>
+        <div class="stars" id="stars"></div>
+        <p class="small muted">1 — совсем не про меня, 5 — точно про меня.</p>
+      </div>
+
+      <div class="card sec" id="formCard">
+        <h3>Персональная подборка</h3>
+        <p class="small muted">Пришлём украшения для вашего типа — с фото и ценами.</p>
+        <input type="text" id="cName" placeholder="Имя" autocomplete="given-name">
+        <input type="text" id="cContact" placeholder="Телефон или @telegram" autocomplete="tel">
+        <label class="chk"><input type="checkbox" id="cConsent"> <span>Даю согласие на обработку персональных данных (текст согласия — уточнить у юриста)</span></label>
+        <button class="btn gold full" id="sendBtn" disabled>Получить подборку</button>
+        <div id="sent" class="note hidden">Готово! В прототипе данные никуда не отправляются — их видно в режиме проверки (⚙︎).</div>
+      </div>
+
+      <div class="card sec">
+        <details>
+          <summary class="small muted">Как это посчитано</summary>
+          <p class="small" id="rDocLead" style="margin-top:10px;font-style:italic"></p>
+          <p id="rTraits" class="small"></p>
+          <p id="rBehav" class="small"></p>
+          <div class="bars" id="rBars"></div>
+          <p class="small muted">Шкалы от 1 до 7. Уровни: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5.</p>
+        </details>
+        <button class="btn ghost full" id="againBtn" style="margin-top:14px">Пройти заново</button>
+      </div>
 
       <div class="dev dev-only hidden" id="devPanel"></div>
     </section>
@@ -180,7 +247,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.2 · 23.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.3 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -289,6 +356,47 @@ sup a{color:var(--gold);text-decoration:none}
   distances: [{id, d}], quality: {straight, contradictions[], ok},
   self_rating: 1..5|null, contact: {name, contact, consent} }</pre>
 
+      <h3>8. Экспертная панель v0.3: решения по опыту прохождения</h3>
+      <p class="small muted">Решения прошли четыре роли: UX/UI-дизайнер, геймдизайнер, психолог и социолог/исследователь. Методика (пункты, ключи, классификатор) не менялась: игровой слой лежит поверх расчёта.</p>
+      <svg viewBox="0 0 760 230" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b28a45"/></marker></defs>
+        <g fill="#fffdf8" stroke="#b28a45">
+          <rect x="10" y="30" width="130" height="62" rx="12"/><rect x="160" y="30" width="130" height="62" rx="12"/><rect x="310" y="30" width="130" height="62" rx="12"/>
+          <rect x="460" y="30" width="130" height="62" rx="12"/><rect x="610" y="30" width="140" height="62" rx="12"/>
+        </g>
+        <g text-anchor="middle" fill="#1d1812">
+          <text x="75" y="54" font-weight="bold">1. Крючок</text><text x="75" y="72" fill="#6e6456">4 карты, «откройте</text><text x="75" y="86" fill="#6e6456">свою»</text>
+          <text x="225" y="54" font-weight="bold">2. Вызов</text><text x="225" y="72" fill="#6e6456">10 бусин на цепочке,</text><text x="225" y="86" fill="#6e6456">подбадривания</text>
+          <text x="375" y="54" font-weight="bold">3. Награда</text><text x="375" y="72" fill="#6e6456">раскрытие 2 с,</text><text x="375" y="86" fill="#6e6456">карта героя</text>
+          <text x="525" y="54" font-weight="bold">4. Коллекция</text><text x="525" y="72" fill="#6e6456">шкатулка из 3</text><text x="525" y="86" fill="#6e6456">украшений → лид</text>
+          <text x="680" y="54" font-weight="bold">5. Социальное</text><text x="680" y="72" fill="#6e6456">сторис 9:16,</text><text x="680" y="86" fill="#6e6456">«позвать подругу»</text>
+        </g>
+        <g stroke="#b28a45" stroke-width="1.5" marker-end="url(#ar3)" fill="none"><path d="M140,61 H158"/><path d="M290,61 H308"/><path d="M440,61 H458"/><path d="M590,61 H608"/><path d="M680,92 C680,170 75,170 75,94" stroke-dasharray="4 3"/></g>
+        <text x="380" y="190" text-anchor="middle" fill="#6e6456">Новый игрок приходит по ссылке подруги (utm_source=invite): цикл замыкается — метрика K-фактор.</text>
+        <text x="380" y="210" text-anchor="middle" fill="#6e6456">Октализ: 1 — любопытство (CD7), 2 — достижение (CD2), 3–4 — владение (CD4), 5 — социальное влияние (CD5).</text>
+      </svg>
+      <table>
+        <tr><th>Код</th><th>Роль</th><th>Решение</th><th>Основание</th></tr>
+        <tr><td>D-01</td><td>Геймдизайн</td><td>Прогресс показан бусинами на цепочке: каждый ответ — бусина, последняя крупнее. Метафора совпадает с продуктом.</td><td>Видимый прогресс повышает доведение до конца: эффект «подаренного прогресса» в полевом эксперименте дал 34% против 19%<sup><a href="#fn6">6</a></sup>; CD2 «Достижение»<sup><a href="#fn7">7</a></sup>.</td></tr>
+        <tr><td>D-02</td><td>UX/UI</td><td>Шкала из 7 кругов: крайние крупнее, цвет от лилового «не про меня» к золотому «про меня»; автопереход 0,26 с; клавиши 1–7 на компьютере; цели нажатия ≥ 28 px, крайние 46 px.</td><td>Один вопрос на экран и минимум трения между ответами — практика тестов с высокой долей завершения<sup><a href="#fn10">10</a></sup>.</td></tr>
+        <tr><td>D-03</td><td>UX/UI</td><td>10 вопросов, счётчик оставшегося времени, кнопка «Назад» без потери ответов.</td><td>Рекомендуемый диапазон для тестов личности — 5–10/8–12 вопросов<sup><a href="#fn9">9</a></sup><sup><a href="#fn10">10</a></sup>.</td></tr>
+        <tr><td>D-04</td><td>Геймдизайн</td><td>Подбадривания на 3, 5, 8 и 10-й бусине («Половина ожерелья собрана!»).</td><td>Точки отсечки на середине — главный риск отвала; короткая обратная связь удерживает темп.</td></tr>
+        <tr><td>D-05</td><td>Геймдизайн</td><td>Раскрытие результата: 2 с «Нанизываем ответы → Плавим золото → Подбираем камень», затем переворот карты.</td><td>Предвкушение перед наградой — CD7 «Любопытство и непредсказуемость»<sup><a href="#fn7">7</a></sup>; длительность ограничена, чтобы не раздражать.</td></tr>
+        <tr><td>D-06</td><td>Геймдизайн + бренд</td><td>Карта героя: игровой класс (Хранитель, Вдохновитель, Звезда, Искатель), эмблема, талисманы «металл · камень · стихия». Название типа Леонида — главный заголовок.</td><td>Имена типов, которые хочется «присвоить», и своя графика результата — главный двигатель распространения<sup><a href="#fn9">9</a></sup>. Талисманы — сторителлинг бренда, не психометрия.</td></tr>
+        <tr><td>D-07</td><td>Психолог</td><td>Только сильные стороны: «суперсилы» вместо слабостей; низкая эмоциональная стабильность подаётся как «чуткость». Баллы шкал спрятаны в «Как это посчитано».</td><td>Белая сторона Октализа (позитивная мотивация) вместо давления<sup><a href="#fn7">7</a></sup>; снижение риска стигматизации.</td></tr>
+        <tr><td>D-08</td><td>Психолог</td><td>Строка «Почему так» строится из двух самых выраженных шкал респондента (отклонение от 4 ≥ 1 балла).</td><td>Против эффекта Барнума: человек видит связь результата со своими ответами, а не общие фразы<sup><a href="#fn8">8</a></sup>. Схема «что значит → почему верно → одно действие».</td></tr>
+        <tr><td>D-09</td><td>Социолог / маркетинг</td><td>Карточка 9:16 для сторис (PNG 1080×1920) и кнопка «Позвать подругу» со ссылкой <code>utm_source=invite</code>.</td><td>Трафик тестов в основном мобильный и из соцсетей; результат должен «скриншотиться» в сторис<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-10</td><td>Социолог</td><td>Контакт запрашивается после результата, а не до; одно основное действие — «Хочу подборку с ценами».</td><td>Форма до результата увеличивает долю лидов, но теряет тех, кто закроет страницу<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-11</td><td>Социолог</td><td>Метрики пилота: доля завершивших, отвал по бусинам, доля «Узнали себя?» ≥ 4, доля поделившихся (<code>shared</code>), лиды, распределение типов, K-фактор по <code>invite</code>.</td><td>Доля поделившихся и K-фактор — стандартные метрики вирусности тестов<sup><a href="#fn9">9</a></sup>.</td></tr>
+        <tr><td>D-12</td><td>UX/UI</td><td>Иллюстрации изделий — оригинальные SVG (12 шт., 3 на тип) с металлом и камнем по талисману типа; заменяются фото SKU.</td><td>Картинка-результат сильнее текста; синтетика даёт единый стиль до появления фото каталога.</td></tr>
+      </table>
+      <table>
+        <tr><th>Код</th><th>Открытый вопрос v0.3</th><th>Кому</th></tr>
+        <tr><td>Q-10</td><td>Игровые классы и талисманы (камни, стихии) — согласовать с бренд-платформой «Магии золота»: не противоречат ли тону бренда.</td><td>Вазген, Владислав</td></tr>
+        <tr><td>Q-11</td><td>Строки «Почему так» (раздел D-08) — проверить формулировки по каждому полюсу шкалы.</td><td>Леонид</td></tr>
+        <tr><td>Q-12</td><td>Сбор данных: куда отправлять payload (таблица, CRM, Frontbox) — без этого метрики D-11 не посчитать.</td><td>Антон, Иван</td></tr>
+      </table>
+
       <hr>
       <div class="fn">
         <p id="fn1">1. Gosling S. D., Rentfrow P. J., Swann W. B. A very brief measure of the Big-Five personality domains // Journal of Research in Personality. 2003. Vol. 37. P. 504–528. <a href="https://doi.org/10.1016/S0092-6566(03)00046-1" target="_blank">doi:10.1016/S0092-6566(03)00046-1</a></p>
@@ -296,12 +404,18 @@ sup a{color:var(--gold);text-decoration:none}
         <p id="fn3">3. Gerlach M., Farb B., Revelle W., Nunes Amaral L. A. A robust data-driven approach identifies four personality types across four large data sets // Nature Human Behaviour. 2018. Vol. 2. P. 735–742. <a href="https://doi.org/10.1038/s41562-018-0419-z" target="_blank">doi:10.1038/s41562-018-0419-z</a> — типы Reserved, Role model, Self-centred, Average соответствуют Т1–Т4.</p>
         <p id="fn4">4. Гороховатский Л. Психодиагностический инструментарий и типология: методика TIPI-RU и определение психотипов (docx, ноябрь 2026). Названия типов — авторские.</p>
         <p id="fn5">5. Krisp: «B2B Weekly Sync», 23.11.2026 — тест определяет психотип, Вазген подбирает изделия (старт ~50 позиций), кликабельная версия на утверждение.</p>
-      </div>
+              <p id="fn6">6. Nunes J. C., Drèze X. The Endowed Progress Effect: How Artificial Advancement Increases Effort // Journal of Consumer Research. 2006. Vol. 32, № 4. P. 504–512. <a href="https://doi.org/10.1086/500480" target="_blank">doi:10.1086/500480</a></p>
+        <p id="fn7">7. Chou Y. Actionable Gamification: Beyond Points, Badges and Leaderboards. Octalysis Media, 2015 (фреймворк Octalysis, 8 мотивационных драйверов). <a href="https://yukaichou.com/octalysis.html" target="_blank">yukaichou.com/octalysis</a></p>
+        <p id="fn8">8. Forer B. R. The fallacy of personal validation // Journal of Abnormal and Social Psychology. 1949. Vol. 44. P. 118–123 (эффект Барнума). <a href="https://en.wikipedia.org/wiki/Barnum_effect" target="_blank">обзор</a></p>
+        <p id="fn9">9. Woobox: How to create a personality quiz; Viral quiz mechanics; Quiz result page best practices (2026). <a href="https://cdn.woobox.com/articles/quiz-result-page-best-practices" target="_blank">woobox.com</a></p>
+        <p id="fn10">10. involve.me: Reasons why people don’t finish your quiz (один вопрос на экран, 5–12 вопросов). <a href="https://involve.me/blog/reasons-why-people-dont-finish-your-quiz" target="_blank">involve.me</a></p>
+</div>
     </section>
   </main>
 </div>
 
 <script>
+{
 // ===== CORE: TIPI-RU scoring + type classifier (источник: документ Л. Гороховатского, разделы 3–4) =====
 const SCALES = [
   { key: 'ES', name: 'Эмоциональная стабильность', items: [4, 9], reversed: [4] },
@@ -383,10 +497,57 @@ function quality(answers) {
 
 if (typeof module !== 'undefined') module.exports = { SCALES, TYPES, ANCHOR, score, classify, quality, level, MIXED_GAP, ATYPICAL_DIST };
 
-</script>
-<script>
-// ===== CONTENT =====
-const VERSION = 'v0.2-2026-11-23';
+// ===== ART: оригинальные SVG-иллюстрации (эмблемы типов и изделия). Не фото товаров — заменяются фото SKU из каталога. =====
+const METAL = {
+  y: ['#fff3c4', '#e2b35a', '#9c6b1e'],  // жёлтое золото
+  r: ['#ffe0d2', '#df9478', '#9e5640'],  // красное (розовое) золото
+  w: ['#ffffff', '#d7dce3', '#8c96a3'],  // белое золото
+};
+const STONE = {
+  sapphire: ['#9ec5ff', '#2753b8', '#0f2560'], citrine: ['#fff1a8', '#f0b42a', '#a86a08'],
+  ruby: ['#ff9aa8', '#c8143c', '#5e0618'], emerald: ['#a8f0c8', '#1f9a62', '#0a4a2c'],
+  diamond: ['#ffffff', '#dff1ff', '#9fb8cc'], moon: ['#ffffff', '#dcd8f2', '#9c95c9'],
+};
+let _gid = 0;
+function gradDefs(metal, stone) {
+  const id = 'a' + (++_gid), m = METAL[metal], s = STONE[stone || 'diamond'];
+  return { id, defs: `<defs>
+    <linearGradient id="${id}m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${m[0]}"/><stop offset=".45" stop-color="${m[1]}"/><stop offset="1" stop-color="${m[2]}"/></linearGradient>
+    <linearGradient id="${id}m2" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m[0]}"/><stop offset=".5" stop-color="${m[1]}"/><stop offset="1" stop-color="${m[2]}"/></linearGradient>
+    <radialGradient id="${id}s" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${s[0]}"/><stop offset=".5" stop-color="${s[1]}"/><stop offset="1" stop-color="${s[2]}"/></radialGradient>
+    <radialGradient id="${id}p" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#f3ece4"/><stop offset="1" stop-color="#cbbfb3"/></radialGradient>
+    <radialGradient id="${id}sh" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  </defs>`, M: `url(#${id}m)`, M2: `url(#${id}m2)`, S: `url(#${id}s)`, P: `url(#${id}p)`, SH: `url(#${id}sh)` };
+}
+const shadow = g => `<ellipse cx="60" cy="108" rx="34" ry="5" fill="${g.SH}"/>`;
+const svg = (g, body) => `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img">${g.defs}${shadow(g)}${body}</svg>`;
+const gem = (cx, cy, w, g) => { const h = w * .7; return `<polygon points="${cx - w / 2},${cy} ${cx + w / 2},${cy} ${cx + w * .3},${cy - h * .45} ${cx - w * .3},${cy - h * .45}" fill="${g.S}" stroke="#fff" stroke-opacity=".6" stroke-width=".8"/><polygon points="${cx - w / 2},${cy} ${cx + w / 2},${cy} ${cx},${cy + h}" fill="${g.S}" stroke="#fff" stroke-opacity=".5" stroke-width=".8"/><path d="M${cx - w * .3},${cy - h * .45} L${cx},${cy + h} L${cx + w * .3},${cy - h * .45}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".7"/>`; };
+const band = (cx, cy, r, g, sw = 6) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * .92}" fill="none" stroke="${g.M}" stroke-width="${sw}"/><ellipse cx="${cx}" cy="${cy}" rx="${r - sw / 2 + 1}" ry="${(r - sw / 2 + 1) * .92}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>`;
+const chain = (g, y2 = 62) => `<path d="M14,14 Q60,${y2 + 22} 106,14" fill="none" stroke="${g.M}" stroke-width="2.4" stroke-dasharray="3.2 1.6" stroke-linecap="round"/>`;
+
+const ITEM_ART = {
+  solitaire: (m = 'y', s = 'diamond') => { const g = gradDefs(m, s); return svg(g, band(60, 72, 28, g) + `<path d="M50,46 L54,38 M70,46 L66,38" stroke="${g.M}" stroke-width="3" stroke-linecap="round"/>` + gem(60, 38, 26, g)); },
+  studs: (m = 'y', s = 'diamond') => { const g = gradDefs(m, s); const one = x => `<circle cx="${x}" cy="60" r="15" fill="${g.M}"/><circle cx="${x}" cy="60" r="11" fill="${g.S}"/><circle cx="${x - 4}" cy="56" r="3" fill="#fff" opacity=".8"/>`; return svg(g, one(38) + one(82)); },
+  pendant: (m = 'y', s = 'sapphire') => { const g = gradDefs(m, s); return svg(g, chain(g) + `<circle cx="60" cy="70" r="5" fill="none" stroke="${g.M}" stroke-width="2.5"/><circle cx="60" cy="88" r="13" fill="${g.M}"/><circle cx="60" cy="88" r="9" fill="${g.S}"/><circle cx="57" cy="85" r="2.5" fill="#fff" opacity=".8"/>`); },
+  stack: () => { const a = gradDefs('y'), b = gradDefs('w'), c = gradDefs('r'); return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${a.defs}${b.defs}${c.defs}${shadow(a)}${band(60, 50, 28, a, 5)}${band(60, 64, 28, b, 5)}${band(60, 78, 28, c, 5)}${[0, 1, 2, 3, 4].map(i => `<circle cx="${44 + i * 8}" cy="${38 + Math.abs(i - 2) * 1.5}" r="2" fill="#fff"/>`).join('')}</svg>`; },
+  colorRing: (m = 'w', s = 'citrine') => { const g = gradDefs(m, s); return svg(g, band(60, 74, 27, g) + `<ellipse cx="60" cy="42" rx="17" ry="13" fill="${g.M}"/><ellipse cx="60" cy="42" rx="13" ry="10" fill="${g.S}"/><ellipse cx="55" cy="38" rx="4" ry="2.5" fill="#fff" opacity=".75"/>`); },
+  hoops: () => { const a = gradDefs('y'), b = gradDefs('w'); const h = (x, g) => `<path d="M${x},28 v6" stroke="${g.M}" stroke-width="2"/><ellipse cx="${x}" cy="62" rx="20" ry="26" fill="none" stroke="${g.M}" stroke-width="6"/>`; return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">${a.defs}${b.defs}${shadow(a)}${h(36, a)}${h(84, b)}</svg>`; },
+  signet: (m = 'r') => { const g = gradDefs(m); return svg(g, band(60, 74, 27, g, 9) + `<rect x="40" y="26" width="40" height="30" rx="9" fill="${g.M}"/><rect x="45" y="31" width="30" height="20" rx="6" fill="${g.M2}"/><path d="M53,41 h14 M60,35 v12" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" stroke-linecap="round"/>`); },
+  bracelet: (m = 'y') => { const g = gradDefs(m); let s = ''; for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2, x = 60 + Math.cos(a) * 34, y = 60 + Math.sin(a) * 30; s += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="9" ry="5.5" transform="rotate(${(a * 180 / Math.PI + 90).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="none" stroke="${i % 2 ? g.M2 : g.M}" stroke-width="4"/>`; } return svg(g, s); },
+  cocktail: (m = 'r', s = 'ruby') => { const g = gradDefs(m, s); let halo = ''; for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2; halo += `<circle cx="${(60 + Math.cos(a) * 20).toFixed(1)}" cy="${(40 + Math.sin(a) * 20).toFixed(1)}" r="2.6" fill="#fff" stroke="${g.M}" stroke-width=".8"/>`; } return svg(g, band(60, 78, 25, g, 7) + `<circle cx="60" cy="40" r="23" fill="${g.M}"/>` + halo + `<circle cx="60" cy="40" r="15" fill="${g.S}"/><circle cx="55" cy="35" r="4" fill="#fff" opacity=".7"/>`); },
+  moon: (m = 'w', s = 'moon') => { const g = gradDefs(m, s); return svg(g, chain(g) + `<circle cx="60" cy="70" r="4" fill="none" stroke="${g.M}" stroke-width="2.5"/><path d="M68,76 A18,18 0 1 0 68,104 A13,13 0 1 1 68,76 Z" fill="${g.M}"/><circle cx="74" cy="86" r="2.2" fill="${g.S}"/><path d="M80,95 l1.5,3 3,1.5 -3,1.5 -1.5,3 -1.5,-3 -3,-1.5 3,-1.5z" fill="${g.M}"/>`); },
+  bar: (m = 'y') => { const g = gradDefs(m); return svg(g, chain(g) + `<circle cx="60" cy="70" r="4" fill="none" stroke="${g.M}" stroke-width="2.5"/><rect x="52" y="74" width="16" height="34" rx="3" fill="${g.M}"/><path d="M57,81 h6 M57,86 h6 M57,91 h4 M57,96 h6 M57,101 h3" stroke="#fff" stroke-opacity=".6" stroke-width="1.3" stroke-linecap="round"/>`); },
+  pearls: (m = 'y') => { const g = gradDefs(m); const one = x => `<path d="M${x},22 q8,0 6,10 l-6,10" fill="none" stroke="${g.M}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x}" cy="44" r="4" fill="${g.M}"/><circle cx="${x}" cy="66" r="17" fill="${g.P}"/><circle cx="${x - 5}" cy="60" r="4" fill="#fff" opacity=".9"/>`; return svg(g, one(38) + one(82)); },
+};
+
+// Эмблемы типов (viewBox 0 0 160 160), рисуются светлым по цветному фону карточки
+const EMBLEM = {
+  T1: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="44" fill="none" stroke="#fff3c4" stroke-width="5"/><circle cx="80" cy="80" r="30" fill="#fff3c4" opacity=".16"/>${[0,1,2,3,4,5].map(i=>{const y=118-i*13;return `<ellipse cx="${46-i*1.5}" cy="${y}" rx="9" ry="4.2" transform="rotate(${-55+i*8} ${46-i*1.5} ${y})" fill="#fff3c4" opacity=".9"/><ellipse cx="${114+i*1.5}" cy="${y}" rx="9" ry="4.2" transform="rotate(${55-i*8} ${114+i*1.5} ${y})" fill="#fff3c4" opacity=".9"/>`}).join('')}<path d="M80,58 l6,16 17,0 -14,10 5,16 -14,-10 -14,10 5,-16 -14,-10 17,0z" fill="#fff3c4"/></svg>`,
+  T2: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">${[...Array(16)].map((_,i)=>{const a=i/16*Math.PI*2,l=i%2?14:24;return `<line x1="${(80+Math.cos(a)*40).toFixed(1)}" y1="${(80+Math.sin(a)*40).toFixed(1)}" x2="${(80+Math.cos(a)*(40+l)).toFixed(1)}" y2="${(80+Math.sin(a)*(40+l)).toFixed(1)}" stroke="#fff6dc" stroke-width="5" stroke-linecap="round"/>`}).join('')}<circle cx="80" cy="80" r="32" fill="#fff6dc"/><circle cx="80" cy="80" r="22" fill="none" stroke="#f08a4b" stroke-width="3" opacity=".6"/></svg>`,
+  T3: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M44,104 L38,58 L60,76 L80,44 L100,76 L122,58 L116,104 Z" fill="#ffd9a0"/><rect x="44" y="108" width="72" height="10" rx="3" fill="#ffd9a0"/><circle cx="80" cy="44" r="6" fill="#fff"/><circle cx="38" cy="58" r="5" fill="#fff"/><circle cx="122" cy="58" r="5" fill="#fff"/><circle cx="80" cy="90" r="9" fill="#c8143c" stroke="#fff" stroke-width="2"/></svg>`,
+  T4: () => `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M96,36 A46,46 0 1 0 96,124 A36,36 0 1 1 96,36 Z" fill="#efeaff"/>${[[108,56,5],[120,84,3.5],[104,104,4],[126,118,2.5]].map(([x,y,r])=>`<path d="M${x},${y-r*2} L${x+r*.6},${y-r*.6} ${x+r*2},${y} ${x+r*.6},${y+r*.6} ${x},${y+r*2} ${x-r*.6},${y+r*.6} ${x-r*2},${y} ${x-r*.6},${y-r*.6}Z" fill="#efeaff"/>`).join('')}</svg>`,
+};
+
 const ITEMS = { // [мужская форма, женская форма] — п.1 женская форма из документа, остальные — G-05
   1: ['открытого, полного энтузиазма', 'открытую, полную энтузиазма'],
   2: ['критичного, склонного спорить', 'критичную, склонную спорить'],
@@ -443,136 +604,244 @@ const DESC = {
         behav: 'остро воспринимает происходящее, склонен к глубокому анализу своих эмоций и поиску ответов на внутренние вопросы. Нуждается в общении и поддержке, но с осторожностью относится к радикальным жизненным переменам.' },
 };
 
-// ЧЕРНОВИК рекомендаций — НЕ из документа Леонида; заполняет/правит Вазген (Q-06)
-const RECS = {
-  T1: { style: 'Классика и вещи «на годы»: проверенные формы, благородный металл, сдержанный блеск.', why: 'стабильность и порядок → предсказуемые, вневременные формы',
-        cats: [['Классические кольца','гладкие и с одним камнем, жёлтое/красное золото'],['Серьги-пусеты и конго','на каждый день, без риска «не к месту»'],['Цепочки и подвески','лаконичные, базовая длина']] },
-  T2: { style: 'Универсальность с характером: модные линии, которые легко сочетать между собой.', why: 'открытость и энергия → новое, но собранное',
-        cats: [['Наборные кольца','комбинировать по настроению'],['Цветные камни','акцент без перегруза'],['Сочетание металлов','белое + жёлтое золото, трендовые коллекции']] },
-  T3: { style: 'Заметные статусные вещи: масштаб, крупная форма, акцент на себе.', why: 'экстраверсия и ориентир на результат → «statement»-изделия',
-        cats: [['Крупные кольца и печатки','объёмные, с выразительной фактурой'],['Массивные цепи и браслеты','видно издалека'],['Крупные камни','центральный акцент образа']] },
-  T4: { style: 'Украшения со смыслом: символ, личная история, мягкие формы.', why: 'смыслы и опоры → символичные и памятные вещи',
-        cats: [['Подвески-символы','знаки, обереги, знаки зодиака'],['Гравировка и именные изделия','дата, имя, слово'],['Жемчуг и мягкие формы','спокойная, тёплая эстетика']] },
-};
 const SCALE_ORDER = ['ES','E','O','A','C']; // G-09: порядок матрицы
 const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстраверсия', O:'Открытость опыту', A:'Доброжелательность', C:'Добросовестность' };
 
+
+// ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
+const VERSION = 'v0.3-2026-11-24';
+
+// Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
+const TYPE_UI = {
+  T1: { cls: 'Хранитель', bg: 'linear-gradient(150deg,#26402f,#4f7255)', ac: '#2f4a3a',
+        chips: [['Металл', 'жёлтое золото'], ['Камень', 'сапфир'], ['Стихия', 'Земля']],
+        powers: [['∞', 'Надёжность', 'на вас опираются'], ['☼', 'Тепло', 'рядом спокойно'], ['◎', 'Вкус к классике', 'вещи на годы']] },
+  T2: { cls: 'Вдохновитель', bg: 'linear-gradient(150deg,#d4552f,#f0a050)', ac: '#d4552f',
+        chips: [['Металл', 'белое + жёлтое'], ['Камень', 'цитрин'], ['Стихия', 'Огонь']],
+        powers: [['✦', 'Энергия', 'заряжаете других'], ['↗', 'Лидерство', 'ведёте за собой'], ['⟳', 'Гибкость', 'перемены в радость']] },
+  T3: { cls: 'Звезда', bg: 'linear-gradient(150deg,#3a0c1c,#8a2141)', ac: '#7a1f3a',
+        chips: [['Металл', 'красное золото'], ['Камень', 'рубин'], ['Стихия', 'Пламя']],
+        powers: [['★', 'Харизма', 'вас замечают'], ['➤', 'Напор', 'идёте к цели'], ['◆', 'Масштаб', 'мыслите крупно']] },
+  T4: { cls: 'Искатель', bg: 'linear-gradient(150deg,#262a66,#6a5fae)', ac: '#3b3a85',
+        chips: [['Металл', 'белое золото'], ['Камень', 'лунный камень'], ['Стихия', 'Вода']],
+        powers: [['☾', 'Чуткость', 'чувствуете глубже'], ['❖', 'Глубина', 'ищете смысл'], ['♡', 'Душевность', 'цените близких']] },
+};
+// Шкатулка: тип → стиль → 3 категории → иллюстрация (ЧЕРНОВИК для Вазгена, Q-06)
+const RECS = {
+  T1: { style: 'Классика и вещи «на годы»: проверенные формы, благородный металл, сдержанный блеск.', why: 'стабильность и порядок → вневременные формы',
+        items: [['Кольцо с солитером', 'классика, жёлтое золото', () => ITEM_ART.solitaire('y', 'diamond')], ['Серьги-пусеты', 'на каждый день', () => ITEM_ART.studs('y', 'sapphire')], ['Подвеска на цепочке', 'лаконичная база', () => ITEM_ART.pendant('y', 'sapphire')]] },
+  T2: { style: 'Универсальность с характером: модные линии, которые легко сочетать между собой.', why: 'открытость и энергия → новое, но собранное',
+        items: [['Наборные кольца', 'комбинируйте по настроению', () => ITEM_ART.stack()], ['Кольцо с цветным камнем', 'акцент без перегруза', () => ITEM_ART.colorRing('w', 'citrine')], ['Серьги-кольца двух металлов', 'белое + жёлтое золото', () => ITEM_ART.hoops()]] },
+  T3: { style: 'Заметные статусные вещи: масштаб, крупная форма, акцент на себе.', why: 'экстраверсия и ориентир на результат → «statement»-изделия',
+        items: [['Кольцо-печатка', 'объём и фактура', () => ITEM_ART.signet('r')], ['Массивный браслет-цепь', 'видно издалека', () => ITEM_ART.bracelet('y')], ['Коктейльное кольцо', 'крупный камень в центре', () => ITEM_ART.cocktail('r', 'ruby')]] },
+  T4: { style: 'Украшения со смыслом: символ, личная история, мягкие формы.', why: 'смыслы и опоры → символичные и памятные вещи',
+        items: [['Подвеска-луна', 'символ-талисман', () => ITEM_ART.moon('w', 'moon')], ['Подвеска с гравировкой', 'имя, дата, слово', () => ITEM_ART.bar('y')], ['Серьги с жемчугом', 'спокойная тёплая эстетика', () => ITEM_ART.pearls('y')]] },
+};
+// «Почему так» — из двух самых выраженных шкал (D-11, против эффекта Барнума)
+const WHY = {
+  ES: { high: 'вы сохраняете спокойствие там, где другие волнуются', low: 'вы тонко чувствуете всё, что происходит вокруг' },
+  E:  { high: 'вас заряжают люди и общение', low: 'вам нужна тишина, чтобы собраться с мыслями' },
+  O:  { high: 'вас тянет к новому и необычному', low: 'вы цените проверенное и надёжное' },
+  A:  { high: 'вы умеете поддержать и посочувствовать', low: 'вы прямо говорите, что думаете' },
+  C:  { high: 'на вас можно положиться', low: 'вы живёте легко и спонтанно' },
+};
+const CHEERS = { 3: 'Отличное начало ✦', 5: 'Половина ожерелья собрана!', 8: 'Осталось совсем чуть-чуть', 10: 'Последняя бусина — и ваша карта откроется' };
+const REVEAL_STEPS = ['Нанизываем ответы…', 'Плавим золото…', 'Подбираем камень…'];
+
 // ===== STATE =====
-const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null };
+const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null, shared: [] };
 const qs = new URLSearchParams(location.search);
-const UTM = {}; ['source','medium','campaign','content'].forEach(k => { const v = qs.get('utm_' + k); if (v) UTM[k] = v; });
-let dev = qs.get('debug') === '1';
+const UTM = {}; ['source', 'medium', 'campaign', 'content'].forEach(k => { const v = qs.get('utm_' + k); if (v) UTM[k] = v; });
+let dev = qs.get('debug') === '1' || location.hash === '#debug';
 const $ = id => document.getElementById(id);
 const typeById = id => TYPES.find(t => t.id === id);
-function show(id) { ['s-intro','s-q','s-res'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0, 0); }
-function setDev(on) { dev = on; document.querySelectorAll('.dev-only').forEach(e => e.classList.toggle('hidden', !on)); $('devToggle').classList.toggle('on', on); if (on && st.result) renderDev(); }
+function show(id) { ['s-intro', 's-q', 's-reveal', 's-res'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0, 0); }
+function setDev(on) { dev = on; document.querySelectorAll('.dev-only').forEach(e => e.classList.toggle('hidden', !on)); $('devToggle').classList.toggle('on', on); if (on && st.result) renderDev(); if (!$('s-q').classList.contains('hidden')) renderQ(); }
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
 // ===== INTRO =====
+$('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
 $('startBtn').onclick = () => { st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
 
-// ===== QUESTIONS =====
+// ===== NECKLACE (D-01: прогресс = бусины на цепочке) =====
+function renderNecklace() {
+  const pts = []; for (let k = 0; k < 10; k++) { const t = (k + .5) / 10, x = 20 + t * 480, y = 8 + 30 * Math.sin(Math.PI * t); pts.push([x, y]); }
+  let s = `<defs><radialGradient id="bd" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#d8b06a"/><stop offset="1" stop-color="#9c6b1e"/></radialGradient></defs>`;
+  s += `<path d="M6,6 Q260,70 514,6" fill="none" stroke="#d8c3a0" stroke-width="1.6" stroke-dasharray="3 2"/>`;
+  s += `<circle cx="6" cy="6" r="4" fill="none" stroke="#b28a45" stroke-width="2"/><circle cx="514" cy="6" r="4" fill="none" stroke="#b28a45" stroke-width="2"/>`;
+  pts.forEach(([x, y], k) => {
+    const n = k + 1, done = st.answers[n] != null, cur = n === st.i;
+    s += done ? `<circle cx="${x}" cy="${y}" r="${n === 10 ? 11 : 8.5}" fill="url(#bd)"/><circle cx="${x - 2.5}" cy="${y - 2.5}" r="2.2" fill="#fff" opacity=".8"/>`
+              : `<circle cx="${x}" cy="${y}" r="${cur ? 8.5 : 5}" fill="#fff" stroke="${cur ? '#b28a45' : '#e2d4bc'}" stroke-width="${cur ? 2.5 : 1.5}"${cur ? ' stroke-dasharray="3 2"' : ''}/>`;
+  });
+  $('necklace').innerHTML = s;
+}
+
+// ===== QUESTIONS (D-02: шкала кругами, крайние крупнее) =====
+const DOT = [46, 40, 34, 28, 34, 40, 46];
+const DOT_C = ['#7c6f9e', '#8c80ab', '#a39abd', '#b9b1a6', '#c9a465', '#bd9242', '#b28a45'];
 function renderQ() {
-  const i = st.i, g = st.g || 'f', cx = WORDING === 'cx';
+  const i = st.i, g = st.g, cx = WORDING === 'cx';
   const A = cx ? ANCHORS_CX : ANCHORS_TIPI[g];
-  $('prog').style.width = ((i - 1) / 10 * 100) + '%';
-  $('qnum').textContent = i + ' из 10';
+  renderNecklace();
+  $('qnum').textContent = 'Бусина ' + i + ' из 10';
+  $('qleft').textContent = i < 10 ? '≈ ' + Math.max(1, Math.round((10 - i) * 10 / 60 * 10) / 10).toString().replace('.', ',') + ' мин' : 'последняя';
   $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
-  $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][g === 'f' ? 1 : 0];
-  $('qhint').textContent = cx ? 'Отвечайте первое, что приходит в голову — правильных ответов нет.' : 'Оцените пару характеристик в целом, даже если одна подходит вам больше другой.';
+  $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
   $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
-  const leg = document.querySelectorAll('.scale-legend span');
-  leg[0].textContent = A[0]; leg[1].textContent = A[6];
+  const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = cx ? 'Не про меня' : A[0]; leg[1].textContent = cx ? 'Про меня' : A[6];
   const sc = $('scale'); sc.innerHTML = '';
   for (let v = 1; v <= 7; v++) {
-    const b = document.createElement('button'); b.textContent = v; b.title = A[v - 1];
-    if (st.answers[i] === v) b.classList.add('sel');
-    b.onclick = () => { st.answers[i] = v; renderQ(); setTimeout(() => { if (st.i === i) next(); }, 220); };
+    const b = document.createElement('button'); b.className = 'dot'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', A[v - 1]);
+    b.style.width = b.style.height = DOT[v - 1] + 'px'; b.style.borderColor = DOT_C[v - 1];
+    if (st.answers[i] === v) { b.classList.add('sel'); b.style.background = DOT_C[v - 1]; b.setAttribute('aria-checked', 'true'); }
+    b.onclick = () => { st.answers[i] = v; renderQ(); setTimeout(() => { if (st.i === i) next(); }, 260); };
     sc.appendChild(b);
   }
   $('anchor').textContent = st.answers[i] ? A[st.answers[i] - 1] : '';
+  $('cheer').textContent = CHEERS[i] && i > 1 ? CHEERS[i] : '';
   $('nextBtn').disabled = !st.answers[i];
-  $('nextBtn').textContent = i === 10 ? 'Результат' : 'Далее';
+  $('nextBtn').textContent = i === 10 ? 'Открыть карту' : 'Далее';
 }
 function next() { if (!st.answers[st.i]) return; if (st.i < 10) { st.i++; renderQ(); } else finish(); }
 $('nextBtn').onclick = next;
 $('backBtn').onclick = () => { if (st.i > 1) { st.i--; renderQ(); } else show('s-intro'); };
+document.addEventListener('keydown', e => { if ($('s-q').classList.contains('hidden')) return; const n = +e.key; if (n >= 1 && n <= 7) { st.answers[st.i] = n; renderQ(); setTimeout(next, 200); } });
+
+// ===== REVEAL (D-05: предвкушение → раскрытие) =====
+function finish(instant) {
+  const s = score(st.answers), c = classify(s.scores), q = quality(st.answers);
+  st.result = { ...s, ...c, quality: q, session_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ts: new Date().toISOString() };
+  st.rating = null; st.contact = null; st.shared = [];
+  if (instant) { renderResult(); show('s-res'); return; }
+  show('s-reveal'); let k = 0; $('revealText').textContent = REVEAL_STEPS[0];
+  const iv = setInterval(() => { k++; if (k < REVEAL_STEPS.length) $('revealText').textContent = REVEAL_STEPS[k]; else { clearInterval(iv); renderResult(); show('s-res'); } }, 650);
+}
 
 // ===== RESULT =====
-function finish() {
-  const s = score(st.answers), c = classify(s.scores), q = quality(st.answers);
-  st.result = { ...s, ...c, quality: q, session_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ts: new Date().toISOString() }; st.rating = null; st.contact = null;
-  renderResult(); show('s-res');
+function whyLine(r) {
+  const ranked = SCALE_ORDER.map(k => ({ k, d: Math.abs(r.scores[k] - 4), dir: r.scores[k] >= 4 ? 'high' : 'low' })).filter(x => x.d >= 1).sort((a, b) => b.d - a.d).slice(0, 2);
+  if (!ranked.length) return 'Ваши ответы ровные: в вас понемногу от каждого типа. Ближе всего вам этот.';
+  return 'Почему так: по вашим ответам, ' + ranked.map(x => WHY[x.k][x.dir]).join(', а ещё ') + '.';
 }
 function renderResult() {
-  const r = st.result, t = typeById(r.primary), d = DESC[r.primary];
+  const r = st.result, t = typeById(r.primary), d = DESC[r.primary], ui = TYPE_UI[r.primary], rec = RECS[r.primary];
+  const hero = $('hero'); hero.style.background = ui.bg; hero.classList.remove('flip'); void hero.offsetWidth; hero.classList.add('flip');
+  $('rCls').textContent = 'Ваш тип · ' + ui.cls;
+  $('rEmb').innerHTML = EMBLEM[r.primary]();
   $('rName').textContent = t.name;
   $('rLead').textContent = LEAD_CX[r.primary];
+  $('rChips').innerHTML = ui.chips.map(([a, b]) => `<span class="chip">${a}: <b>${b}</b></span>`).join('');
+  $('rPowers').innerHTML = ui.powers.map(([ic, n, s]) => `<div class="power"><div class="ic" style="color:${ui.ac}">${ic}</div><b>${n}</b><span>${s}</span></div>`).join('');
+  $('rWhy').textContent = whyLine(r);
+  $('rMixed').innerHTML = r.secondary ? `<div class="note">В вашей карте есть и черты типа <b>«${typeById(r.secondary).name}» · ${TYPE_UI[r.secondary].cls}</b> — профиль промежуточный.</div>` : '';
+  $('rQuality').innerHTML = r.quality.ok ? '' : '<div class="note warn">' + (r.quality.straight ? 'Все ответы одинаковые — результат может быть неточным. Попробуйте ещё раз, выбирая разные оценки.' : 'В некоторых парах вы согласились с противоположными утверждениями — результат может быть неточным.') + '</div>';
+  $('rStyle').textContent = rec.style;
+  $('rLoot').innerHTML = rec.items.map(([n, s, art]) => `<div class="item"><div class="pic">${art()}</div><b>${n}</b><span>${s}</span></div>`).join('');
   $('rDocLead').textContent = d.lead;
   $('rTraits').innerHTML = '<b>Профиль черт:</b> ' + d.traits;
   $('rBehav').innerHTML = '<b>Поведенческие особенности:</b> ' + d.behav;
-  $('rMixed').innerHTML = r.secondary ? '<div class="note">Ваш профиль промежуточный: в нём есть и черты типа <b>«' + typeById(r.secondary).name + '»</b>.</div>' : '';
-  $('rBars').innerHTML = SCALE_ORDER.map(k => {
-    const v = r.scores[k], lv = { low: 'низкий', mid: 'средний', high: 'высокий' }[r.levels[k]];
-    return '<div class="bar"><span>' + SCALE_SHORT[k] + '</span><span class="lv">' + v.toFixed(1).replace('.', ',') + ' · ' + lv + '</span><span class="t"><i style="width:' + ((v - 1) / 6 * 100) + '%"></i></span></div>';
-  }).join('');
-  $('rQuality').innerHTML = r.quality.ok ? '' : '<div class="note warn">' + (r.quality.straight ? 'Все ответы одинаковые — результат может быть неточным. Попробуйте пройти ещё раз, выбирая разные оценки.' : 'В некоторых парах вы согласились с противоположными утверждениями — результат может быть неточным.') + '</div>';
-  const rec = RECS[r.primary];
-  $('rStyle').textContent = rec.style;
-  $('rRecs').innerHTML = rec.cats.map(([n, s]) => '<div class="rec"><b>' + n + '</b><span class="small muted">' + s + '</span><div class="slots"><div class="slot">SKU<br>Вазген</div><div class="slot">SKU<br>Вазген</div><div class="slot">SKU<br>Вазген</div></div></div>').join('');
-  const stars = $('stars'); stars.innerHTML = '';
-  for (let v = 1; v <= 5; v++) { const b = document.createElement('button'); b.textContent = v; if (st.rating === v) b.classList.add('sel'); b.onclick = () => { st.rating = v; renderResult(); }; stars.appendChild(b); }
+  $('rBars').innerHTML = SCALE_ORDER.map(k => { const v = r.scores[k], lv = { low: 'низкий', mid: 'средний', high: 'высокий' }[r.levels[k]];
+    return `<div class="bar"><span>${SCALE_SHORT[k]}</span><span class="lv">${v.toFixed(1).replace('.', ',')} · ${lv}</span><span class="t"><i style="width:${(v - 1) / 6 * 100}%"></i></span></div>`; }).join('');
+  renderStars();
   $('sent').classList.toggle('hidden', !st.contact);
+  $('storyPrev').classList.add('hidden');
   if (dev) renderDev();
 }
-['cName','cContact','cConsent'].forEach(id => $(id).addEventListener('input', () => { $('sendBtn').disabled = !($('cContact').value.trim() && $('cConsent').checked); }));
-$('sendBtn').onclick = () => { st.contact = { name: $('cName').value.trim(), contact: $('cContact').value.trim(), consent: $('cConsent').checked }; renderResult(); };
+function renderStars() { const el = $('stars'); el.innerHTML = ''; for (let v = 1; v <= 5; v++) { const b = document.createElement('button'); b.textContent = v; if (st.rating === v) b.classList.add('sel'); b.onclick = () => { st.rating = v; renderStars(); if (dev) renderDev(); }; el.appendChild(b); } }
+$('toForm').onclick = () => $('formCard').scrollIntoView({ behavior: 'smooth' });
+['cName', 'cContact', 'cConsent'].forEach(id => $(id).addEventListener('input', () => { $('sendBtn').disabled = !($('cContact').value.trim() && $('cConsent').checked); }));
+$('sendBtn').onclick = () => { st.contact = { name: $('cName').value.trim(), contact: $('cContact').value.trim(), consent: $('cConsent').checked }; $('sent').classList.remove('hidden'); if (dev) renderDev(); };
 $('againBtn').onclick = () => { st.answers = {}; st.result = null; show('s-intro'); };
 
+// ===== SHARE (D-09: карточка 9:16 для сторис + приглашение) =====
+function wrap2(s) { const w = s.split(' '); if (s.length <= 16) return [s]; let a = '', i = 0; while (i < w.length && (a + ' ' + w[i]).trim().length <= 16) { a = (a + ' ' + w[i]).trim(); i++; } if (!a) { a = w[0]; i = 1; } let b = w.slice(i).join(' '); if (b.length > 18) b = b.slice(0, 17) + '…'; return b ? [a, b] : [a]; }
+function storySVG() {
+  const r = st.result, t = typeById(r.primary), ui = TYPE_UI[r.primary], rec = RECS[r.primary];
+  const stops = { T1: ['#26402f', '#4f7255'], T2: ['#d4552f', '#f0a050'], T3: ['#3a0c1c', '#8a2141'], T4: ['#262a66', '#6a5fae'] }[r.primary];
+  const words = t.name.split(' '); const l1 = words.slice(0, Math.ceil(words.length / 2)).join(' '), l2 = words.slice(Math.ceil(words.length / 2)).join(' ');
+  const emb = EMBLEM[r.primary]().replace('<svg ', '<svg x="340" y="300" width="400" height="400" ');
+  const items = rec.items.map(([n], k) => { const a = rec.items[k][2]().replace('<svg ', `<svg x="${90 + k * 310}" y="1240" width="280" height="280" `); return `<rect x="${90 + k * 310}" y="1240" width="280" height="280" rx="36" fill="#fffaf0"/>${a}${wrap2(n).map((ln, j) => `<text x="${230 + k * 310}" y="${1575 + j * 36}" font-size="29" text-anchor="middle" fill="#fff" font-family="Arial">${ln}</text>`).join('')}`; }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <defs><linearGradient id="bgS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${stops[0]}"/><stop offset="1" stop-color="${stops[1]}"/></linearGradient></defs>
+  <rect width="1080" height="1920" fill="url(#bgS)"/>
+  <circle cx="900" cy="160" r="360" fill="#fff" opacity=".07"/>
+  <text x="540" y="170" font-size="40" letter-spacing="10" text-anchor="middle" fill="#f3dca8" font-family="Georgia,serif" font-weight="bold">МАГИЯ ЗОЛОТА</text>
+  <text x="540" y="250" font-size="38" text-anchor="middle" fill="#fff" opacity=".85" font-family="Arial">Мой тип · ${ui.cls}</text>
+  ${emb}
+  <text x="540" y="850" font-size="92" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-weight="bold">${l1}</text>
+  <text x="540" y="960" font-size="92" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-weight="bold">${l2}</text>
+  <text x="540" y="1060" font-size="36" text-anchor="middle" fill="#fff" opacity=".9" font-family="Arial">${ui.powers.map(p => p[1]).join('  ·  ')}</text>
+  <text x="540" y="1190" font-size="34" text-anchor="middle" fill="#f3dca8" font-family="Arial">Мои украшения</text>
+  ${items}
+  <rect x="190" y="1700" width="700" height="110" rx="55" fill="#fff"/>
+  <text x="540" y="1770" font-size="40" text-anchor="middle" fill="${stops[0]}" font-family="Arial" font-weight="bold">А какой тип у тебя?</text>
+  </svg>`;
+}
+function storyPNG() {
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(new Blob([storySVG()], { type: 'image/svg+xml' }));
+    img.onload = () => { const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; c.getContext('2d').drawImage(img, 0, 0); URL.revokeObjectURL(url); c.toBlob(b => b ? res(b) : rej('blob'), 'image/png'); };
+    img.onerror = rej; img.src = url;
+  });
+}
+$('storyBtn').onclick = async () => {
+  try {
+    const blob = await storyPNG(); const file = new File([blob], 'magiya-zolota-moy-tip.png', { type: 'image/png' });
+    st.shared.push('story');
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Мой тип — Магия золота' }); }
+    else { const u = URL.createObjectURL(blob); $('storyPrev').innerHTML = `<img src="${u}" alt="Карточка для сторис" style="width:100%;border-radius:16px"><a class="btn ghost full" style="margin-top:8px" href="${u}" download="magiya-zolota-moy-tip.png">Скачать картинку</a><p class="small muted" style="margin-top:6px">На телефоне: долгое нажатие на картинку → «Сохранить».</p>`; $('storyPrev').classList.remove('hidden'); }
+    if (dev) renderDev();
+  } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось создать картинку'); }
+};
+$('inviteBtn').onclick = async () => {
+  const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend', text = 'Я — «' + typeById(st.result.primary).name + '». А какой тип у тебя? Тест за 2 минуты:';
+  st.shared.push('invite');
+  try { if (navigator.share) await navigator.share({ title: 'Магия золота — тест', text, url }); else { await navigator.clipboard.writeText(text + ' ' + url); toast('Ссылка скопирована'); } }
+  catch (e) { if (e && e.name !== 'AbortError') toast('Скопируйте ссылку из адресной строки'); }
+  if (dev) renderDev();
+};
+
+// ===== DEV =====
 function payload() {
   const r = st.result;
-  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM,
-    wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels, type: r.primary, secondary: r.secondary,
-    distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, contact: st.contact };
+  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM, wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels,
+    type: r.primary, secondary: r.secondary, distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, shared: st.shared, contact: st.contact };
 }
 function renderDev() {
   const r = st.result; if (!r) return;
-  const rows = Object.keys(st.answers).map(i => '<tr><td>' + i + '</td><td>' + st.answers[i] + '</td><td>' + r.adj[i] + (REVERSED.includes(+i) ? ' (R)' : '') + '</td></tr>').join('');
-  const dist = r.distances.map(x => '<tr><td>' + x.id + '</td><td>' + x.name + '</td><td>' + x.d + '</td></tr>').join('');
-  $('devPanel').innerHTML = '<b>Режим проверки</b> · ' + VERSION + (r.atypical ? ' · <span style="color:#9a4b2f">нетипичный профиль: до ближайшего прототипа &gt; ' + ATYPICAL_DIST + '</span>' : '') +
-    '<table><tr><th>№</th><th>Ответ</th><th>После реверса</th></tr>' + rows + '</table>' +
-    '<table><tr><th>Тип</th><th>Название</th><th>Расстояние</th></tr>' + dist + '</table>' +
-    '<div class="small">Промежуточный, если d₂ − d₁ &lt; ' + MIXED_GAP + '. Качество: ' + JSON.stringify(r.quality) + '</div>' +
-    '<pre id="pl">' + JSON.stringify(payload(), null, 2) + '</pre><button class="btn ghost" id="copyPl" style="font-size:13px;padding:7px 12px">Скопировать JSON</button>';
-  $('copyPl').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('pl').textContent).then(() => $('copyPl').textContent = 'Скопировано');
+  const rows = Object.keys(st.answers).map(i => `<tr><td>${i}</td><td>${st.answers[i]}</td><td>${r.adj[i]}${REVERSED.includes(+i) ? ' (R)' : ''}</td></tr>`).join('');
+  const dist = r.distances.map(x => `<tr><td>${x.id}</td><td>${x.name}</td><td>${x.d}</td></tr>`).join('');
+  $('devPanel').innerHTML = `<b>Режим проверки</b> · ${VERSION}${r.atypical ? ' · <span style="color:#9a4b2f">нетипичный профиль: до ближайшего прототипа &gt; ' + ATYPICAL_DIST + '</span>' : ''}
+    <table><tr><th>№</th><th>Ответ</th><th>После реверса</th></tr>${rows}</table>
+    <table><tr><th>Тип</th><th>Название</th><th>Расстояние</th></tr>${dist}</table>
+    <div class="small">Промежуточный, если d₂ − d₁ &lt; ${MIXED_GAP}. Качество: ${JSON.stringify(r.quality)}</div>
+    <pre id="pl">${JSON.stringify(payload(), null, 2)}</pre><button class="btn ghost" id="copyPl" style="font-size:13px;padding:7px 12px;min-height:0">Скопировать JSON</button>`;
+  $('copyPl').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('pl').textContent).then(() => $('copyPl').textContent = 'Скопировано').catch(() => {});
 }
-
-// ===== DEV PRESETS =====
-function answersFor(target) { // target: {ES..C} → ответы, дающие эти шкалы
-  const a = {};
-  for (const s of SCALES) { const v = Math.round(target[s.key]); const [d] = s.items.filter(i => !s.reversed.includes(i)); a[d] = v; a[s.reversed[0]] = 8 - v; }
-  return a;
-}
+function answersFor(target) { const a = {}; for (const s of SCALES) { const v = Math.round(target[s.key]); const d = s.items.find(i => !s.reversed.includes(i)); a[d] = v; a[s.reversed[0]] = 8 - v; } return a; }
 document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
-  const p = b.dataset.preset; st.g = st.g || 'f';
+  const p = b.dataset.preset;
   if (/^T\d$/.test(p)) { const t = typeById(p), tg = {}; SCALE_ORDER.forEach(k => tg[k] = ANCHOR[t.matrix[k]]); st.answers = answersFor(tg); }
   else if (p === 'mix') st.answers = answersFor({ ES: 4, E: 6, O: 3, A: 4, C: 4 });
   else if (p === 'straight') { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 4; }
   else { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 1 + Math.floor(Math.random() * 7); }
-  finish();
+  finish(true);
 });
+$('wordBtn').onclick = () => { WORDING = WORDING === 'cx' ? 'tipi' : 'cx'; $('wordBtn').textContent = 'Формулировки: ' + (WORDING === 'cx' ? 'потребительские' : 'оригинал TIPI-RU'); };
 
-// ===== TABS =====
+// ===== TABS / DOC =====
 function goTab(name) { $('quiz').classList.toggle('hidden', name !== 'quiz'); $('doc').classList.toggle('hidden', name !== 'doc'); document.querySelectorAll('[data-tab]').forEach(t => t.classList.toggle('on', t.dataset.tab === name)); }
 document.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => goTab(t.dataset.tab));
-document.querySelectorAll('[data-goto-doc]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTab('doc'); setTimeout(() => document.querySelector(a.getAttribute('href')).scrollIntoView(), 30); }));
+document.querySelectorAll('[data-goto-doc]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTab('doc'); setTimeout(() => { const el = document.querySelector(a.getAttribute('href')); if (el) el.scrollIntoView(); }, 30); }));
 $('devToggle').onclick = () => setDev(!dev);
-$('wordBtn').onclick = () => { WORDING = WORDING === 'cx' ? 'tipi' : 'cx'; $('wordBtn').textContent = 'Формулировки: ' + (WORDING === 'cx' ? 'потребительские' : 'оригинал TIPI-RU'); };
-$('docRecs').innerHTML = '<table><tr><th>Тип</th><th>Стиль-направление</th><th>Логика (черта → изделие)</th><th>Категории</th></tr>' +
-  TYPES.map(t => '<tr><td>' + t.id + ' ' + t.name + '</td><td>' + RECS[t.id].style + '</td><td>' + RECS[t.id].why + '</td><td>' + RECS[t.id].cats.map(c => c[0]).join('; ') + '</td></tr>').join('') + '</table>';
+$('docRecs').innerHTML = '<table><tr><th>Тип / класс</th><th>Стиль</th><th>Логика (черта → изделие)</th><th>Шкатулка</th><th>Талисманы</th></tr>' +
+  TYPES.map(t => `<tr><td>${t.id} ${t.name} / ${TYPE_UI[t.id].cls}</td><td>${RECS[t.id].style}</td><td>${RECS[t.id].why}</td><td>${RECS[t.id].items.map(c => c[0]).join('; ')}</td><td>${TYPE_UI[t.id].chips.map(c => c[1]).join(', ')}</td></tr>`).join('') + '</table>';
 $('cxTable').innerHTML = '<tr><th>№</th><th>Шкала / полюс</th><th>Оригинал TIPI-RU («Я воспринимаю себя как…»)</th><th>Для покупателя</th></tr>' +
-  Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); const r = REVERSED.includes(+i);
-    return '<tr><td>' + i + '</td><td>' + s.key + (r ? ' −' : ' +') + '</td><td>…' + ITEMS[i][0] + '</td><td>' + ITEMS_CX[i] + '</td></tr>'; }).join('');
+  Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); return `<tr><td>${i}</td><td>${s.key}${REVERSED.includes(+i) ? ' −' : ' +'}</td><td>…${ITEMS[i][0]}</td><td>${ITEMS_CX[i]}</td></tr>`; }).join('');
 setDev(dev);
+
+}
 </script>
 </body>
 </html>
