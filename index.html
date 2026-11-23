@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — Какое украшение отражает ваш характер? · v0.4</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.4.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -257,7 +257,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.4 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.4.1 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -642,7 +642,7 @@ const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстрав
 
 
 // ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
-const VERSION = 'v0.4-2026-11-24';
+const VERSION = 'v0.4.1-2026-11-24';
 
 // Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
 const TYPE_UI = {
@@ -750,6 +750,21 @@ function renderDuo() {
 }
 
 $('verTag').textContent = 'версия ' + VERSION.replace(/^v/, '').replace(/-(\d{4})-(\d{2})-(\d{2})$/, ' · $3.$2');
+
+// ===== АВТООБНОВЛЕНИЕ: если браузер показал старую сохранённую копию — сам перезагружает свежую =====
+(async () => {
+  if (location.protocol === 'file:') return;
+  try {
+    const r = await fetch(location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' });
+    const m = (await r.text()).match(/const VERSION = '([^']+)'/);
+    if (!m || m[1] === VERSION) return;
+    const p = new URLSearchParams(location.search);
+    if (p.get('v') === m[1]) return; // уже пробовали — не зацикливаемся
+    p.set('v', m[1]);
+    location.replace(location.pathname + '?' + p.toString() + location.hash);
+  } catch (e) {}
+})();
+
 // ===== INTRO =====
 $('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
 renderRefIntro();
