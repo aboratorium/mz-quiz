@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Магия золота — тест «Какое украшение вам подходит» · прототип v0.1</title>
+<style>
+:root{--bg:#f7f3ec;--card:#fffdf9;--ink:#1f1b16;--muted:#6f665a;--line:#e6ddcf;--gold:#a7834a;--gold2:#c9a96e;--soft:#f1e8d8;--warn:#9a4b2f;--ok:#3f6b4a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:600px;margin:0 auto;padding:16px 16px 48px}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font-size:13px;color:var(--muted)}
+.brand{font-family:Georgia,"Times New Roman",serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-size:13px}
+.tabs{display:flex;gap:6px}
+.tab{border:1px solid var(--line);background:transparent;border-radius:20px;padding:5px 11px;font-size:13px;cursor:pointer;color:var(--muted)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:normal;margin:0 0 10px}
+h1{font-size:28px;line-height:1.2}
+h2{font-size:22px}
+h3{font-size:18px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.btn{display:inline-block;border:0;border-radius:12px;padding:13px 18px;font-size:16px;cursor:pointer;background:var(--ink);color:#fff;text-decoration:none}
+.btn.gold{background:var(--gold)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:8px;margin:8px 0 16px}
+.seg label{flex:1;border:1px solid var(--line);border-radius:12px;padding:11px;text-align:center;cursor:pointer}
+.seg input{display:none}
+.seg input:checked+span{font-weight:600}
+.seg label:has(input:checked){border-color:var(--gold);background:var(--soft)}
+.progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin:0 0 18px}
+.progress i{display:block;height:100%;background:var(--gold);transition:width .25s}
+.qnum{font-size:13px;color:var(--muted);margin-bottom:6px}
+.qlead{color:var(--muted);font-size:15px;margin-bottom:2px}
+.qtext{font-family:Georgia,serif;font-size:23px;line-height:1.3;margin-bottom:20px}
+.scale{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.scale button{aspect-ratio:1/1;border:1px solid var(--line);background:#fff;border-radius:12px;font-size:17px;cursor:pointer}
+.scale button.sel{background:var(--gold);color:#fff;border-color:var(--gold)}
+.scale-legend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.anchor{min-height:22px;text-align:center;font-size:14px;color:var(--gold);margin-top:10px}
+.nav{display:flex;justify-content:space-between;margin-top:20px}
+.type-badge{display:inline-block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold2);border-radius:20px;padding:3px 10px;margin-bottom:10px}
+.lead{font-style:italic;color:var(--muted)}
+.bars{margin:14px 0 6px}
+.bar{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;font-size:14px;margin:9px 0}
+.bar .t{grid-column:1/3}
+.bar .t{height:8px;background:var(--line);border-radius:6px;position:relative}
+.bar .t i{position:absolute;left:0;top:0;bottom:0;background:var(--gold2);border-radius:6px}
+.bar .lv{color:var(--muted);font-size:12px;text-align:right}
+.note{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:14px;margin:12px 0}
+.note.warn{background:#f6e6de;color:var(--warn)}
+.draft{display:inline-block;background:#fff3cd;color:#7a5b00;border-radius:6px;font-size:11px;padding:2px 7px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;margin-left:6px}
+.recs{display:grid;gap:10px;margin-top:10px}
+.rec{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}
+.rec b{display:block;margin-bottom:2px}
+.slots{display:flex;gap:6px;margin-top:8px}
+.slot{flex:1;aspect-ratio:1/1;border:1px dashed var(--gold2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);text-align:center;padding:4px}
+.stars{display:flex;gap:6px;margin:6px 0 4px}
+.stars button{border:1px solid var(--line);background:#fff;border-radius:10px;width:42px;height:42px;cursor:pointer;font-size:16px}
+.stars button.sel{background:var(--ink);color:#fff}
+input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;margin:4px 0 10px;background:#fff}
+.chk{display:flex;gap:8px;font-size:13px;color:var(--muted);align-items:flex-start;margin-bottom:12px}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+.dev{margin-top:18px;border:1px dashed #9aa4b2;border-radius:14px;padding:14px;background:#f5f7fa;font-size:13px}
+.dev table{border-collapse:collapse;width:100%;margin:6px 0 10px}
+.dev td,.dev th{border:1px solid #dde2ea;padding:4px 6px;text-align:left}
+.dev pre{white-space:pre-wrap;word-break:break-all;background:#fff;border:1px solid #dde2ea;border-radius:8px;padding:8px;max-height:260px;overflow:auto;font-size:11px}
+.devbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.devbar button{border:1px dashed #9aa4b2;background:#fff;border-radius:8px;padding:6px 9px;font-size:12px;cursor:pointer}
+.hidden{display:none!important}
+/* методичка */
+.doc{font-size:14.5px}
+.doc table{display:block;overflow-x:auto;border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 14px}
+.doc td,.doc th{border:1px solid var(--line);padding:6px 7px;vertical-align:top;text-align:left}
+.doc th{background:var(--soft);font-weight:600}
+.doc code{background:var(--soft);padding:1px 4px;border-radius:4px}
+.doc ol.ln{counter-reset:ln;list-style:none;padding-left:0}
+.doc ol.ln>li{counter-increment:ln;position:relative;padding-left:34px;margin:4px 0}
+.doc ol.ln>li:before{content:counter(ln,decimal-leading-zero);position:absolute;left:0;color:var(--gold);font-family:ui-monospace,Menlo,monospace;font-size:12px;top:2px}
+.doc svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;margin:6px 0 14px}
+.fn{font-size:12px;color:var(--muted)}
+sup a{color:var(--gold);text-decoration:none}
+@media (max-width:430px){.qtext{font-size:21px}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="brand">Магия золота</span>
+    <span class="tabs">
+      <button class="tab on" data-tab="quiz">Тест</button>
+      <button class="tab" data-tab="doc">Методичка</button>
+      <button class="tab" id="devToggle" title="Режим проверки для команды">⚙︎</button>
+    </span>
+  </header>
+
+  <!-- ============ ТЕСТ ============ -->
+  <main id="quiz">
+    <!-- Интро -->
+    <section class="card" id="s-intro">
+      <h1>Какое украшение отражает ваш характер?</h1>
+      <p>Украшение говорит о нас раньше слов. Ответьте на 10 коротких вопросов о себе — и мы подскажем, какие украшения подчеркнут именно вас.</p>
+      <p class="muted small">2 минуты · без регистрации · подборка в конце</p>
+      <button class="btn gold" id="startBtn">Узнать свой тип</button>
+      <p class="small muted" style="margin-top:16px">Тест основан на научной модели личности «Большая пятёрка»<sup><a href="#fn1" data-goto-doc>1</a></sup> и исследовании четырёх типов личности<sup><a href="#fn3" data-goto-doc>3</a></sup>. Это не психологическая диагностика, а повод взглянуть на себя по-новому.</p>
+      <div class="devbar dev-only hidden">
+        <span class="small muted">Быстрый прогон:</span>
+        <button data-preset="T1">→ Т1</button><button data-preset="T2">→ Т2</button>
+        <button data-preset="T3">→ Т3</button><button data-preset="T4">→ Т4</button>
+        <button data-preset="mix">→ промежуточный</button><button data-preset="rnd">→ случайно</button>
+        <button data-preset="straight">→ все «4»</button>
+        <button id="wordBtn">Формулировки: потребительские</button>
+      </div>
+    </section>
+
+    <!-- Вопрос -->
+    <section class="card hidden" id="s-q">
+      <div class="progress"><i id="prog"></i></div>
+      <div class="qnum" id="qnum"></div>
+      <div class="qlead" id="qlead">Насколько это про вас?</div>
+      <div class="qtext" id="qtext"></div>
+      <div class="scale" id="scale"></div>
+      <div class="scale-legend"><span></span><span></span></div>
+      <div class="anchor" id="anchor"></div>
+      <div class="nav">
+        <button class="btn ghost" id="backBtn">Назад</button>
+        <button class="btn" id="nextBtn" disabled>Далее</button>
+      </div>
+      <p class="small muted" style="margin-top:14px" id="qhint">Отвечайте первое, что приходит в голову — правильных ответов нет.</p>
+      <p class="small dev-only hidden" id="qorig" style="color:#56606e;margin-top:6px"></p>
+    </section>
+
+    <!-- Результат -->
+    <section class="card hidden" id="s-res">
+      <span class="type-badge">Ваш тип</span>
+      <h1 id="rName"></h1>
+      <p id="rLead" style="font-size:17px"></p>
+      <div id="rMixed"></div>
+      <div id="rQuality"></div>
+      <details style="margin-top:8px">
+        <summary class="small muted" style="cursor:pointer">Как это посчитано</summary>
+        <p class="lead" id="rDocLead" style="margin-top:10px"></p>
+        <p id="rTraits" class="small"></p>
+        <p id="rBehav" class="small"></p>
+        <div class="bars" id="rBars"></div>
+        <p class="small muted">Шкалы от 1 до 7. Уровни: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5.</p>
+      </details>
+
+      <hr>
+      <h2>Ваши украшения <span class="draft">черновик</span></h2>
+      <p class="muted" id="rStyle"></p>
+      <div class="recs" id="rRecs"></div>
+
+      <hr>
+      <h3>Узнали себя?</h3>
+      <div class="stars" id="stars"></div>
+      <p class="small muted">1 — совсем не про меня, 5 — точно про меня.</p>
+
+      <hr>
+      <h3>Хотите персональную подборку?</h3>
+      <p class="small muted">Пришлём украшения, которые подходят вашему типу, — с фото и ценами.</p>
+      <input type="text" id="cName" placeholder="Имя">
+      <input type="text" id="cContact" placeholder="Телефон или @telegram">
+      <label class="chk"><input type="checkbox" id="cConsent"> <span>Даю согласие на обработку персональных данных (текст согласия — уточнить у юриста)</span></label>
+      <div class="row">
+        <button class="btn gold" id="sendBtn" disabled>Получить подборку</button>
+        <button class="btn ghost" id="againBtn">Пройти заново</button>
+      </div>
+      <div id="sent" class="note hidden">Готово. В прототипе данные никуда не отправляются — их видно в режиме проверки (⚙︎).</div>
+
+      <div class="dev dev-only hidden" id="devPanel"></div>
+    </section>
+  </main>
+
+  <!-- ============ МЕТОДИЧКА ============ -->
+  <main id="doc" class="hidden">
+    <section class="card doc">
+      <h2>Методическая справка прототипа</h2>
+      <p class="muted small">Версия 0.2 · 23.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+
+      <h3>1. Сценарий (базовый use case)</h3>
+      <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a7834a"/></marker></defs>
+        <g fill="#fffdf9" stroke="#a7834a">
+          <rect x="10" y="20" width="120" height="54" rx="10"/><rect x="160" y="20" width="120" height="54" rx="10"/>
+          <rect x="310" y="20" width="130" height="54" rx="10"/><rect x="470" y="20" width="130" height="54" rx="10"/>
+          <rect x="630" y="20" width="120" height="54" rx="10"/>
+          <rect x="630" y="130" width="120" height="54" rx="10"/><rect x="470" y="130" width="130" height="54" rx="10"/>
+          <rect x="310" y="130" width="130" height="54" rx="10"/><rect x="160" y="130" width="120" height="54" rx="10"/>
+          <rect x="10" y="130" width="120" height="54" rx="10" stroke-dasharray="4 3"/>
+        </g>
+        <g fill="#1f1b16" text-anchor="middle">
+          <text x="70" y="43">Вход</text><text x="70" y="60" fill="#6f665a">блогер · UTM</text>
+          <text x="220" y="43">Интро</text><text x="220" y="60" fill="#6f665a">обращение ж/м</text>
+          <text x="375" y="43">10 утверждений</text><text x="375" y="60" fill="#6f665a">шкала 1–7</text>
+          <text x="535" y="43">Расчёт 5 шкал</text><text x="535" y="60" fill="#6f665a">реверс 2,4,6,8,10</text>
+          <text x="690" y="43">Классификатор</text><text x="690" y="60" fill="#6f665a">ближайший тип</text>
+          <text x="690" y="153">Результат</text><text x="690" y="170" fill="#6f665a">тип ± второй</text>
+          <text x="535" y="153">Рекомендации</text><text x="535" y="170" fill="#6f665a">тип → категории</text>
+          <text x="375" y="153">Оценка «похоже?»</text><text x="375" y="170" fill="#6f665a">1–5, калибровка</text>
+          <text x="220" y="153">Контакт</text><text x="220" y="170" fill="#6f665a">+ согласие ПДн</text>
+          <text x="70" y="153">CRM / Frontbox</text><text x="70" y="170" fill="#6f665a">следующий этап</text>
+        </g>
+        <g stroke="#a7834a" stroke-width="1.5" marker-end="url(#ar)" fill="none">
+          <path d="M130,47 H158"/><path d="M280,47 H308"/><path d="M440,47 H468"/><path d="M600,47 H628"/>
+          <path d="M690,74 V128"/><path d="M630,157 H602"/><path d="M470,157 H442"/><path d="M310,157 H282"/><path d="M160,157 H132" stroke-dasharray="4 3"/>
+        </g>
+        <text x="10" y="230" fill="#6f665a">Пунктир — вне прототипа: интеграцию выбираем после утверждения логики (сайт / Facebook Instant Form / Telegram).</text>
+        <text x="10" y="250" fill="#6f665a">Выход сессии — JSON-payload (ответы, шкалы, тип, расстояния, качество, оценка, контакт, UTM) — он же контракт для ТЗ Ивану.</text>
+        <text x="10" y="270" fill="#6f665a">Рекомендации сейчас — черновик стилевых направлений; ~50 SKU подбирает Вазген.</text>
+      </svg>
+
+      <h3>2. Онтология (что с чем связано)</h3>
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+        <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#6f665a"/></marker></defs>
+        <g fill="#fffdf9" stroke="#1f1b16">
+          <rect x="10" y="20" width="110" height="36" rx="6"/><rect x="170" y="20" width="110" height="36" rx="6"/>
+          <rect x="330" y="20" width="110" height="36" rx="6"/><rect x="490" y="20" width="110" height="36" rx="6"/>
+          <rect x="640" y="20" width="110" height="36" rx="6"/>
+          <rect x="640" y="120" width="110" height="36" rx="6"/><rect x="490" y="120" width="110" height="36" rx="6"/>
+          <rect x="330" y="120" width="110" height="36" rx="6"/><rect x="170" y="120" width="110" height="36" rx="6"/>
+          <rect x="10" y="120" width="110" height="36" rx="6"/>
+        </g>
+        <g text-anchor="middle" fill="#1f1b16">
+          <text x="65" y="43">Респондент</text><text x="225" y="43">Сессия</text><text x="385" y="43">Ответ ×10</text>
+          <text x="545" y="43">Шкала ×5</text><text x="695" y="43">Прототип ×4</text>
+          <text x="695" y="143">Тип</text><text x="545" y="143">Стиль-направление</text><text x="385" y="143">Категория ×3</text>
+          <text x="225" y="143">SKU (каталог)</text><text x="65" y="143">Лид + источник</text>
+        </g>
+        <g stroke="#6f665a" marker-end="url(#ar2)" fill="none"><path d="M120,38 H168"/><path d="M280,38 H328"/><path d="M440,38 H488"/><path d="M600,38 H638"/><path d="M695,56 V118"/><path d="M640,138 H602"/><path d="M490,138 H442"/><path d="M330,138 H282"/><path d="M225,56 C200,90 90,90 65,118"/></g>
+        <g fill="#6f665a" font-size="11" text-anchor="middle"><text x="144" y="32">проходит</text><text x="304" y="32">содержит</text><text x="464" y="32">дают</text><text x="619" y="32">vs</text><text x="725" y="92">ближайший</text><text x="621" y="132">задаёт</text><text x="466" y="132">включает</text><text x="306" y="132">наполняет</text><text x="140" y="92">порождает</text></g>
+        <text x="10" y="195" fill="#6f665a">Респондент = тот, кто проходит тест, он же получатель украшения. «Подарок другому» — Q-03.</text>
+        <text x="10" y="215" fill="#6f665a">Тип — свойство Сессии, не человека: повторное прохождение даёт новую Сессию.</text><text x="10" y="235" fill="#6f665a">Тип → Стиль 1:1 · Стиль → Категории 1:N · Категория → SKU N:M.</text>
+      </svg>
+
+      <h3>3. Алгоритм (как считает прототип)</h3>
+      <ol class="ln">
+        <li>Пункты 2, 4, 6, 8, 10 переворачиваются: <code>8 − ответ</code> (документ, шаг 1).</li>
+        <li>Шкала = среднее пары: E (1, 6R), A (2R, 7), C (3, 8R), ES (4R, 9), O (5, 10R). Диапазон 1,0–7,0, шаг 0,5 (шаг 2).</li>
+        <li>Уровень: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5 (шаг 3, см. G-01).</li>
+        <li>Градации матрицы переводятся в числа: Низкая 3,0 · Ниже среднего 4,0 · Средняя 4,5 · Выше среднего 5,0 · Высокая 6,0 (G-02).</li>
+        <li>Тип = прототип с минимальным евклидовым расстоянием по 5 шкалам (G-03).</li>
+        <li>Если второй прототип дальше первого менее чем на 0,3 — показываем промежуточный профиль «тип А с чертами типа Б» (G-04).</li>
+        <li>Ответы проверяются на однотипность и противоречия в парах; тип не меняется, выводится мягкая пометка (G-07).</li>
+      </ol>
+
+      <h3>4. Разрывы, закрытые в прототипе</h3>
+      <table>
+        <tr><th>Код</th><th>Разрыв в исходном документе</th><th>Решение в прототипе</th></tr>
+        <tr><td>G-01</td><td>Границы уровней размыты и не стыкуются: «ниже 3,8–4,0», «4,0–5,2», «выше 5,3–5,5».</td><td>Шкала принимает значения с шагом 0,5, поэтому границы однозначны: ≤ 3,5 / 4,0–5,0 / ≥ 5,5.</td></tr>
+        <tr><td>G-02</td><td>Шаг 3 даёт 3 уровня, а матрица типов использует 5 градаций («выше/ниже среднего»).</td><td>Числовые якоря 3,0 / 4,0 / 4,5 / 5,0 / 6,0 — допущение, калибруется на пилоте (Q-01).</td></tr>
+        <tr><td>G-03</td><td>Матрица описывает 4 профиля из 3⁵ = 243 возможных комбинаций уровней; правило «выберите наиболее близкий» не формализовано.</td><td>Ближайший прототип по расстоянию — так же типы получены в исходном исследовании<sup><a href="#fn3">3</a></sup>.</td></tr>
+        <tr><td>G-04</td><td>Методическая справка упоминает промежуточный профиль, но не задаёт правило.</td><td>Порог 0,3: на симуляции промежуточный профиль получают ≈ 32% прохождений (при 0,5 — 49%).</td></tr>
+        <tr><td>G-05</td><td>Женская форма дана только для пункта 1, остальные пункты — в мужском роде.</td><td>Потребительские формулировки гендерно-нейтральны (G-10); для оригинала TIPI-RU в режиме проверки дописаны женские формы всех 10 пунктов.</td></tr>
+        <tr><td>G-06</td><td>Нет связки «тип → изделия» — а это цель теста.</td><td>Слой рекомендаций: тип → стиль → 3 категории → слоты SKU. Содержание — черновик для Вазгена.</td></tr>
+        <tr><td>G-07</td><td>Нет контроля качества ответов (все «4», «согласен» с противоположностями).</td><td>Пометка при однотипных ответах или ≥ 2 противоречивых парах.</td></tr>
+        <tr><td>G-08</td><td>Нет выхода на лид и источник трафика (договорённость: UTM на каждого блогера).</td><td>Форма контакта + согласие; <code>utm_*</code> из ссылки пишется в payload.</td></tr>
+        <tr><td>G-10</td><td>Формулировки бланка («Я воспринимаю себя как… критичного, склонного спорить», «согласен/не согласен») звучат как анкета, а не как обращение к покупателю.</td><td>Пункты переписаны от первого лица жизненными ситуациями; шкала «Совсем не про меня → Точно про меня». Черта, полюс, ключ и номер пункта не меняются (таблица в разделе 4а). Оригинал доступен в режиме проверки ⚙︎.</td></tr>
+        <tr><td>G-09</td><td>Порядок шкал в расчёте (E, A, C, ES, O) и в матрице (ES, E, O, A, C) разный.</td><td>Везде порядок матрицы.</td></tr>
+      </table>
+
+      <h3>4а. Потребительская адаптация пунктов</h3>
+      <table id="cxTable"></table>
+      <h3>5. Открытые вопросы</h3>
+      <table>
+        <tr><th>Код</th><th>Вопрос</th><th>Кому</th></tr>
+        <tr><td>Q-01</td><td>Якоря градаций (G-02): оставить или перейти на z-оценки по нормам TIPI-RU<sup><a href="#fn2">2</a></sup> / по пилотной выборке?</td><td>Леонид</td></tr>
+        <tr><td>Q-02</td><td>«Лёгкий на подъём лидер» требует высоких баллов по всем 5 шкалам; при случайных ответах выпадает ≈ 1–2%. Нормально ли, что самый «продающий» тип будет редким?</td><td>Леонид, Вазген</td></tr>
+        <tr><td>Q-03</td><td>Новогодний сценарий «подарок другому»: нужен режим «я оцениваю близкого человека» (формулировки от 3-го лица)?</td><td>Антон, Леонид</td></tr>
+        <tr><td>Q-04</td><td>Три типа из четырёх — с низкой открытостью опыту. Люди с высокой открытостью почти всегда получают «Лидера» или промежуточный профиль — проверить на пилоте.</td><td>Леонид</td></tr>
+        <tr><td>Q-05</td><td>Показывать ли шкалы пользователю? Формулировка «низкая эмоциональная стабильность» может отталкивать.</td><td>Леонид, Алина</td></tr>
+        <tr><td>Q-06</td><td>Рекомендации: стилевые направления (раздел 6) и ~50 SKU по типам.</td><td>Вазген</td></tr>
+        <tr><td>Q-07</td><td>Текст согласия на обработку ПДн (152-ФЗ) и дисклеймер «не является психодиагностикой».</td><td>юрист</td></tr>
+        <tr><td>Q-09</td><td>Адаптированные формулировки отходят от валидированного TIPI-RU<sup><a href="#fn2">2</a></sup>. Проверить каждую пару по смыслу; на пилоте сравнить варианты: часть трафика на оригинал, совпадение типов и оценка «Узнали себя?». Поле <code>wording</code> в данных сессии уже есть.</td><td>Леонид</td></tr>
+        <tr><td>Q-08</td><td>Площадка: сайт (Frontbox), Facebook Instant Form из рекламы в Instagram или Telegram-бот.</td><td>Антон, Иван</td></tr>
+      </table>
+
+      <h3>6. Черновик рекомендаций (на согласование с Вазгеном)</h3>
+      <div id="docRecs"></div>
+
+      <h3>7. Контракт данных сессии (для ТЗ на интеграцию)</h3>
+      <pre style="white-space:pre-wrap;font-size:12px;background:var(--soft);border-radius:10px;padding:10px">{ session_id, ts, version, utm: {source, medium, campaign, content},
+  wording: "cx"|"tipi", answers: {1..10: 1..7}, scores: {ES,E,O,A,C},
+  levels: {ES..C: "low"|"mid"|"high"}, type: "T1".."T4", secondary: "T1".."T4"|null,
+  distances: [{id, d}], quality: {straight, contradictions[], ok},
+  self_rating: 1..5|null, contact: {name, contact, consent} }</pre>
+
+      <hr>
+      <div class="fn">
+        <p id="fn1">1. Gosling S. D., Rentfrow P. J., Swann W. B. A very brief measure of the Big-Five personality domains // Journal of Research in Personality. 2003. Vol. 37. P. 504–528. <a href="https://doi.org/10.1016/S0092-6566(03)00046-1" target="_blank">doi:10.1016/S0092-6566(03)00046-1</a></p>
+        <p id="fn2">2. Сергеева А. С., Кириллов Б. А., Джумагулова А. Ф. Перевод и адаптация краткого пятифакторного опросника личности (TIPI-RU) // Экспериментальная психология. 2016. Т. 9, № 3. С. 138–154.</p>
+        <p id="fn3">3. Gerlach M., Farb B., Revelle W., Nunes Amaral L. A. A robust data-driven approach identifies four personality types across four large data sets // Nature Human Behaviour. 2018. Vol. 2. P. 735–742. <a href="https://doi.org/10.1038/s41562-018-0419-z" target="_blank">doi:10.1038/s41562-018-0419-z</a> — типы Reserved, Role model, Self-centred, Average соответствуют Т1–Т4.</p>
+        <p id="fn4">4. Гороховатский Л. Психодиагностический инструментарий и типология: методика TIPI-RU и определение психотипов (docx, ноябрь 2026). Названия типов — авторские.</p>
+        <p id="fn5">5. Krisp: «B2B Weekly Sync», 23.11.2026 — тест определяет психотип, Вазген подбирает изделия (старт ~50 позиций), кликабельная версия на утверждение.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+// ===== CORE: TIPI-RU scoring + type classifier (источник: документ Л. Гороховатского, разделы 3–4) =====
+const SCALES = [
+  { key: 'ES', name: 'Эмоциональная стабильность', items: [4, 9], reversed: [4] },
+  { key: 'E',  name: 'Экстраверсия',               items: [1, 6], reversed: [6] },
+  { key: 'O',  name: 'Открытость опыту',           items: [5, 10], reversed: [10] },
+  { key: 'A',  name: 'Доброжелательность',         items: [2, 7], reversed: [2] },
+  { key: 'C',  name: 'Добросовестность',           items: [3, 8], reversed: [8] },
+];
+const REVERSED = [2, 4, 6, 8, 10];
+
+// Шаг 3 документа. Средние двух целых пунктов принимают только значения с шагом 0.5,
+// поэтому размытые границы «3.8–4.0» и «5.3–5.5» сводятся к однозначным: ≤3.5 / 4.0–5.0 / ≥5.5.
+function level(v) {
+  if (v < 4.0) return 'low';
+  if (v <= 5.25) return 'mid';
+  return 'high';
+}
+const LEVEL_RU = { low: 'Низкий', mid: 'Средний', high: 'Высокий' };
+
+// Числовые якоря для 5 градаций из матрицы (раздел 4). Допущение прототипа — откалибровать на пилоте.
+const ANCHOR = { 'Низкая': 3.0, 'Ниже среднего': 4.0, 'Средняя': 4.5, 'Выше среднего': 5.0, 'Высокая': 6.0 };
+
+const TYPES = [
+  { id: 'T1', name: 'Доброжелательный консерватор', gerlach: 'Reserved',
+    matrix: { ES: 'Высокая', E: 'Ниже среднего', O: 'Низкая', A: 'Выше среднего', C: 'Выше среднего' } },
+  { id: 'T2', name: 'Лёгкий на подъём лидер', gerlach: 'Role model',
+    matrix: { ES: 'Высокая', E: 'Высокая', O: 'Высокая', A: 'Высокая', C: 'Высокая' } },
+  { id: 'T3', name: 'Знающий себе цену созидатель', gerlach: 'Self-centred',
+    matrix: { ES: 'Средняя', E: 'Высокая', O: 'Низкая', A: 'Низкая', C: 'Низкая' } },
+  { id: 'T4', name: 'Вдумчивый искатель истины', gerlach: 'Average',
+    matrix: { ES: 'Низкая', E: 'Высокая', O: 'Низкая', A: 'Средняя', C: 'Средняя' } },
+];
+
+const MIXED_GAP = 0.3;   // если 2-й тип дальше 1-го менее чем на 0.3 — промежуточный профиль (~1/3 случаев на симуляции)
+const ATYPICAL_DIST = 3.0; // если до ближайшего прототипа дальше 3.0 — профиль нетипичный
+
+function score(answers) { // answers: {1..10: 1..7}
+  for (let i = 1; i <= 10; i++) {
+    const a = answers[i];
+    if (!Number.isInteger(a) || a < 1 || a > 7) throw new Error('Нет ответа на пункт ' + i);
+  }
+  const adj = {};
+  for (let i = 1; i <= 10; i++) adj[i] = REVERSED.includes(i) ? 8 - answers[i] : answers[i];
+  const scores = {}, levels = {};
+  for (const s of SCALES) {
+    scores[s.key] = (adj[s.items[0]] + adj[s.items[1]]) / 2;
+    levels[s.key] = level(scores[s.key]);
+  }
+  return { adj, scores, levels };
+}
+
+function classify(scores) {
+  const dist = TYPES.map(t => {
+    let d2 = 0;
+    for (const s of SCALES) d2 += (scores[s.key] - ANCHOR[t.matrix[s.key]]) ** 2;
+    return { id: t.id, name: t.name, d: Math.round(Math.sqrt(d2) * 100) / 100 };
+  }).sort((a, b) => a.d - b.d || a.id.localeCompare(b.id));
+  const primary = dist[0], second = dist[1];
+  return {
+    primary: primary.id,
+    secondary: (second.d - primary.d) < MIXED_GAP ? second.id : null,
+    atypical: primary.d > ATYPICAL_DIST,
+    distances: dist,
+  };
+}
+
+// Контроль качества ответов (не меняет тип, только помечает):
+//  - straight-lining: все 10 ответов одинаковые;
+//  - противоречие в паре: согласие (≥6) и с прямым, и с обратным утверждением одной шкалы.
+function quality(answers) {
+  const vals = Object.values(answers);
+  const straight = vals.every(v => v === vals[0]);
+  const contradictions = SCALES.filter(s => {
+    const direct = s.items.find(i => !s.reversed.includes(i));
+    return answers[direct] >= 6 && answers[s.reversed[0]] >= 6;
+  }).map(s => s.key);
+  return { straight, contradictions, ok: !straight && contradictions.length < 2 };
+}
+
+if (typeof module !== 'undefined') module.exports = { SCALES, TYPES, ANCHOR, score, classify, quality, level, MIXED_GAP, ATYPICAL_DIST };
+
+</script>
+<script>
+// ===== CONTENT =====
+const VERSION = 'v0.2-2026-11-23';
+const ITEMS = { // [мужская форма, женская форма] — п.1 женская форма из документа, остальные — G-05
+  1: ['открытого, полного энтузиазма', 'открытую, полную энтузиазма'],
+  2: ['критичного, склонного спорить', 'критичную, склонную спорить'],
+  3: ['надёжного и дисциплинированного', 'надёжную и дисциплинированную'],
+  4: ['тревожного, меня легко расстроить', 'тревожную, меня легко расстроить'],
+  5: ['открытого для нового опыта, сложного', 'открытую для нового опыта, сложную'],
+  6: ['замкнутого, тихого', 'замкнутую, тихую'],
+  7: ['сочувствующего, сердечного', 'сочувствующую, сердечную'],
+  8: ['неорганизованного, беспечного', 'неорганизованную, беспечную'],
+  9: ['спокойного, эмоционально устойчивого', 'спокойную, эмоционально устойчивую'],
+  10: ['обыкновенного, не творческого', 'обыкновенную, не творческую'],
+};
+const ANCHORS_TIPI = { m: ['Совершенно не согласен','Не согласен','Немного не согласен','Ни то, ни другое','Немного согласен','Согласен','Абсолютно согласен'],
+                  f: ['Совершенно не согласна','Не согласна','Немного не согласна','Ни то, ни другое','Немного согласна','Согласна','Абсолютно согласна'] };
+
+// Потребительская адаптация (G-10). Каждый пункт сохраняет черту, полюс и обе характеристики пары TIPI-RU;
+// формулировки гендерно-нейтральны, поэтому выбор рода не нужен. Требует проверки Леонидом (Q-09).
+const ITEMS_CX = {
+  1: 'Я легко загораюсь новым и заряжаю энтузиазмом всех вокруг',
+  2: 'Мне часто есть что возразить, и поспорить я не боюсь',
+  3: 'На меня можно положиться: я держу слово и люблю порядок в делах',
+  4: 'Я часто волнуюсь, и выбить меня из колеи несложно',
+  5: 'Меня тянет ко всему новому и необычному, простые решения мне скучны',
+  6: 'В шумной компании я скорее тихо наблюдаю со стороны',
+  7: 'Я тонко чувствую людей, и мне важно поддержать близких',
+  8: 'Строгие планы — не моё: живу легко и порой что-то забываю',
+  9: 'Меня сложно вывести из равновесия, даже когда вокруг суета',
+  10: 'Мне ближе проверенное и привычное, чем эксперименты и творчество',
+};
+const ANCHORS_CX = ['Совсем не про меня','Не про меня','Скорее не про меня','И да, и нет','Скорее про меня','Про меня','Точно про меня'];
+
+// Текст результата для покупателя (2-е лицо). Научное описание из документа — в блоке «Как это посчитано».
+const LEAD_CX = {
+  T1: 'Вы — опора для близких: спокойствие, надёжность и тепло. Вы цените то, что проверено временем, и выбираете вещи, которые остаются с вами на годы.',
+  T2: 'Вы легко загораетесь новым и умеете вести за собой, не теряя собранности. Людей тянет к вашей энергии, а перемены вас только вдохновляют.',
+  T3: 'Вы знаете, чего хотите, и не боитесь быть в центре внимания. Свои правила, свой масштаб, свой результат — и украшения, которые заметны.',
+  T4: 'Вы чувствуете глубже других и ищете смысл во всём, что вас окружает. Для вас важны близкие люди и вещи со своей историей.',
+};
+let WORDING = 'cx'; // 'cx' — потребительская, 'tipi' — оригинал TIPI-RU (только в режиме проверки)
+
+// Описания — дословно из документа, раздел 5
+const DESC = {
+  T1: { lead: 'Спокойный, надёжный и эмоционально устойчивый человек, который ценит стабильность, порядок и проверенные решения.',
+        traits: 'высокая эмоциональная стабильность, доброжелательность и добросовестность выше среднего; экстраверсия ниже среднего, низкая открытость новому опыту.',
+        behav: 'не склонен к импульсивности и резким перепадам настроения, умеет поддерживать ровные, тёплые отношения, предпочитает предсказуемость и системность спонтанным экспериментам.' },
+  T2: { lead: 'Энергичный, гибкий и социально зрелый человек, который легко адаптируется к переменам и ведёт за собой других.',
+        traits: 'высокие показатели по всем пяти шкалам (высокая эмоциональная стабильность, экстраверсия, открытость опыту, доброжелательность и добросовестность).',
+        behav: 'быстро загорается новыми идеями, но при этом сохраняет организованность и самоконтроль. Легко находит общий язык с разными людьми и спокойно справляется со стрессом.' },
+  T3: { lead: 'Амбициозный, яркий и независимый человек, ориентированный на собственные цели, масштаб и свободу действий.',
+        traits: 'высокая экстраверсия, средняя эмоциональная стабильность, низкие показатели по открытости опыту, доброжелательности и добросовестности.',
+        behav: 'любит быть в центре внимания и действовать по собственным правилам, не оглядываясь на чужие ожидания или строгие рамки. Прямолинеен, напорист и фокусируется на личном результате.' },
+  T4: { lead: 'Общительный, глубоко переживающий и рефлексирующий человек, для которого важны смыслы и проверенные жизненные опоры.',
+        traits: 'высокая экстраверсия, низкая эмоциональная стабильность (высокая чувствительность), низкая открытость опыту; доброжелательность и добросовестность на среднем уровне.',
+        behav: 'остро воспринимает происходящее, склонен к глубокому анализу своих эмоций и поиску ответов на внутренние вопросы. Нуждается в общении и поддержке, но с осторожностью относится к радикальным жизненным переменам.' },
+};
+
+// ЧЕРНОВИК рекомендаций — НЕ из документа Леонида; заполняет/правит Вазген (Q-06)
+const RECS = {
+  T1: { style: 'Классика и вещи «на годы»: проверенные формы, благородный металл, сдержанный блеск.', why: 'стабильность и порядок → предсказуемые, вневременные формы',
+        cats: [['Классические кольца','гладкие и с одним камнем, жёлтое/красное золото'],['Серьги-пусеты и конго','на каждый день, без риска «не к месту»'],['Цепочки и подвески','лаконичные, базовая длина']] },
+  T2: { style: 'Универсальность с характером: модные линии, которые легко сочетать между собой.', why: 'открытость и энергия → новое, но собранное',
+        cats: [['Наборные кольца','комбинировать по настроению'],['Цветные камни','акцент без перегруза'],['Сочетание металлов','белое + жёлтое золото, трендовые коллекции']] },
+  T3: { style: 'Заметные статусные вещи: масштаб, крупная форма, акцент на себе.', why: 'экстраверсия и ориентир на результат → «statement»-изделия',
+        cats: [['Крупные кольца и печатки','объёмные, с выразительной фактурой'],['Массивные цепи и браслеты','видно издалека'],['Крупные камни','центральный акцент образа']] },
+  T4: { style: 'Украшения со смыслом: символ, личная история, мягкие формы.', why: 'смыслы и опоры → символичные и памятные вещи',
+        cats: [['Подвески-символы','знаки, обереги, знаки зодиака'],['Гравировка и именные изделия','дата, имя, слово'],['Жемчуг и мягкие формы','спокойная, тёплая эстетика']] },
+};
+const SCALE_ORDER = ['ES','E','O','A','C']; // G-09: порядок матрицы
+const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстраверсия', O:'Открытость опыту', A:'Доброжелательность', C:'Добросовестность' };
+
+// ===== STATE =====
+const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null };
+const qs = new URLSearchParams(location.search);
+const UTM = {}; ['source','medium','campaign','content'].forEach(k => { const v = qs.get('utm_' + k); if (v) UTM[k] = v; });
+let dev = qs.get('debug') === '1';
+const $ = id => document.getElementById(id);
+const typeById = id => TYPES.find(t => t.id === id);
+function show(id) { ['s-intro','s-q','s-res'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo(0, 0); }
+function setDev(on) { dev = on; document.querySelectorAll('.dev-only').forEach(e => e.classList.toggle('hidden', !on)); $('devToggle').classList.toggle('on', on); if (on && st.result) renderDev(); }
+
+// ===== INTRO =====
+$('startBtn').onclick = () => { st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
+
+// ===== QUESTIONS =====
+function renderQ() {
+  const i = st.i, g = st.g || 'f', cx = WORDING === 'cx';
+  const A = cx ? ANCHORS_CX : ANCHORS_TIPI[g];
+  $('prog').style.width = ((i - 1) / 10 * 100) + '%';
+  $('qnum').textContent = i + ' из 10';
+  $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
+  $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][g === 'f' ? 1 : 0];
+  $('qhint').textContent = cx ? 'Отвечайте первое, что приходит в голову — правильных ответов нет.' : 'Оцените пару характеристик в целом, даже если одна подходит вам больше другой.';
+  $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
+  const leg = document.querySelectorAll('.scale-legend span');
+  leg[0].textContent = A[0]; leg[1].textContent = A[6];
+  const sc = $('scale'); sc.innerHTML = '';
+  for (let v = 1; v <= 7; v++) {
+    const b = document.createElement('button'); b.textContent = v; b.title = A[v - 1];
+    if (st.answers[i] === v) b.classList.add('sel');
+    b.onclick = () => { st.answers[i] = v; renderQ(); setTimeout(() => { if (st.i === i) next(); }, 220); };
+    sc.appendChild(b);
+  }
+  $('anchor').textContent = st.answers[i] ? A[st.answers[i] - 1] : '';
+  $('nextBtn').disabled = !st.answers[i];
+  $('nextBtn').textContent = i === 10 ? 'Результат' : 'Далее';
+}
+function next() { if (!st.answers[st.i]) return; if (st.i < 10) { st.i++; renderQ(); } else finish(); }
+$('nextBtn').onclick = next;
+$('backBtn').onclick = () => { if (st.i > 1) { st.i--; renderQ(); } else show('s-intro'); };
+
+// ===== RESULT =====
+function finish() {
+  const s = score(st.answers), c = classify(s.scores), q = quality(st.answers);
+  st.result = { ...s, ...c, quality: q, session_id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())), ts: new Date().toISOString() }; st.rating = null; st.contact = null;
+  renderResult(); show('s-res');
+}
+function renderResult() {
+  const r = st.result, t = typeById(r.primary), d = DESC[r.primary];
+  $('rName').textContent = t.name;
+  $('rLead').textContent = LEAD_CX[r.primary];
+  $('rDocLead').textContent = d.lead;
+  $('rTraits').innerHTML = '<b>Профиль черт:</b> ' + d.traits;
+  $('rBehav').innerHTML = '<b>Поведенческие особенности:</b> ' + d.behav;
+  $('rMixed').innerHTML = r.secondary ? '<div class="note">Ваш профиль промежуточный: в нём есть и черты типа <b>«' + typeById(r.secondary).name + '»</b>.</div>' : '';
+  $('rBars').innerHTML = SCALE_ORDER.map(k => {
+    const v = r.scores[k], lv = { low: 'низкий', mid: 'средний', high: 'высокий' }[r.levels[k]];
+    return '<div class="bar"><span>' + SCALE_SHORT[k] + '</span><span class="lv">' + v.toFixed(1).replace('.', ',') + ' · ' + lv + '</span><span class="t"><i style="width:' + ((v - 1) / 6 * 100) + '%"></i></span></div>';
+  }).join('');
+  $('rQuality').innerHTML = r.quality.ok ? '' : '<div class="note warn">' + (r.quality.straight ? 'Все ответы одинаковые — результат может быть неточным. Попробуйте пройти ещё раз, выбирая разные оценки.' : 'В некоторых парах вы согласились с противоположными утверждениями — результат может быть неточным.') + '</div>';
+  const rec = RECS[r.primary];
+  $('rStyle').textContent = rec.style;
+  $('rRecs').innerHTML = rec.cats.map(([n, s]) => '<div class="rec"><b>' + n + '</b><span class="small muted">' + s + '</span><div class="slots"><div class="slot">SKU<br>Вазген</div><div class="slot">SKU<br>Вазген</div><div class="slot">SKU<br>Вазген</div></div></div>').join('');
+  const stars = $('stars'); stars.innerHTML = '';
+  for (let v = 1; v <= 5; v++) { const b = document.createElement('button'); b.textContent = v; if (st.rating === v) b.classList.add('sel'); b.onclick = () => { st.rating = v; renderResult(); }; stars.appendChild(b); }
+  $('sent').classList.toggle('hidden', !st.contact);
+  if (dev) renderDev();
+}
+['cName','cContact','cConsent'].forEach(id => $(id).addEventListener('input', () => { $('sendBtn').disabled = !($('cContact').value.trim() && $('cConsent').checked); }));
+$('sendBtn').onclick = () => { st.contact = { name: $('cName').value.trim(), contact: $('cContact').value.trim(), consent: $('cConsent').checked }; renderResult(); };
+$('againBtn').onclick = () => { st.answers = {}; st.result = null; show('s-intro'); };
+
+function payload() {
+  const r = st.result;
+  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM,
+    wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels, type: r.primary, secondary: r.secondary,
+    distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, contact: st.contact };
+}
+function renderDev() {
+  const r = st.result; if (!r) return;
+  const rows = Object.keys(st.answers).map(i => '<tr><td>' + i + '</td><td>' + st.answers[i] + '</td><td>' + r.adj[i] + (REVERSED.includes(+i) ? ' (R)' : '') + '</td></tr>').join('');
+  const dist = r.distances.map(x => '<tr><td>' + x.id + '</td><td>' + x.name + '</td><td>' + x.d + '</td></tr>').join('');
+  $('devPanel').innerHTML = '<b>Режим проверки</b> · ' + VERSION + (r.atypical ? ' · <span style="color:#9a4b2f">нетипичный профиль: до ближайшего прототипа &gt; ' + ATYPICAL_DIST + '</span>' : '') +
+    '<table><tr><th>№</th><th>Ответ</th><th>После реверса</th></tr>' + rows + '</table>' +
+    '<table><tr><th>Тип</th><th>Название</th><th>Расстояние</th></tr>' + dist + '</table>' +
+    '<div class="small">Промежуточный, если d₂ − d₁ &lt; ' + MIXED_GAP + '. Качество: ' + JSON.stringify(r.quality) + '</div>' +
+    '<pre id="pl">' + JSON.stringify(payload(), null, 2) + '</pre><button class="btn ghost" id="copyPl" style="font-size:13px;padding:7px 12px">Скопировать JSON</button>';
+  $('copyPl').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('pl').textContent).then(() => $('copyPl').textContent = 'Скопировано');
+}
+
+// ===== DEV PRESETS =====
+function answersFor(target) { // target: {ES..C} → ответы, дающие эти шкалы
+  const a = {};
+  for (const s of SCALES) { const v = Math.round(target[s.key]); const [d] = s.items.filter(i => !s.reversed.includes(i)); a[d] = v; a[s.reversed[0]] = 8 - v; }
+  return a;
+}
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
+  const p = b.dataset.preset; st.g = st.g || 'f';
+  if (/^T\d$/.test(p)) { const t = typeById(p), tg = {}; SCALE_ORDER.forEach(k => tg[k] = ANCHOR[t.matrix[k]]); st.answers = answersFor(tg); }
+  else if (p === 'mix') st.answers = answersFor({ ES: 4, E: 6, O: 3, A: 4, C: 4 });
+  else if (p === 'straight') { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 4; }
+  else { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 1 + Math.floor(Math.random() * 7); }
+  finish();
+});
+
+// ===== TABS =====
+function goTab(name) { $('quiz').classList.toggle('hidden', name !== 'quiz'); $('doc').classList.toggle('hidden', name !== 'doc'); document.querySelectorAll('[data-tab]').forEach(t => t.classList.toggle('on', t.dataset.tab === name)); }
+document.querySelectorAll('[data-tab]').forEach(t => t.onclick = () => goTab(t.dataset.tab));
+document.querySelectorAll('[data-goto-doc]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goTab('doc'); setTimeout(() => document.querySelector(a.getAttribute('href')).scrollIntoView(), 30); }));
+$('devToggle').onclick = () => setDev(!dev);
+$('wordBtn').onclick = () => { WORDING = WORDING === 'cx' ? 'tipi' : 'cx'; $('wordBtn').textContent = 'Формулировки: ' + (WORDING === 'cx' ? 'потребительские' : 'оригинал TIPI-RU'); };
+$('docRecs').innerHTML = '<table><tr><th>Тип</th><th>Стиль-направление</th><th>Логика (черта → изделие)</th><th>Категории</th></tr>' +
+  TYPES.map(t => '<tr><td>' + t.id + ' ' + t.name + '</td><td>' + RECS[t.id].style + '</td><td>' + RECS[t.id].why + '</td><td>' + RECS[t.id].cats.map(c => c[0]).join('; ') + '</td></tr>').join('') + '</table>';
+$('cxTable').innerHTML = '<tr><th>№</th><th>Шкала / полюс</th><th>Оригинал TIPI-RU («Я воспринимаю себя как…»)</th><th>Для покупателя</th></tr>' +
+  Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); const r = REVERSED.includes(+i);
+    return '<tr><td>' + i + '</td><td>' + s.key + (r ? ' −' : ' +') + '</td><td>…' + ITEMS[i][0] + '</td><td>' + ITEMS_CX[i] + '</td></tr>'; }).join('');
+setDev(dev);
+</script>
+</body>
+</html>
