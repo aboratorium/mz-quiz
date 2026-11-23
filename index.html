@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — Какое украшение отражает ваш характер? · v0.3</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.3.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -188,6 +188,7 @@ sup a{color:var(--gold);text-decoration:none}
         <div class="chips" id="rChips"></div>
       </div>
 
+      <div class="card sec hidden" id="rDuo" style="margin-top:16px"></div>
       <div class="powers" id="rPowers"></div>
       <div class="why" id="rWhy"></div>
       <div id="rMixed"></div>
@@ -202,11 +203,12 @@ sup a{color:var(--gold);text-decoration:none}
       </div>
 
       <div class="card sec">
-        <h3>Поделитесь своей картой</h3>
-        <p class="small muted">Сохраните карточку в сторис и узнайте, какой тип у подруги.</p>
+        <h3>Челлендж: а кто твоя подруга?</h3>
+        <p class="small muted">Отправьте тест подруге — она увидит ваш тип и узнает, какая вы пара. Или выложите карточку в сторис.</p>
+        <input type="text" id="inviteName" placeholder="Ваше имя для приглашения (необязательно)" maxlength="20" autocomplete="given-name">
         <div class="share">
           <button class="btn" id="storyBtn">Карточка для сторис</button>
-          <button class="btn ghost" id="inviteBtn">Позвать подругу</button>
+          <button class="btn gold" id="inviteBtn">Позвать подругу</button>
         </div>
         <div id="storyPrev" class="hidden" style="margin-top:12px"></div>
       </div>
@@ -247,7 +249,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.3 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.3.1 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -378,7 +380,7 @@ sup a{color:var(--gold);text-decoration:none}
       <table>
         <tr><th>Код</th><th>Роль</th><th>Решение</th><th>Основание</th></tr>
         <tr><td>D-01</td><td>Геймдизайн</td><td>Прогресс показан бусинами на цепочке: каждый ответ — бусина, последняя крупнее. Метафора совпадает с продуктом.</td><td>Видимый прогресс повышает доведение до конца: эффект «подаренного прогресса» в полевом эксперименте дал 34% против 19%<sup><a href="#fn6">6</a></sup>; CD2 «Достижение»<sup><a href="#fn7">7</a></sup>.</td></tr>
-        <tr><td>D-02</td><td>UX/UI</td><td>Шкала из 7 кругов: крайние крупнее, цвет от лилового «не про меня» к золотому «про меня»; автопереход 0,26 с; клавиши 1–7 на компьютере; цели нажатия ≥ 28 px, крайние 46 px.</td><td>Один вопрос на экран и минимум трения между ответами — практика тестов с высокой долей завершения<sup><a href="#fn10">10</a></sup>.</td></tr>
+        <tr><td>D-02</td><td>UX/UI</td><td>Шкала из 7 кругов: крайние крупнее, цвет от лилового «не про меня» к золотому «про меня»; без автоперехода: выбор отмечается, переход — только кнопкой «Далее» (можно спокойно передумать); клавиши 1–7 и Enter на компьютере; цели нажатия ≥ 28 px, крайние 46 px.</td><td>Один вопрос на экран и минимум трения между ответами — практика тестов с высокой долей завершения<sup><a href="#fn10">10</a></sup>.</td></tr>
         <tr><td>D-03</td><td>UX/UI</td><td>10 вопросов, счётчик оставшегося времени, кнопка «Назад» без потери ответов.</td><td>Рекомендуемый диапазон для тестов личности — 5–10/8–12 вопросов<sup><a href="#fn9">9</a></sup><sup><a href="#fn10">10</a></sup>.</td></tr>
         <tr><td>D-04</td><td>Геймдизайн</td><td>Подбадривания на 3, 5, 8 и 10-й бусине («Половина ожерелья собрана!»).</td><td>Точки отсечки на середине — главный риск отвала; короткая обратная связь удерживает темп.</td></tr>
         <tr><td>D-05</td><td>Геймдизайн</td><td>Раскрытие результата: 2 с «Нанизываем ответы → Плавим золото → Подбираем камень», затем переворот карты.</td><td>Предвкушение перед наградой — CD7 «Любопытство и непредсказуемость»<sup><a href="#fn7">7</a></sup>; длительность ограничена, чтобы не раздражать.</td></tr>
@@ -389,11 +391,13 @@ sup a{color:var(--gold);text-decoration:none}
         <tr><td>D-10</td><td>Социолог</td><td>Контакт запрашивается после результата, а не до; одно основное действие — «Хочу подборку с ценами».</td><td>Форма до результата увеличивает долю лидов, но теряет тех, кто закроет страницу<sup><a href="#fn9">9</a></sup>.</td></tr>
         <tr><td>D-11</td><td>Социолог</td><td>Метрики пилота: доля завершивших, отвал по бусинам, доля «Узнали себя?» ≥ 4, доля поделившихся (<code>shared</code>), лиды, распределение типов, K-фактор по <code>invite</code>.</td><td>Доля поделившихся и K-фактор — стандартные метрики вирусности тестов<sup><a href="#fn9">9</a></sup>.</td></tr>
         <tr><td>D-12</td><td>UX/UI</td><td>Иллюстрации изделий — оригинальные SVG (12 шт., 3 на тип) с металлом и камнем по талисману типа; заменяются фото SKU.</td><td>Картинка-результат сильнее текста; синтетика даёт единый стиль до появления фото каталога.</td></tr>
+        <tr><td>D-13</td><td>Социолог / геймдизайн</td><td>Челлендж «А кто ты?»: в ссылке-приглашении передаётся тип и имя пригласившей (<code>ref=T2&amp;n=Аня</code>). Подруга видит «Аня — Вдохновитель. А кто вы?», после прохождения получает «вашу пару» (10 сочетаний: «Солнце и Луна», «Две звезды»…) и парное украшение; может отправить результат обратно.</td><td>CD5 «Социальное влияние» и CD7 «Любопытство»<sup><a href="#fn7">7</a></sup>; сравнение с другом — сильнейший повод поделиться; парное украшение — готовый повод для подарка. Метрики: доля <code>ref</code> среди прохождений, K-фактор<sup><a href="#fn9">9</a></sup>.</td></tr>
       </table>
       <table>
         <tr><th>Код</th><th>Открытый вопрос v0.3</th><th>Кому</th></tr>
         <tr><td>Q-10</td><td>Игровые классы и талисманы (камни, стихии) — согласовать с бренд-платформой «Магии золота»: не противоречат ли тону бренда.</td><td>Вазген, Владислав</td></tr>
         <tr><td>Q-11</td><td>Строки «Почему так» (раздел D-08) — проверить формулировки по каждому полюсу шкалы.</td><td>Леонид</td></tr>
+        <tr><td>Q-13</td><td>Тексты 10 пар и парные изделия — черновик; подобрать реальные парные SKU (подвески-половинки, парные браслеты).</td><td>Вазген</td></tr>
         <tr><td>Q-12</td><td>Сбор данных: куда отправлять payload (таблица, CRM, Frontbox) — без этого метрики D-11 не посчитать.</td><td>Антон, Иван</td></tr>
       </table>
 
@@ -609,7 +613,7 @@ const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстрав
 
 
 // ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
-const VERSION = 'v0.3-2026-11-24';
+const VERSION = 'v0.3.1-2026-11-24';
 
 // Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
 const TYPE_UI = {
@@ -659,8 +663,51 @@ function show(id) { ['s-intro', 's-q', 's-reveal', 's-res'].forEach(s => $(s).cl
 function setDev(on) { dev = on; document.querySelectorAll('.dev-only').forEach(e => e.classList.toggle('hidden', !on)); $('devToggle').classList.toggle('on', on); if (on && st.result) renderDev(); if (!$('s-q').classList.contains('hidden')) renderQ(); }
 function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
 
+
+// ===== ДУЭТ (D-13: челлендж «А кто ты?» — сарафанный цикл) =====
+const PAIRS = { // ключ — отсортированная пара типов
+  T1T1: ['Две опоры', 'Вы обе — надёжный тыл друг для друга.', 'парные классические пусеты'],
+  T1T2: ['Опора и искра', 'Одна зажигает, другая держит курс — идеальный баланс.', 'подвески-половинки «круг и солнце»'],
+  T1T3: ['Надёжность и масштаб', 'Одна мечтает крупно, другая знает, как довести до конца.', 'кольца из одной коллекции в разных металлах'],
+  T1T4: ['Тишина и глубина', 'С вами двумя спокойно и по-настоящему душевно.', 'подвески с гравировкой друг для друга'],
+  T2T2: ['Два солнца', 'Где вы вдвоём — там праздник и новые идеи.', 'парные наборные кольца'],
+  T2T3: ['Огонь и пламя', 'Самый яркий дуэт: вас невозможно не заметить.', 'парные браслеты-цепи'],
+  T2T4: ['Солнце и Луна', 'Вы дополняете друг друга, как день и ночь.', 'подвески «солнце» и «луна»'],
+  T3T3: ['Две звезды', 'Дуэт с характером: каждая сияет по-своему.', 'коктейльные кольца с разными камнями'],
+  T3T4: ['Звезда и Луна', 'Блеск и глубина — вместе вы видите больше.', 'подвески «звезда» и «луна»'],
+  T4T4: ['Две луны', 'Вы понимаете друг друга без слов.', 'серьги с жемчугом для обеих'],
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const REF = (() => { const r = qs.get('ref'); if (!/^T[1-4]$/.test(r || '')) return null; const n = (qs.get('n') || '').trim().slice(0, 20); return { type: r, name: n }; })();
+const pairKey = (a, b) => [a, b].sort().join('');
+const refWho = () => REF.name ? esc(REF.name) : 'Ваша подруга';
+function renderRefIntro() {
+  if (!REF) return;
+  const ui = TYPE_UI[REF.type], t = typeById(REF.type);
+  const box = document.createElement('div');
+  box.className = 'note'; box.style.cssText = 'display:flex;gap:12px;align-items:center;margin:0 0 16px';
+  box.innerHTML = `<div style="width:64px;height:64px;flex:none;border-radius:14px;background:${ui.bg};padding:6px">${EMBLEM[REF.type]()}</div><div><b>${refWho()}</b> прошла тест: «${t.name}» · ${ui.cls}.<br>А кто вы? Узнайте, какая вы пара.</div>`;
+  $('s-intro').insertBefore(box, $('s-intro').querySelector('h1'));
+  $('startBtn').textContent = 'Узнать, кто я';
+}
+function renderDuo() {
+  const el = $('rDuo'); if (!REF) { el.classList.add('hidden'); return; }
+  const me = st.result.primary, [title, line, item] = PAIRS[pairKey(me, REF.type)];
+  el.classList.remove('hidden');
+  el.innerHTML = `<h3>Ваша пара: вы + ${REF.name ? esc(REF.name) : 'подруга'}</h3>
+    <div style="display:flex;justify-content:center;gap:10px;margin:8px 0 12px">${[me, REF.type].map(k => `<div style="width:84px;height:84px;border-radius:18px;background:${TYPE_UI[k].bg};padding:8px">${EMBLEM[k]()}</div>`).join('<div style="align-self:center;font:700 26px Cormorant Garamond,serif;color:var(--gold)">+</div>')}</div>
+    <h2 style="text-align:center">${title}</h2><p style="text-align:center">${line}</p>
+    <div class="why" style="text-align:center">Парное украшение для вас двоих: <b>${item}</b> <span class="draft">черновик</span></div>
+    <button class="btn gold full" id="duoShare">Отправить результат подруге</button>`;
+  $('duoShare').onclick = async () => {
+    const text = `Мы с тобой — «${title}»! Я — ${TYPE_UI[me].cls}, ты — ${TYPE_UI[REF.type].cls}. Смотри, какое у нас парное украшение:`;
+    st.shared.push('duo'); try { if (navigator.share) await navigator.share({ title: 'Наша пара — Магия золота', text, url: location.origin + location.pathname }); else { await navigator.clipboard.writeText(text + ' ' + location.origin + location.pathname); toast('Текст скопирован'); } } catch (e) {}
+  };
+}
+
 // ===== INTRO =====
 $('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
+renderRefIntro();
 $('startBtn').onclick = () => { st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
 
 // ===== NECKLACE (D-01: прогресс = бусины на цепочке) =====
@@ -695,7 +742,7 @@ function renderQ() {
     const b = document.createElement('button'); b.className = 'dot'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', A[v - 1]);
     b.style.width = b.style.height = DOT[v - 1] + 'px'; b.style.borderColor = DOT_C[v - 1];
     if (st.answers[i] === v) { b.classList.add('sel'); b.style.background = DOT_C[v - 1]; b.setAttribute('aria-checked', 'true'); }
-    b.onclick = () => { st.answers[i] = v; renderQ(); setTimeout(() => { if (st.i === i) next(); }, 260); };
+    b.onclick = () => { st.answers[i] = v; renderQ(); $('nextBtn').focus({ preventScroll: true }); };
     sc.appendChild(b);
   }
   $('anchor').textContent = st.answers[i] ? A[st.answers[i] - 1] : '';
@@ -706,7 +753,7 @@ function renderQ() {
 function next() { if (!st.answers[st.i]) return; if (st.i < 10) { st.i++; renderQ(); } else finish(); }
 $('nextBtn').onclick = next;
 $('backBtn').onclick = () => { if (st.i > 1) { st.i--; renderQ(); } else show('s-intro'); };
-document.addEventListener('keydown', e => { if ($('s-q').classList.contains('hidden')) return; const n = +e.key; if (n >= 1 && n <= 7) { st.answers[st.i] = n; renderQ(); setTimeout(next, 200); } });
+document.addEventListener('keydown', e => { if ($('s-q').classList.contains('hidden')) return; const n = +e.key; if (n >= 1 && n <= 7) { st.answers[st.i] = n; renderQ(); } else if (e.key === 'Enter' && st.answers[st.i] && document.activeElement !== $('nextBtn') && document.activeElement !== $('backBtn')) { e.preventDefault(); next(); } });
 
 // ===== REVEAL (D-05: предвкушение → раскрытие) =====
 function finish(instant) {
@@ -743,6 +790,7 @@ function renderResult() {
   $('rBehav').innerHTML = '<b>Поведенческие особенности:</b> ' + d.behav;
   $('rBars').innerHTML = SCALE_ORDER.map(k => { const v = r.scores[k], lv = { low: 'низкий', mid: 'средний', high: 'высокий' }[r.levels[k]];
     return `<div class="bar"><span>${SCALE_SHORT[k]}</span><span class="lv">${v.toFixed(1).replace('.', ',')} · ${lv}</span><span class="t"><i style="width:${(v - 1) / 6 * 100}%"></i></span></div>`; }).join('');
+  renderDuo();
   renderStars();
   $('sent').classList.toggle('hidden', !st.contact);
   $('storyPrev').classList.add('hidden');
@@ -795,7 +843,7 @@ $('storyBtn').onclick = async () => {
   } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось создать картинку'); }
 };
 $('inviteBtn').onclick = async () => {
-  const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend', text = 'Я — «' + typeById(st.result.primary).name + '». А какой тип у тебя? Тест за 2 минуты:';
+  const nm = $('inviteName').value.trim().slice(0, 20); const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend&ref=' + st.result.primary + (nm ? '&n=' + encodeURIComponent(nm) : ''), text = 'Я — ' + TYPE_UI[st.result.primary].cls + ' («' + typeById(st.result.primary).name + '»). А кто ты? Пройди тест за 2 минуты — узнаем, какая мы пара:';
   st.shared.push('invite');
   try { if (navigator.share) await navigator.share({ title: 'Магия золота — тест', text, url }); else { await navigator.clipboard.writeText(text + ' ' + url); toast('Ссылка скопирована'); } }
   catch (e) { if (e && e.name !== 'AbortError') toast('Скопируйте ссылку из адресной строки'); }
@@ -806,7 +854,7 @@ $('inviteBtn').onclick = async () => {
 function payload() {
   const r = st.result;
   return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM, wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels,
-    type: r.primary, secondary: r.secondary, distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, shared: st.shared, contact: st.contact };
+    type: r.primary, secondary: r.secondary, distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, shared: st.shared, ref: REF, contact: st.contact };
 }
 function renderDev() {
   const r = st.result; if (!r) return;
