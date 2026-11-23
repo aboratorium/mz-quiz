@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — Какое украшение отражает ваш характер? · v0.6</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -65,6 +65,10 @@ p{margin:0 0 12px}
 .sc-meta{font-size:12px;color:var(--muted);line-height:1.4}
 .sc-alt{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--muted)}
 .sc-stat{font-size:11.5px;color:#8a7a5c}
+.sc-play{display:inline-flex;align-items:center;gap:6px;margin:8px 0 2px;border:1px solid var(--gold2);background:#fff;color:#7a5a20;border-radius:999px;padding:6px 12px;font:600 12.5px Manrope,sans-serif;cursor:pointer;min-height:34px}
+.sc-alt .sc-play{margin:4px 0;padding:4px 10px;font-size:11.5px;min-height:28px}
+.sc-player{margin-top:10px}
+.sc-player iframe{width:100%;max-width:340px;aspect-ratio:9/16;max-height:620px;border:0;border-radius:14px;background:#000;display:block;margin:0 auto 6px}
 .sc-alt summary{color:var(--gold);font-weight:600;cursor:pointer}
 .sc-alt-i{margin-top:6px}
 .sc-alt-i i{color:#7a5a20}
@@ -262,7 +266,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.6 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.7 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -442,7 +446,7 @@ sup a{color:var(--gold);text-decoration:none}
         <g stroke="#b28a45" stroke-width="1.5" marker-end="url(#ar4)"><path d="M170,55 H198"/><path d="M360,55 H388"/><path d="M550,55 H578"/></g>
         <text x="380" y="125" text-anchor="middle" fill="#6e6456">Затраты Apify ≈ $2 из бюджета $5. Срез на 24.11.2026 — обновлять раз в квартал (R-3).</text>
       </svg>
-      <p class="small muted">Методика: по каждому мему — 30 роликов из поиска TikTok (clockworks/tiktok-scraper) и выдача Reels по 8 запросам (data-slayer/instagram-search-reels; по «воздухан», «можно а зачем», «мой 2016» Reels вернул пустую выдачу). В расчёт идут ролики с 01.01.2025. Индекс 0–100 = 40% × лог-медиана просмотров + 30% × медианная доля репостов (сигнал «хочется скинуть») + 30% × доля роликов за последние 90 дней; каждая метрика нормирована на максимум. Ограничения: поиск — не вся генеральная совокупность; по «пиббл» и «сикс-севен» в выдаче много зарубежных роликов; «котость» не берём, пока не ясен смысл. Сырые данные: <code>research/</code> в репозитории.</p>
+      <p class="small muted">Методика: по каждому мему — 30 роликов из поиска TikTok (clockworks/tiktok-scraper) и выдача Reels по 8 запросам (data-slayer/instagram-search-reels; по «воздухан», «можно а зачем», «мой 2016» Reels вернул пустую выдачу). В расчёт идут ролики с 01.01.2025. Индекс 0–100 = 40% × лог-медиана просмотров + 30% × медианная доля репостов (сигнал «хочется скинуть») + 30% × доля роликов за последние 90 дней; каждая метрика нормирована на максимум. Ограничения: поиск — не вся генеральная совокупность; по «пиббл» и «сикс-севен» в выдаче много зарубежных роликов; «котость» не берём, пока не ясен смысл. Сырые данные: <code>research/</code> в репозитории. В тесте у каждого мема кнопка «▶ Посмотреть мем»: самый просматриваемый ролик из выборки, показанный официальным плеером TikTok / Instagram (ролик остаётся у автора; внутренний референс, не для продакшена).</p>
       <table id="memeRating"></table>
 
       <hr>
@@ -662,7 +666,7 @@ const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстрав
 
 
 // ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
-const VERSION = 'v0.6-2026-11-24';
+const VERSION = 'v0.7-2026-11-24';
 
 // Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
 const TYPE_UI = {
@@ -967,6 +971,12 @@ const SCENES = {
 };
 // Рейтинг мемов 2025–2026 (источники в сносках 11–15). Используем только форматы без реальных людей, детей и чужих персонажей (R-1).
 const MEME_RATING = [["пиббл", 86, 30, "420 тыс.", "22,6%", "7,63%", "50%", "—", "да — 1, 7, 9 (свой бульдог); часть роликов зарубежные"], ["черемша мем", 83, 30, "367 тыс.", "17,2%", "7,0%", "50%", "65 тыс.", "да — 3, 5, 6, 9 (свой гибрид)"], ["котость", 77, 30, "328 тыс.", "13,0%", "3,32%", "77%", "—", "смысл уточнить — пока не берём"], ["охаешечки", 65, 30, "572 тыс.", "11,4%", "2,32%", "47%", "—", "да — 1 (только фраза)"], ["бурмалда", 63, 30, "142 тыс.", "11,7%", "2,45%", "53%", "—", "да — 2"], ["я тебя могну", 62, 30, "544 тыс.", "5,7%", "0,78%", "57%", "216 тыс.", "да — 1"], ["вот такие дела собачка", 61, 30, "12 тыс.", "6,0%", "0,6%", "90%", "13 тыс.", "да — 2, 4, 7 (свои звери)"], ["воздухан", 58, 30, "315 тыс.", "9,9%", "1,96%", "37%", "—", "да — 4, 8"], ["сова на скакалке", 51, 30, "157 тыс.", "8,3%", "1,73%", "23%", "21 тыс.", "да — 4, 8 (своя сова)"], ["сикс севен", 48, 30, "521 тыс.", "2,6%", "0,7%", "17%", "—", "да — 8; много зарубежных роликов"], ["можно а зачем", 44, 30, "83 тыс.", "4,3%", "0,85%", "20%", "—", "да — 2, 5, 10"], ["мой 2016", 43, 27, "99 тыс.", "5,1%", "0,17%", "22%", "—", "да — 6, 7, 10"], ["пухосос", 42, 30, "52 тыс.", "6,2%", "0,59%", "20%", "—", "да — 3, 5, 10"], ["бобр за столом", 40, 28, "18 тыс.", "4,1%", "0,49%", "25%", "—", "да — 9 (без текста песни)"], ["пингвин нигилист", 39, 30, "165 тыс.", "4,3%", "0,44%", "3%", "2,0 млн", "да — 6; лидер в Reels"]];
+// Референсы для команды (внутренняя версия): самый просматриваемый ролик по мему из выборки Apify 24.11.2026.
+// Показываются официальным встраиваемым плеером площадки — ролик остаётся у автора.
+const MEME_REF = {"Пиббл на сёрфе": {"p": "tt", "id": "7620606065754803472", "plays": "46 млн", "url": "https://www.tiktok.com/@pibblefan_/video/7620606065754803472"}, "«Охаёшечки»": {"p": "tt", "id": "7657135542366113042", "plays": "6,1 млн", "url": "https://www.tiktok.com/@zubita_/video/7657135542366113042"}, "«Я тебя могну»": {"p": "tt", "id": "7672839605187661077", "plays": "14,1 млн", "url": "https://www.tiktok.com/@busterenko_/video/7672839605187661077"}, "«Бурмалда»": {"p": "tt", "id": "7617143362692451601", "plays": "2,6 млн", "url": "https://www.tiktok.com/@jaylonebeats/video/7617143362692451601"}, "«Вот такие дела, собачка»": {"p": "tt", "id": "7690602320668790037", "plays": "2,1 млн", "url": "https://www.tiktok.com/@corgi.evaa/video/7690602320668790037"}, "«Можно, а зачем?»": {"p": "tt", "id": "7579985147450248468", "plays": "3,9 млн", "url": "https://www.tiktok.com/@lolepandril/video/7579985147450248468"}, "«Тихо, не спеша, черемша»": {"p": "tt", "id": "7704258805705526559", "plays": "3,6 млн", "url": "https://www.tiktok.com/@geo_nuvels/video/7704258805705526559"}, "«Черемша»-гибрид": {"p": "tt", "id": "7697227985652354312", "plays": "2,8 млн", "url": "https://www.tiktok.com/@geo_nuvels/video/7697227985652354312"}, "«Пухосос»": {"p": "tt", "id": "7648981842665753888", "plays": "1,8 млн", "url": "https://www.tiktok.com/@lutchak2/video/7648981842665753888"}, "«Воздухан»": {"p": "tt", "id": "7642316745050688789", "plays": "7,2 млн", "url": "https://www.tiktok.com/@abdullaevauhtam8/video/7642316745050688789"}, "«Воздухан» наоборот": {"p": "tt", "id": "7650807348340215043", "plays": "3,3 млн", "url": "https://www.tiktok.com/@tweezy_ai/video/7650807348340215043"}, "«Сова на скакалке»": {"p": "tt", "id": "7660126482563403022", "plays": "1,5 млн", "url": "https://www.tiktok.com/@w_orl2/video/7660126482563403022"}, "Пингвин-нигилист": {"p": "ig", "id": "DT79lldAWNy", "plays": "21,9 млн", "url": "https://www.instagram.com/reel/DT79lldAWNy/"}, "«Мой 2016-й»": {"p": "tt", "id": "7540665339365854496", "plays": "10,8 млн", "url": "https://www.tiktok.com/@shagaevaalina/video/7540665339365854496"}, "«6-7»": {"p": "tt", "id": "7618928422810553618", "plays": "54,6 млн", "url": "https://www.tiktok.com/@gazanmusic/video/7618928422810553618"}, "«Бобр» (2025)": {"p": "tt", "id": "7457870210595360008", "plays": "4,0 млн", "url": "https://www.tiktok.com/@dubkovapo/video/7457870210595360008"}};
+function refBtn(name) { const r = MEME_REF[name]; return r ? `<button class="sc-play" data-ref="${esc(name)}">▶ Посмотреть мем · ${r.p === 'ig' ? 'Reels' : 'TikTok'}, ${r.plays}</button>` : '<span class="sc-stat">(вечный формат — без ролика)</span>'; }
+function refPlayer(name) { const r = MEME_REF[name]; const src = r.p === 'ig' ? `https://www.instagram.com/reel/${r.id}/embed` : `https://www.tiktok.com/player/v1/${r.id}?description=1&music_info=1&rel=0`; return `<div class="sc-player"><iframe src="${src}" loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen title="${esc(name)}"></iframe><div class="sc-stat">Оригинал: <a href="${r.url}" target="_blank" rel="noopener">открыть у автора</a> · референс для команды, не для продакшена</div></div>`; }
+
 // ===== STATE =====
 const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null, shared: [] };
 const qs = new URLSearchParams(location.search);
@@ -1067,7 +1077,10 @@ function renderQ() {
   $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
   $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
   const sc0 = SCENES[i], vm = sc0.v[0]; $('scene').classList.toggle('hidden', !cx);
-  if (cx) $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Сцена ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(vm[1])}</div><div class="sc-cap">${esc(vm[2])}</div><div class="sc-meta"><b>Мем:</b> ${esc(vm[0])} — <span class="sc-stat">${esc(vm[3])}</span></div><div class="sc-alt">(${sc0.v.slice(1).map((x, k) => `<b>альтернатива ${k + 1}:</b> ${esc(x[0])} — <i>${esc(x[2])}</i> <span class="sc-stat">[${esc(x[3])}]</span>`).join('; ')})</div>`;
+  if (cx) {
+    $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Сцена ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(vm[1])}</div><div class="sc-cap">${esc(vm[2])}</div><div class="sc-meta"><b>Мем:</b> ${esc(vm[0])} — <span class="sc-stat">${esc(vm[3])}</span></div>${refBtn(vm[0])}<div class="sc-alt">(${sc0.v.slice(1).map((x, k) => `<b>альтернатива ${k + 1}:</b> ${esc(x[0])} — <i>${esc(x[2])}</i> <span class="sc-stat">[${esc(x[3])}]</span> ${refBtn(x[0])}`).join('; ')})</div><div id="scPlayer"></div>`;
+    $('scene').querySelectorAll('.sc-play').forEach(btn => btn.onclick = () => { const p = $('scPlayer'), n = btn.dataset.ref; if (p.dataset.cur === n) { p.innerHTML = ''; p.dataset.cur = ''; return; } p.innerHTML = refPlayer(n); p.dataset.cur = n; p.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+  }
   $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
   const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = cx ? 'Не про меня' : A[0]; leg[1].textContent = cx ? 'Про меня' : A[6];
   const sc = $('scale'); sc.innerHTML = '';
@@ -1220,7 +1233,7 @@ $('docRecs').innerHTML = '<table><tr><th>Тип / класс</th><th>Стиль<
   TYPES.map(t => `<tr><td>${t.id} ${t.name} / ${TYPE_UI[t.id].cls}</td><td>${RECS[t.id].style}</td><td>${RECS[t.id].why}</td><td>${RECS[t.id].items.map(c => c[0]).join('; ')}</td><td>${TYPE_UI[t.id].chips.map(c => c[1]).join(', ')}</td></tr>`).join('') + '</table>';
 $('cxTable').innerHTML = '<tr><th>№</th><th>Шкала / полюс</th><th>Оригинал TIPI-RU («Я воспринимаю себя как…»)</th><th>Для покупателя</th></tr>' +
   Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); return `<tr><td>${i}</td><td>${s.key}${REVERSED.includes(+i) ? ' −' : ' +'}</td><td>…${ITEMS[i][0]}</td><td>${ITEMS_CX[i]}</td></tr>`; }).join('');
-$('sceneTable').innerHTML = '<tr><th>№</th><th>Утверждение</th><th>Вариант</th><th>Мем</th><th>Что на картинке</th><th>Подпись</th><th>Данные</th></tr>' + Object.keys(SCENES).map(i => SCENES[i].v.map((x, k) => `<tr>${k === 0 ? `<td rowspan="3">${i}</td><td rowspan="3">${ITEMS_CX[i]}<br><span class="small muted">задача кадра: ${SCENES[i].job}</span></td>` : ''}<td>${['основной', 'альт. 1', 'альт. 2'][k]}</td><td>${x[0]}${x[4] ? ` <a href="${x[4]}" target="_blank">поиск</a>` : ''}</td><td>${x[1]}</td><td>${x[2]}</td><td class="small">${x[3]}</td></tr>`).join('')).join('');
+$('sceneTable').innerHTML = '<tr><th>№</th><th>Утверждение</th><th>Вариант</th><th>Мем</th><th>Что на картинке</th><th>Подпись</th><th>Данные</th></tr>' + Object.keys(SCENES).map(i => SCENES[i].v.map((x, k) => `<tr>${k === 0 ? `<td rowspan="3">${i}</td><td rowspan="3">${ITEMS_CX[i]}<br><span class="small muted">задача кадра: ${SCENES[i].job}</span></td>` : ''}<td>${['основной', 'альт. 1', 'альт. 2'][k]}</td><td>${x[0]}${MEME_REF[x[0]] ? ` <a href="${MEME_REF[x[0]].url}" target="_blank">ролик (${MEME_REF[x[0]].plays})</a>` : ''}</td><td>${x[1]}</td><td>${x[2]}</td><td class="small">${x[3]}</td></tr>`).join('')).join('');
 $('memeRating').innerHTML = '<tr><th>#</th><th>Мем (запрос)</th><th>Индекс</th><th>Роликов</th><th>Медиана просмотров TikTok</th><th>Вовлечённость</th><th>Репосты</th><th>Свежие (90 дн.)</th><th>Медиана Reels</th><th>Берём?</th></tr>' + MEME_RATING.map((r, k) => `<tr><td>${k + 1}</td><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td style="white-space:nowrap">${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td style="white-space:nowrap">${r[7]}</td><td>${r[8]}</td></tr>`).join('');
 setDev(dev);
 
