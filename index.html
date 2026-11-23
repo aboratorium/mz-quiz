@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — Какое украшение отражает ваш характер? · v0.3.1</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -56,6 +56,13 @@ p{margin:0 0 12px}
 .anchor{min-height:22px;text-align:center;font-size:14px;color:var(--muted);margin-top:8px}
 .nav{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
 .cheer{font-size:13px;color:var(--gold);text-align:center;min-height:20px;margin-top:10px;font-weight:600}
+.scene{border:1.5px dashed var(--gold2);border-radius:16px;background:repeating-linear-gradient(135deg,#fffaf0 0 14px,#fbf3e4 14px 28px);padding:12px 13px;margin:4px 0 6px}
+.sc-top{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.sc-badge{font:700 10.5px Manrope,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--gold);color:#fff;border-radius:6px;padding:3px 7px}
+.sc-badge.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold2)}
+.sc-pic{font-size:14px;line-height:1.4}
+.sc-cap{font:600 italic 15px Manrope,sans-serif;color:#7a5a20;margin:6px 0}
+.sc-meta{font-size:12px;color:var(--muted);line-height:1.4}
 /* reveal */
 .reveal{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;text-align:center}
 .spin{width:120px;height:120px;border-radius:50%;background:conic-gradient(from 0deg,#fff3c4,#d8b06a,#9c6b1e,#d8b06a,#fff3c4);animation:sp 1.1s linear infinite;-webkit-mask:radial-gradient(circle,transparent 46px,#000 47px);mask:radial-gradient(circle,transparent 46px,#000 47px);margin-bottom:22px}
@@ -129,7 +136,7 @@ sup a{color:var(--gold);text-decoration:none}
 <body>
 <div class="wrap">
   <header class="top">
-    <span class="brand">Магия золота</span>
+    <span style="display:flex;flex-direction:column;line-height:1.1"><span class="brand">Магия золота</span><span id="verTag" style="font-size:11px;color:var(--muted);letter-spacing:.02em"></span></span>
     <span class="tabs">
       <button class="tab on" data-tab="quiz">Тест</button>
       <button class="tab" data-tab="doc">Методичка</button>
@@ -160,6 +167,7 @@ sup a{color:var(--gold);text-decoration:none}
     <section class="card hidden" id="s-q">
       <svg class="necklace" id="necklace" viewBox="0 0 520 56" aria-hidden="true"></svg>
       <div class="qnum"><span id="qnum"></span><span id="qleft"></span></div>
+      <div class="scene" id="scene"></div>
       <div class="qlead" id="qlead">Насколько это про вас?</div>
       <div class="qtext" id="qtext"></div>
       <div class="scale" id="scale" role="radiogroup" aria-label="Насколько это про вас"></div>
@@ -249,7 +257,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.3.1 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.4 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -401,6 +409,23 @@ sup a{color:var(--gold);text-decoration:none}
         <tr><td>Q-12</td><td>Сбор данных: куда отправлять payload (таблица, CRM, Frontbox) — без этого метрики D-11 не посчитать.</td><td>Антон, Иван</td></tr>
       </table>
 
+      <h3>9. Сцены к вопросам (v0.4): ТЗ для иллюстратора</h3>
+      <p class="small muted">У каждого вопроса — эскиз сцены: что изображено, подпись, мем-референс этого или прошлого года и задача кадра. В тесте он показан рамкой «здесь будет картинка». Мемы подобраны по рейтингам Brand Analytics и «Медиалогии» за 2025–2026 годы<sup><a href="#fn11">11</a></sup><sup><a href="#fn12">12</a></sup><sup><a href="#fn13">13</a></sup><sup><a href="#fn14">14</a></sup>.</p>
+      <table id="sceneTable"></table>
+      <table>
+        <tr><th>Код</th><th>Правило для сцен</th><th>Почему</th></tr>
+        <tr><td>R-1</td><td>Мем — только формат-референс. Рисуем своими персонажами (героиня бренда, звери, предметы). Не используем фото реальных людей, кадры фильмов и персонажей чужих франшиз, тексты песен.</td><td>Права на изображение человека и на персонажей; реклама с чужим лицом или героем — юридический риск. Проверить с юристом (Q-07).</td></tr>
+        <tr><td>R-2</td><td>Сцена показывает ситуацию, а не «правильный» ответ: обе стороны шкалы должны выглядеть одинаково симпатично.</td><td>Картинка может подталкивать к ответу (социальная желательность) и сдвигать тип. На пилоте сравнить прохождения с картинками и без (Q-14).</td></tr>
+        <tr><td>R-3</td><td>Мем живёт 1–3 месяца. У каждой сцены держим запасную подпись без мема; ротация подписей раз в квартал по свежему рейтингу.</td><td>Лидеры рейтингов меняются каждый квартал: «Воздухан» во II кв., «Вот такие дела, собачка» в III кв. 2026<sup><a href="#fn11">11</a></sup><sup><a href="#fn12">12</a></sup>.</td></tr>
+        <tr><td>R-4</td><td>Героиня — одна на все 10 сцен (единый персонаж бренда), разные ситуации; в каждой сцене есть украшение.</td><td>Сквозной персонаж связывает тест в историю и продаёт продукт в каждом кадре.</td></tr>
+      </table>
+      <table>
+        <tr><th>Код</th><th>Открытый вопрос v0.4</th><th>Кому</th></tr>
+        <tr><td>Q-14</td><td>Пилот A/B: сцены есть / сцен нет — сравнить долю завершивших, распределение типов и «Узнали себя?».</td><td>Леонид, Антон</td></tr>
+        <tr><td>Q-15</td><td>Кто рисует: иллюстратор (10 сцен + героиня) или генерация ИИ с ручной доводкой; стиль — под карты типов.</td><td>Антон, Алина</td></tr>
+        <tr><td>Q-16</td><td>Мемы с реальными людьми и киноперсонажами (Юра Борисов, Колобок из «Последнего богатыря», тигр с Собчак) — не использовать или только после юриста.</td><td>юрист</td></tr>
+      </table>
+
       <hr>
       <div class="fn">
         <p id="fn1">1. Gosling S. D., Rentfrow P. J., Swann W. B. A very brief measure of the Big-Five personality domains // Journal of Research in Personality. 2003. Vol. 37. P. 504–528. <a href="https://doi.org/10.1016/S0092-6566(03)00046-1" target="_blank">doi:10.1016/S0092-6566(03)00046-1</a></p>
@@ -413,6 +438,10 @@ sup a{color:var(--gold);text-decoration:none}
         <p id="fn8">8. Forer B. R. The fallacy of personal validation // Journal of Abnormal and Social Psychology. 1949. Vol. 44. P. 118–123 (эффект Барнума). <a href="https://en.wikipedia.org/wiki/Barnum_effect" target="_blank">обзор</a></p>
         <p id="fn9">9. Woobox: How to create a personality quiz; Viral quiz mechanics; Quiz result page best practices (2026). <a href="https://cdn.woobox.com/articles/quiz-result-page-best-practices" target="_blank">woobox.com</a></p>
         <p id="fn10">10. involve.me: Reasons why people don’t finish your quiz (один вопрос на экран, 5–12 вопросов). <a href="https://involve.me/blog/reasons-why-people-dont-finish-your-quiz" target="_blank">involve.me</a></p>
+        <p id="fn11">11. Brand Analytics, III квартал 2026: «Вот такие дела, собачка» (113,4 тыс.), «Я тебя могну», «Сова на скакалке», «Колобок». <a href="https://uznayvse.ru/interesting-facts/vot-takie-dela-sobachka-istoriya-mema-127821.html" target="_blank">uznayvse.ru</a></p>
+        <p id="fn12">12. Brand Analytics, II квартал 2026: «воздухан» (367,6 тыс.), «черемша», «бурмалда», «котость»; тренды «советский брейнрот», бэкрумс. <a href="https://adindex.ru/news/researches/2026/07/23/347446.phtml" target="_blank">AdIndex, 23.07.2026</a></p>
+        <p id="fn13">13. Brand Analytics, начало 2026: «Можно, а зачем?», «Фа втфа пепе шнейне», тренд «Мой 2016-й». <a href="https://360.ru/tekst/interesnoe/kakie-memy-i-trendy-na-pike-populjarnosti-v-2026-godu/" target="_blank">360.ru</a>; опрос Rambler&amp;Co, ноябрь 2026 (Колобок, «собачка», «6-7», пингвин-нигилист): <a href="https://360.ru/news/interesnoe/analitiki-nazvali-samye-populjarnye-memy-2026-goda/" target="_blank">360.ru, 17.11.2026</a></p>
+        <p id="fn14">14. Мемы 2025 года: «Бобр», итальянский брейнрот, «Юра Борисов за столом», «окак». <a href="https://360.ru/tekst/interesnoe/glavnye-memy-2025-kak-my-bojalis-dolinu-sijali-kak-maga-i-tantsevali-filjaj-filjaj/" target="_blank">360.ru</a>; <a href="https://hi-tech.mail.ru/review/136896-samye-populyarnye-memy-v-2025-godu/" target="_blank">Hi-Tech Mail</a></p>
 </div>
     </section>
   </main>
@@ -613,7 +642,7 @@ const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстрав
 
 
 // ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
-const VERSION = 'v0.3.1-2026-11-24';
+const VERSION = 'v0.4-2026-11-24';
 
 // Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
 const TYPE_UI = {
@@ -651,6 +680,21 @@ const WHY = {
 };
 const CHEERS = { 3: 'Отличное начало ✦', 5: 'Половина ожерелья собрана!', 8: 'Осталось совсем чуть-чуть', 10: 'Последняя бусина — и ваша карта откроется' };
 const REVEAL_STEPS = ['Нанизываем ответы…', 'Плавим золото…', 'Подбираем камень…'];
+
+
+// ===== СЦЕНЫ к вопросам (v0.4): ТЗ для иллюстратора. Мем = формат-референс, рисуем своими персонажами (R-1). =====
+const SCENES = {
+  1:  { pic: 'Девичник: героиня поднимает руку с новым кольцом, подруги вокруг визжат от восторга, конфетти.', cap: '«Когда пришла на девичник и всех могнула»', meme: '«Я тебя могну» — «затмить», 101 тыс. упоминаний, III кв. 2026', job: 'узнать себя в роли заводилы' },
+  2:  { pic: 'Тигр положил лапы на бортик бассейна и объясняет овчарке, что это не серебро, а белое золото.', cap: '«Это белое золото. Вот такие дела, собачка»', meme: '«Вот такие дела, собачка» — мем №1 III кв. 2026 (113 тыс.)', job: 'улыбнуться своей привычке спорить' },
+  3:  { pic: 'Две шкатулки рядом: у героини всё по ячейкам с подписями, у подруги — клубок цепочек.', cap: '«Ожидание = реальность. Шкатулка как у аудитора»', meme: 'вечный формат «Ожидание / реальность» (наоборот)', job: 'гордость за порядок' },
+  4:  { pic: 'Героиня тянет карту из детской игры: выпала сова на скакалке. Серёжка тем временем катится под диван.', cap: '«Выпала сова на скакалке — значит, серёжка уже под диваном»', meme: '«Сова на скакалке» — знак, что всё пойдёт не так, III кв. 2026', job: 'посмеяться над своей тревожностью без стыда' },
+  5:  { pic: 'У витрины: классические пусеты скучают, героиня тянется к асимметричным серьгам странной формы.', cap: '«Классика? Можно. А зачем?»', meme: '«Можно, а зачем?» — мем №1 начала 2026', job: 'почувствовать себя смелой в выборе' },
+  6:  { pic: 'Пингвин в маленьких серьгах уходит от шумной стаи в закат. На часах 22:00.', cap: '«Я с вечеринки в 22:00»', meme: '«Пингвин-нигилист» — январь 2026, 9% в опросе ноября', job: 'узнать себя-интроверта без осуждения' },
+  7:  { pic: 'Коллаж «было / стало»: подруги в 2016-м с плетёными фенечками и сейчас — с одинаковыми золотыми браслетами.', cap: '«Мой 2016-й: фенечки. Мой 2026-й: всё ещё вместе»', meme: 'тренд «Мой 2016-й» — №3 начала 2026', job: 'тепло к близким, повод для парного украшения' },
+  8:  { pic: 'Героиня ищет вторую серёжку: в холодильнике, в миске кота, в кроссовке. Кот невозмутимо смотрит.', cap: '«Обещала разобрать шкатулку ещё в прошлом году. Воздухан»', meme: '«Воздухан» — мем №1 II кв. 2026 (368 тыс.): много говорит, мало делает', job: 'посмеяться над своей спонтанностью' },
+  9:  { pic: 'Предновогодняя суета: все бегают с коробками, а героиня спокойно пьёт чай за столом с бобром.', cap: '«Вокруг суета, а мы с бобром за столом»', meme: '«Бобр» — первый вирусный мем 2025 (песня); только формат «бобр за столом»', job: 'гордость за спокойствие' },
+  10: { pic: 'Бабушкино классическое кольцо против нейросетевого кольца-капибары в балетной пачке. Героиня выбирает классику.', cap: '«Кольцо-брейнрот? Можно. А зачем?»', meme: 'итальянский брейнрот («Балерина Капучино») — 2025 + «Можно, а зачем?» 2026', job: 'уверенность в любви к проверенному' },
+};
 
 // ===== STATE =====
 const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null, shared: [] };
@@ -705,6 +749,7 @@ function renderDuo() {
   };
 }
 
+$('verTag').textContent = 'версия ' + VERSION.replace(/^v/, '').replace(/-(\d{4})-(\d{2})-(\d{2})$/, ' · $3.$2');
 // ===== INTRO =====
 $('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
 renderRefIntro();
@@ -735,6 +780,8 @@ function renderQ() {
   $('qleft').textContent = i < 10 ? '≈ ' + Math.max(1, Math.round((10 - i) * 10 / 60 * 10) / 10).toString().replace('.', ',') + ' мин' : 'последняя';
   $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
   $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
+  const sc0 = SCENES[i]; $('scene').classList.toggle('hidden', !cx);
+  if (cx) $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Эскиз сцены ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(sc0.pic)}</div><div class="sc-cap">${esc(sc0.cap)}</div><div class="sc-meta"><b>Мем-референс:</b> ${esc(sc0.meme)}<br><b>Задача кадра:</b> ${esc(sc0.job)}</div>`;
   $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
   const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = cx ? 'Не про меня' : A[0]; leg[1].textContent = cx ? 'Про меня' : A[6];
   const sc = $('scale'); sc.innerHTML = '';
@@ -887,6 +934,7 @@ $('docRecs').innerHTML = '<table><tr><th>Тип / класс</th><th>Стиль<
   TYPES.map(t => `<tr><td>${t.id} ${t.name} / ${TYPE_UI[t.id].cls}</td><td>${RECS[t.id].style}</td><td>${RECS[t.id].why}</td><td>${RECS[t.id].items.map(c => c[0]).join('; ')}</td><td>${TYPE_UI[t.id].chips.map(c => c[1]).join(', ')}</td></tr>`).join('') + '</table>';
 $('cxTable').innerHTML = '<tr><th>№</th><th>Шкала / полюс</th><th>Оригинал TIPI-RU («Я воспринимаю себя как…»)</th><th>Для покупателя</th></tr>' +
   Object.keys(ITEMS_CX).map(i => { const s = SCALES.find(x => x.items.includes(+i)); return `<tr><td>${i}</td><td>${s.key}${REVERSED.includes(+i) ? ' −' : ' +'}</td><td>…${ITEMS[i][0]}</td><td>${ITEMS_CX[i]}</td></tr>`; }).join('');
+$('sceneTable').innerHTML = '<tr><th>№</th><th>Утверждение</th><th>Что на картинке</th><th>Подпись</th><th>Мем-референс</th><th>Задача кадра (JTBD)</th></tr>' + Object.keys(SCENES).map(i => `<tr><td>${i}</td><td>${ITEMS_CX[i]}</td><td>${SCENES[i].pic}</td><td>${SCENES[i].cap}</td><td>${SCENES[i].meme}</td><td>${SCENES[i].job}</td></tr>`).join('');
 setDev(dev);
 
 }
