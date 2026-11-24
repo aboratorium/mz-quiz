@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Магия золота — Какое украшение отражает ваш характер? · v0.7</title>
+<title>Магия золота — Какое украшение отражает ваш характер? · v0.8</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -158,9 +158,10 @@ sup a{color:var(--gold);text-decoration:none}
     <section class="card" id="s-intro">
       <div class="intro-art" id="introArt"></div>
       <h1>Какое украшение отражает ваш характер?</h1>
-      <p>Украшение говорит о нас раньше слов. Ответьте на 10 вопросов — соберите своё ожерелье и откройте карту своего типа с подборкой украшений.</p>
-      <div class="facts"><span><b>2</b> минуты</span><span><b>4</b> типа характера</span><span><b>3</b> украшения в подборке</span></div>
+      <p>Украшение говорит о нас раньше слов. Ответьте на 10 вопросов — соберите своё ожерелье и откройте карту своего типа с подборкой украшений. Или ответьте про близкого человека — и узнайте, что ему подарить.</p>
+      <div class="facts"><span><b>10</b> вопросов</span><span><b>4</b> типа характера</span><span><b>3</b> украшения в подборке</span></div>
       <button class="btn gold full" id="startBtn">Открыть свою карту</button>
+      <button class="btn ghost full" id="giftBtn" style="margin-top:10px">Подобрать подарок близкому</button>
       <p class="small muted" style="margin-top:14px">Тест основан на научной модели личности «Большая пятёрка»<sup><a href="#fn1" data-goto-doc>1</a></sup> и исследовании четырёх типов личности<sup><a href="#fn3" data-goto-doc>3</a></sup>. Это не психологическая диагностика, а повод взглянуть на себя по-новому.</p>
       <div class="devbar dev-only hidden">
         <span class="small muted">Быстрый прогон:</span>
@@ -176,12 +177,12 @@ sup a{color:var(--gold);text-decoration:none}
     <section class="card hidden" id="s-q">
       <svg class="necklace" id="necklace" viewBox="0 0 520 56" aria-hidden="true"></svg>
       <div class="qnum"><span id="qnum"></span><span id="qleft"></span></div>
-      <div class="scene" id="scene"></div>
       <div class="qlead" id="qlead">Насколько это про вас?</div>
       <div class="qtext" id="qtext"></div>
       <div class="scale" id="scale" role="radiogroup" aria-label="Насколько это про вас"></div>
       <div class="scale-legend"><span></span><span></span></div>
       <div class="anchor" id="anchor"></div>
+      <div class="scene hidden" id="scene" style="margin-top:14px"></div>
       <div class="cheer" id="cheer"></div>
       <div class="nav">
         <button class="btn ghost" id="backBtn">Назад</button>
@@ -207,19 +208,19 @@ sup a{color:var(--gold);text-decoration:none}
 
       <div class="card sec hidden" id="rDuo" style="margin-top:16px"></div>
       <div class="powers" id="rPowers"></div>
-      <div class="why" id="rWhy"></div>
+      <div class="why dev-only hidden" id="rWhy"></div>
       <div id="rMixed"></div>
       <div id="rQuality"></div>
 
       <div class="card sec">
-        <h2>Ваша шкатулка <span class="draft">черновик</span></h2>
+        <h2 id="lootTitle">Ваша шкатулка <span class="draft">черновик</span></h2>
         <p class="muted" id="rStyle"></p>
         <div class="loot" id="rLoot"></div>
         <p class="small muted" style="margin-top:10px">Иллюстрации — вместо них будут фото изделий из каталога.</p>
         <button class="btn gold full" id="toForm" style="margin-top:6px">Хочу подборку с ценами</button>
       </div>
 
-      <div class="card sec">
+      <div class="card sec" id="shareCard">
         <h3>Челлендж: а кто твоя подруга?</h3>
         <p class="small muted">Отправьте тест подруге — она увидит ваш тип и узнает, какая вы пара. Или выложите карточку в сторис.</p>
         <input type="text" id="inviteName" placeholder="Ваше имя для приглашения (необязательно)" maxlength="20" autocomplete="given-name">
@@ -246,17 +247,17 @@ sup a{color:var(--gold);text-decoration:none}
         <div id="sent" class="note hidden">Готово! В прототипе данные никуда не отправляются — их видно в режиме проверки (⚙︎).</div>
       </div>
 
-      <div class="card sec">
+      <div class="card sec dev-only hidden">
         <details>
-          <summary class="small muted">Как это посчитано</summary>
+          <summary class="small muted">Как это посчитано (только режим проверки — Q-05)</summary>
           <p class="small" id="rDocLead" style="margin-top:10px;font-style:italic"></p>
           <p id="rTraits" class="small"></p>
           <p id="rBehav" class="small"></p>
           <div class="bars" id="rBars"></div>
           <p class="small muted">Шкалы от 1 до 7. Уровни: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5.</p>
         </details>
-        <button class="btn ghost full" id="againBtn" style="margin-top:14px">Пройти заново</button>
-      </div>
+        </div>
+      <div class="card sec"><button class="btn ghost full" id="againBtn">Пройти заново</button></div>
 
       <div class="dev dev-only hidden" id="devPanel"></div>
     </section>
@@ -266,7 +267,7 @@ sup a{color:var(--gold);text-decoration:none}
   <main id="doc" class="hidden">
     <section class="card doc">
       <h2>Методическая справка прототипа</h2>
-      <p class="muted small">Версия 0.7 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
+      <p class="muted small">Версия 0.8 · 24.11.2026 · основа — документ Л. Гороховатского «TIPI-RU и определение психотипов»<sup><a href="#fn4">4</a></sup>, задача — совещание B2B Weekly Sync 23.11.2026<sup><a href="#fn5">5</a></sup>. Содержание методики (пункты, ключи, матрица, описания типов) не менялось; закрыты только разрывы в логике.</p>
 
       <h3>1. Сценарий (базовый use case)</h3>
       <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
@@ -327,10 +328,10 @@ sup a{color:var(--gold);text-decoration:none}
       <ol class="ln">
         <li>Пункты 2, 4, 6, 8, 10 переворачиваются: <code>8 − ответ</code> (документ, шаг 1).</li>
         <li>Шкала = среднее пары: E (1, 6R), A (2R, 7), C (3, 8R), ES (4R, 9), O (5, 10R). Диапазон 1,0–7,0, шаг 0,5 (шаг 2).</li>
-        <li>Уровень: низкий ≤ 3,5 · средний 4,0–5,0 · высокий ≥ 5,5 (шаг 3, см. G-01).</li>
-        <li>Градации матрицы переводятся в числа: Низкая 3,0 · Ниже среднего 4,0 · Средняя 4,5 · Выше среднего 5,0 · Высокая 6,0 (G-02).</li>
-        <li>Тип = прототип с минимальным евклидовым расстоянием по 5 шкалам (G-03).</li>
-        <li>Если второй прототип дальше первого менее чем на 0,3 — показываем промежуточный профиль «тип А с чертами типа Б» (G-04).</li>
+        <li>Каждая шкала переводится в z-оценку по нормам TIPI-RU: z = (балл − M) / SD; нормы — открытые данные авторов адаптации, n = 218<sup><a href="#fn16">16</a></sup> (Q-01, решение Леонида 24.11). Уровень для исследователя: низкий z &lt; −0,5 · средний · высокий z &gt; +0,5.</li>
+        <li>Градации матрицы — якоря в z: Низкая −1 · Ниже среднего −0,5 · Средняя 0 · Выше среднего +0,5 · Высокая +1 (±1 = одно стандартное отклонение от нормы).</li>
+        <li>Тип = прототип с минимальным евклидовым расстоянием в z-пространстве по 5 шкалам (G-03).</li>
+        <li>Если второй прототип дальше первого менее чем на 0,3 z — промежуточный профиль (на n = 218 — 34% респондентов) (G-04).</li>
         <li>Ответы проверяются на однотипность и противоречия в парах; тип не меняется, выводится мягкая пометка (G-07).</li>
       </ol>
 
@@ -338,7 +339,7 @@ sup a{color:var(--gold);text-decoration:none}
       <table>
         <tr><th>Код</th><th>Разрыв в исходном документе</th><th>Решение в прототипе</th></tr>
         <tr><td>G-01</td><td>Границы уровней размыты и не стыкуются: «ниже 3,8–4,0», «4,0–5,2», «выше 5,3–5,5».</td><td>Шкала принимает значения с шагом 0,5, поэтому границы однозначны: ≤ 3,5 / 4,0–5,0 / ≥ 5,5.</td></tr>
-        <tr><td>G-02</td><td>Шаг 3 даёт 3 уровня, а матрица типов использует 5 градаций («выше/ниже среднего»).</td><td>Числовые якоря 3,0 / 4,0 / 4,5 / 5,0 / 6,0 — допущение, калибруется на пилоте (Q-01).</td></tr>
+        <tr><td>G-02</td><td>Шаг 3 даёт 3 уровня, а матрица типов использует 5 градаций («выше/ниже среднего»).</td><td>v0.8: якоря в z-оценках (−1 / −0,5 / 0 / +0,5 / +1 SD) по нормам TIPI-RU (Q-01 закрыт).</td></tr>
         <tr><td>G-03</td><td>Матрица описывает 4 профиля из 3⁵ = 243 возможных комбинаций уровней; правило «выберите наиболее близкий» не формализовано.</td><td>Ближайший прототип по расстоянию — так же типы получены в исходном исследовании<sup><a href="#fn3">3</a></sup>.</td></tr>
         <tr><td>G-04</td><td>Методическая справка упоминает промежуточный профиль, но не задаёт правило.</td><td>Порог 0,3: на симуляции промежуточный профиль получают ≈ 32% прохождений (при 0,5 — 49%).</td></tr>
         <tr><td>G-05</td><td>Женская форма дана только для пункта 1, остальные пункты — в мужском роде.</td><td>Потребительские формулировки гендерно-нейтральны (G-10); для оригинала TIPI-RU в режиме проверки дописаны женские формы всех 10 пунктов.</td></tr>
@@ -449,6 +450,22 @@ sup a{color:var(--gold);text-decoration:none}
       <p class="small muted">Методика: по каждому мему — 30 роликов из поиска TikTok (clockworks/tiktok-scraper) и выдача Reels по 8 запросам (data-slayer/instagram-search-reels; по «воздухан», «можно а зачем», «мой 2016» Reels вернул пустую выдачу). В расчёт идут ролики с 01.01.2025. Индекс 0–100 = 40% × лог-медиана просмотров + 30% × медианная доля репостов (сигнал «хочется скинуть») + 30% × доля роликов за последние 90 дней; каждая метрика нормирована на максимум. Ограничения: поиск — не вся генеральная совокупность; по «пиббл» и «сикс-севен» в выдаче много зарубежных роликов; «котость» не берём, пока не ясен смысл. Сырые данные: <code>research/</code> в репозитории. В тесте у каждого мема кнопка «▶ Посмотреть мем»: самый просматриваемый ролик из выборки, показанный официальным плеером TikTok / Instagram (ролик остаётся у автора; внутренний референс, не для продакшена).</p>
       <table id="memeRating"></table>
 
+      <h3>11. Обратная связь Л. Гороховатского (24.11.2026) → решения v0.8</h3>
+      <table>
+        <tr><th>Код</th><th>Отзыв Леонида</th><th>Решение в v0.8</th><th>Статус</th></tr>
+        <tr><td>G-01…G-04</td><td>Проблем нет, всё корректно.</td><td>Без изменений.</td><td>закрыт</td></tr>
+        <tr><td>Q-01</td><td>Лучше перейти на z-оценки.</td><td>Классификатор переведён на z-оценки. Нормы посчитаны по открытым данным авторов TIPI-RU (основная выборка, n = 218): ES 4,19 ± 1,68; E 4,85 ± 1,58; O 5,19 ± 1,21; A 4,13 ± 1,19; C 4,90 ± 1,43<sup><a href="#fn16">16</a></sup>. Проверка на этих же 218 респондентах: Т1 35% · Т2 20% · Т3 21% · Т4 24%; промежуточный профиль — 34%. Ограничение: студенты техвуза, медиана возраста 18 лет — нормы пересчитать на пилоте.</td><td>закрыт, пересчёт норм — после пилота</td></tr>
+        <tr><td>Q-02</td><td>Редкий тип и в генеральной совокупности; названия намеренно нейтральные.</td><td>Без изменений. После перехода на z-оценки доля «Лидера» на реальной выборке — 20%.</td><td>закрыт</td></tr>
+        <tr><td>Q-03</td><td>Режим «подарок» — можно поиграть; предложены формулировки от 3-го лица.</td><td>Кнопка «Подобрать подарок близкому»: формулировки Леонида дословно, шкала «Точно нет → Точно да», результат «Тип этого человека», блок «Что подарить». Челлендж и сторис в этом режиме скрыты. В данных — <code>mode: gift</code> для будущей адаптации.</td><td>экспериментальный</td></tr>
+        <tr><td>Q-04</td><td>Каждый тип имеет плюсы и минусы.</td><td>Опасение было статистическим (на сырых баллах высокая открытость почти всегда давала «Лидера»). На z-оценках распределение сбалансировано — вопрос снят.</td><td>закрыт</td></tr>
+        <tr><td>Q-05</td><td>Шкалы точно не показывать — только интерпретацию; это сведения для исследователя.</td><td>Блок «Как это посчитано» и шкалы убраны из интерфейса пользователя, остались в режиме проверки ⚙︎.</td><td>закрыт</td></tr>
+        <tr><td>Q-09</td><td>Адаптация формулировок — блестяще.</td><td>Без изменений.</td><td>закрыт</td></tr>
+        <tr><td>Q-11</td><td>«Почему так» не показывать — перегружает. Идея: «хочешь узнать почему — консультация при покупке от 20 000» (дискуссионно).</td><td>Строка «Почему так» убрана из интерфейса, видна только в режиме проверки. Идея с консультацией — в Q-17.</td><td>закрыт</td></tr>
+        <tr><td>R-2</td><td>Мемы могут влиять на выбор — открывать после ответа как положительное подкрепление.</td><td>Сцена с мемом появляется только после выбора ответа («Ответ принят ✦»), до ответа её нет.</td><td>закрыт</td></tr>
+        <tr><td>D-03</td><td>Время не ограничивать; «Назад» оставить.</td><td>Убраны счётчик минут и «2 минуты» во вступлении и в приглашении; «Назад» на месте.</td><td>закрыт</td></tr>
+        <tr><td>Q-17</td><td>—</td><td>Бонус «разбор типа с психологом при покупке от 20 000 ₽» — решение за Владиславом и Вазгеном (экономика, кто консультирует).</td><td>открыт</td></tr>
+      </table>
+
       <hr>
       <div class="fn">
         <p id="fn1">1. Gosling S. D., Rentfrow P. J., Swann W. B. A very brief measure of the Big-Five personality domains // Journal of Research in Personality. 2003. Vol. 37. P. 504–528. <a href="https://doi.org/10.1016/S0092-6566(03)00046-1" target="_blank">doi:10.1016/S0092-6566(03)00046-1</a></p>
@@ -466,6 +483,7 @@ sup a{color:var(--gold);text-decoration:none}
         <p id="fn13">13. Brand Analytics, начало 2026: «Можно, а зачем?», «Фа втфа пепе шнейне», тренд «Мой 2016-й». <a href="https://360.ru/tekst/interesnoe/kakie-memy-i-trendy-na-pike-populjarnosti-v-2026-godu/" target="_blank">360.ru</a>; опрос Rambler&amp;Co, ноябрь 2026 (Колобок, «собачка», «6-7», пингвин-нигилист): <a href="https://360.ru/news/interesnoe/analitiki-nazvali-samye-populjarnye-memy-2026-goda/" target="_blank">360.ru, 17.11.2026</a></p>
         <p id="fn14">14. Мемы 2025 года: «Бобр», итальянский брейнрот, «Юра Борисов за столом», «окак». <a href="https://360.ru/tekst/interesnoe/glavnye-memy-2025-kak-my-bojalis-dolinu-sijali-kak-maga-i-tantsevali-filjaj-filjaj/" target="_blank">360.ru</a>; <a href="https://hi-tech.mail.ru/review/136896-samye-populyarnye-memy-v-2025-godu/" target="_blank">Hi-Tech Mail</a></p>
         <p id="fn15">15. Brand Analytics, I кв. 2026 (топ-15): «Можно, а зачем?» 294,2 тыс., «Фа втфа пепе шнейне» 292,6 тыс., «Мой 2016» 241,1 тыс. и др. <a href="https://lifehacker.ru/luchshie-memy-2026-goda/" target="_blank">Лайфхакер</a>; описания мемов 2026 («Пухосос», «Черемша», Пиббл, «Сова на скакалке»): <a href="https://media.halvacard.ru/entertainment/populiarnye-memy-2026" target="_blank">Халва Медиа</a>; «Сикс-севен» 1,26 млн упоминаний (Медиалогия, I пол. 2026): <a href="https://hi-tech.mail.ru/news/153789-v-rossii-opredelili-samyj-obsuzhdaemyj-mem/" target="_blank">Hi-Tech Mail</a></p>
+        <p id="fn16">16. Открытые данные TIPI-RU: <a href="https://github.com/bakirillov/tipiru" target="_blank">github.com/bakirillov/tipiru</a>, файл data/Survey1.csv (218 респондентов, 109 женщин и 109 мужчин; студенты технического вуза Санкт-Петербурга, медиана возраста 18 лет). Средние и SD рассчитаны по формулам подсчёта из кода авторов (src/functions.R).</p>
 </div>
     </section>
   </main>
@@ -485,16 +503,21 @@ const REVERSED = [2, 4, 6, 8, 10];
 
 // Шаг 3 документа. Средние двух целых пунктов принимают только значения с шагом 0.5,
 // поэтому размытые границы «3.8–4.0» и «5.3–5.5» сводятся к однозначным: ≤3.5 / 4.0–5.0 / ≥5.5.
-function level(v) {
-  if (v < 4.0) return 'low';
-  if (v <= 5.25) return 'mid';
+function level(v, k) { // v0.8: уровень по z-оценке (для исследователя; пользователю не показывается — Q-05)
+  const z = k ? zOf(k, v) : (v - 4) / 1.5;
+  if (z < -0.5) return 'low';
+  if (z <= 0.5) return 'mid';
   return 'high';
 }
 const LEVEL_RU = { low: 'Низкий', mid: 'Средний', high: 'Высокий' };
 
-// Числовые якоря для 5 градаций из матрицы (раздел 4). Допущение прототипа — откалибровать на пилоте.
-const ANCHOR = { 'Низкая': 3.0, 'Ниже среднего': 4.0, 'Средняя': 4.5, 'Выше среднего': 5.0, 'Высокая': 6.0 };
-
+// v0.8 (Q-01, решение Леонида): классификация по z-оценкам.
+// Нормы TIPI-RU — открытые данные авторов адаптации (Сергеева и др., 2016; github.com/bakirillov/tipiru, Survey1, n = 218).
+// Ограничение: студенты техвуза, медиана возраста 18 лет — пересчитать нормы на пилотной выборке (поле scores в payload).
+const NORMS = { ES: [4.19, 1.68], E: [4.85, 1.58], O: [5.19, 1.21], A: [4.13, 1.19], C: [4.90, 1.43] };
+const zOf = (k, v) => (v - NORMS[k][0]) / NORMS[k][1];
+// Градации матрицы типов (раздел 4 документа) → якоря в z: ±1 = 1 SD от нормы.
+const ANCHOR = { 'Низкая': -1.0, 'Ниже среднего': -0.5, 'Средняя': 0, 'Выше среднего': 0.5, 'Высокая': 1.0 };
 const TYPES = [
   { id: 'T1', name: 'Доброжелательный консерватор', gerlach: 'Reserved',
     matrix: { ES: 'Высокая', E: 'Ниже среднего', O: 'Низкая', A: 'Выше среднего', C: 'Выше среднего' } },
@@ -506,8 +529,8 @@ const TYPES = [
     matrix: { ES: 'Низкая', E: 'Высокая', O: 'Низкая', A: 'Средняя', C: 'Средняя' } },
 ];
 
-const MIXED_GAP = 0.3;   // если 2-й тип дальше 1-го менее чем на 0.3 — промежуточный профиль (~1/3 случаев на симуляции)
-const ATYPICAL_DIST = 3.0; // если до ближайшего прототипа дальше 3.0 — профиль нетипичный
+const MIXED_GAP = 0.3;   // в единицах z: промежуточный профиль, если 2-й тип дальше 1-го менее чем на 0.3 (~34% на n = 218)
+const ATYPICAL_DIST = 2.5; // в единицах z: до ближайшего прототипа дальше 2.5 — профиль нетипичный (~21% на n = 218) (только пометка в режиме проверки)
 
 function score(answers) { // answers: {1..10: 1..7}
   for (let i = 1; i <= 10; i++) {
@@ -516,18 +539,19 @@ function score(answers) { // answers: {1..10: 1..7}
   }
   const adj = {};
   for (let i = 1; i <= 10; i++) adj[i] = REVERSED.includes(i) ? 8 - answers[i] : answers[i];
-  const scores = {}, levels = {};
+  const scores = {}, levels = {}, zs = {};
   for (const s of SCALES) {
     scores[s.key] = (adj[s.items[0]] + adj[s.items[1]]) / 2;
-    levels[s.key] = level(scores[s.key]);
+    levels[s.key] = level(scores[s.key], s.key);
+    zs[s.key] = Math.round(zOf(s.key, scores[s.key]) * 100) / 100;
   }
-  return { adj, scores, levels };
+  return { adj, scores, levels, z: zs };
 }
 
 function classify(scores) {
   const dist = TYPES.map(t => {
     let d2 = 0;
-    for (const s of SCALES) d2 += (scores[s.key] - ANCHOR[t.matrix[s.key]]) ** 2;
+    for (const s of SCALES) d2 += (zOf(s.key, scores[s.key]) - ANCHOR[t.matrix[s.key]]) ** 2;
     return { id: t.id, name: t.name, d: Math.round(Math.sqrt(d2) * 100) / 100 };
   }).sort((a, b) => a.d - b.d || a.id.localeCompare(b.id));
   const primary = dist[0], second = dist[1];
@@ -552,7 +576,7 @@ function quality(answers) {
   return { straight, contradictions, ok: !straight && contradictions.length < 2 };
 }
 
-if (typeof module !== 'undefined') module.exports = { SCALES, TYPES, ANCHOR, score, classify, quality, level, MIXED_GAP, ATYPICAL_DIST };
+if (typeof module !== 'undefined') module.exports = { SCALES, TYPES, ANCHOR, NORMS, zOf, score, classify, quality, level, MIXED_GAP, ATYPICAL_DIST };
 
 // ===== ART: оригинальные SVG-иллюстрации (эмблемы типов и изделия). Не фото товаров — заменяются фото SKU из каталога. =====
 const METAL = {
@@ -666,7 +690,7 @@ const SCALE_SHORT = { ES:'Эмоц. стабильность', E:'Экстрав
 
 
 // ===== v0.3: игровой слой (экспертная панель, решения D-xx в «Методичке», раздел 8) =====
-const VERSION = 'v0.7-2026-11-24';
+const VERSION = 'v0.8-2026-11-24';
 
 // Карта героя: игровой класс + талисманы. Классы и талисманы — бренд-сторителлинг (D-06), не психометрия.
 const TYPE_UI = {
@@ -977,6 +1001,28 @@ const MEME_REF = {"Пиббл на сёрфе": {"p": "tt", "id": "7620606065754
 function refBtn(name) { const r = MEME_REF[name]; return r ? `<button class="sc-play" data-ref="${esc(name)}">▶ Посмотреть мем · ${r.p === 'ig' ? 'Reels' : 'TikTok'}, ${r.plays}</button>` : '<span class="sc-stat">(вечный формат — без ролика)</span>'; }
 function refPlayer(name) { const r = MEME_REF[name]; const src = r.p === 'ig' ? `https://www.instagram.com/reel/${r.id}/embed` : `https://www.tiktok.com/player/v1/${r.id}?description=1&music_info=1&rel=0`; return `<div class="sc-player"><iframe src="${src}" loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen title="${esc(name)}"></iframe><div class="sc-stat">Оригинал: <a href="${r.url}" target="_blank" rel="noopener">открыть у автора</a> · референс для команды, не для продакшена</div></div>`; }
 
+// ===== РЕЖИМ «ПОДАРОК» (Q-03, формулировки Л. Гороховатского 24.11.2026; экспериментальный, не валидирован) =====
+const ITEMS_GIFT = {
+  1: 'Легко ли этот человек загорается новым и заряжает ли энтузиазмом всех вокруг?',
+  2: 'Часто ли ему есть что возразить, и не боится ли он поспорить?',
+  3: 'Можно ли на него положиться: держит ли он слово и любит ли порядок в делах?',
+  4: 'Часто ли он волнуется, и легко ли его выбить из колеи?',
+  5: 'Тянет ли его ко всему новому и необычному, скучны ли ему простые решения?',
+  6: 'Предпочитает ли он в шумной компании тихо наблюдать со стороны?',
+  7: 'Тонко ли он чувствует людей, и важно ли ему поддержать близких?',
+  8: 'Верно ли, что строгие планы — не для него, он живёт легко и порой что-то забывает?',
+  9: 'Сложно ли вывести его из равновесия, даже когда вокруг суета?',
+  10: 'Ближе ли ему проверенное и привычное, чем эксперименты и творчество?',
+};
+const ANCHORS_GIFT = ['Точно нет', 'Нет', 'Скорее нет', 'И да, и нет', 'Скорее да', 'Да', 'Точно да'];
+const LEAD_GIFT = {
+  T1: 'Этот человек — опора для близких: спокойствие, надёжность и тепло. Ценит то, что проверено временем, и вещи, которые остаются с ним на годы.',
+  T2: 'Легко загорается новым и умеет вести за собой, не теряя собранности. Людей тянет к его энергии, а перемены его только вдохновляют.',
+  T3: 'Знает, чего хочет, и не боится быть в центре внимания. Свои правила, свой масштаб — и украшения, которые заметны.',
+  T4: 'Чувствует глубже других и ищет смысл во всём, что вокруг. Для него важны близкие люди и вещи со своей историей.',
+};
+let MODE = 'self'; // 'self' — про себя, 'gift' — подбор подарка близкому
+
 // ===== STATE =====
 const st = { g: 'f', i: 1, answers: {}, rating: null, contact: null, result: null, shared: [] };
 const qs = new URLSearchParams(location.search);
@@ -1049,7 +1095,8 @@ $('verTag').textContent = 'версия ' + VERSION.replace(/^v/, '').replace(/-
 // ===== INTRO =====
 $('introArt').innerHTML = ['T1', 'T2', 'T3', 'T4'].map((k, i) => `<div style="background:${TYPE_UI[k].bg};--r:${[-4, 3, -2, 4][i]}deg">${EMBLEM[k]()}</div>`).join('');
 renderRefIntro();
-$('startBtn').onclick = () => { st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
+$('startBtn').onclick = () => { MODE = 'self'; st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
+$('giftBtn').onclick = () => { MODE = 'gift'; st.i = 1; st.answers = {}; renderQ(); show('s-q'); };
 
 // ===== NECKLACE (D-01: прогресс = бусины на цепочке) =====
 function renderNecklace() {
@@ -1070,19 +1117,20 @@ const DOT = [46, 40, 34, 28, 34, 40, 46];
 const DOT_C = ['#7c6f9e', '#8c80ab', '#a39abd', '#b9b1a6', '#c9a465', '#bd9242', '#b28a45'];
 function renderQ() {
   const i = st.i, g = st.g, cx = WORDING === 'cx';
-  const A = cx ? ANCHORS_CX : ANCHORS_TIPI[g];
+  const gift = MODE === 'gift' && cx;
+  const A = gift ? ANCHORS_GIFT : cx ? ANCHORS_CX : ANCHORS_TIPI[g];
   renderNecklace();
   $('qnum').textContent = 'Бусина ' + i + ' из 10';
-  $('qleft').textContent = i < 10 ? '≈ ' + Math.max(1, Math.round((10 - i) * 10 / 60 * 10) / 10).toString().replace('.', ',') + ' мин' : 'последняя';
-  $('qlead').textContent = cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
-  $('qtext').textContent = cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
-  const sc0 = SCENES[i], vm = sc0.v[0]; $('scene').classList.toggle('hidden', !cx);
-  if (cx) {
-    $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Сцена ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(vm[1])}</div><div class="sc-cap">${esc(vm[2])}</div><div class="sc-meta"><b>Мем:</b> ${esc(vm[0])} — <span class="sc-stat">${esc(vm[3])}</span></div>${refBtn(vm[0])}<div class="sc-alt">(${sc0.v.slice(1).map((x, k) => `<b>альтернатива ${k + 1}:</b> ${esc(x[0])} — <i>${esc(x[2])}</i> <span class="sc-stat">[${esc(x[3])}]</span> ${refBtn(x[0])}`).join('; ')})</div><div id="scPlayer"></div>`;
+  $('qleft').textContent = gift ? 'подбор подарка' : '';
+  $('qlead').textContent = gift ? 'Вспомните человека, которому выбираете подарок' : cx ? 'Насколько это про вас?' : 'Я воспринимаю себя как…';
+  $('qtext').textContent = gift ? ITEMS_GIFT[i] : cx ? ITEMS_CX[i] : '…' + ITEMS[i][1];
+  const sc0 = SCENES[i], vm = sc0.v[0]; const showScene = cx && st.answers[i] != null; $('scene').classList.toggle('hidden', !showScene);
+  if (showScene) {
+    $('scene').innerHTML = `<div class="sc-top"><span class="sc-badge">Ответ принят ✦ сцена ${i}/10</span><span class="sc-badge ghost">здесь будет картинка</span></div><div class="sc-pic">${esc(vm[1])}</div><div class="sc-cap">${esc(vm[2])}</div><div class="sc-meta"><b>Мем:</b> ${esc(vm[0])} — <span class="sc-stat">${esc(vm[3])}</span></div>${refBtn(vm[0])}<div class="sc-alt">(${sc0.v.slice(1).map((x, k) => `<b>альтернатива ${k + 1}:</b> ${esc(x[0])} — <i>${esc(x[2])}</i> <span class="sc-stat">[${esc(x[3])}]</span> ${refBtn(x[0])}`).join('; ')})</div><div id="scPlayer"></div>`;
     $('scene').querySelectorAll('.sc-play').forEach(btn => btn.onclick = () => { const p = $('scPlayer'), n = btn.dataset.ref; if (p.dataset.cur === n) { p.innerHTML = ''; p.dataset.cur = ''; return; } p.innerHTML = refPlayer(n); p.dataset.cur = n; p.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
   }
   $('qorig').textContent = cx ? 'TIPI-RU п.' + i + ': «Я воспринимаю себя как ' + ITEMS[i][1] + '»' + (REVERSED.includes(i) ? ' · обратный' : '') : '';
-  const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = cx ? 'Не про меня' : A[0]; leg[1].textContent = cx ? 'Про меня' : A[6];
+  const leg = document.querySelectorAll('.scale-legend span'); leg[0].textContent = gift ? 'Нет' : cx ? 'Не про меня' : A[0]; leg[1].textContent = gift ? 'Да' : cx ? 'Про меня' : A[6];
   const sc = $('scale'); sc.innerHTML = '';
   for (let v = 1; v <= 7; v++) {
     const b = document.createElement('button'); b.className = 'dot'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', A[v - 1]);
@@ -1120,14 +1168,16 @@ function whyLine(r) {
 function renderResult() {
   const r = st.result, t = typeById(r.primary), d = DESC[r.primary], ui = TYPE_UI[r.primary], rec = RECS[r.primary];
   const hero = $('hero'); hero.style.background = ui.bg; hero.classList.remove('flip'); void hero.offsetWidth; hero.classList.add('flip');
-  $('rCls').textContent = 'Ваш тип · ' + ui.cls;
+  $('rCls').textContent = (MODE === 'gift' ? 'Тип этого человека · ' : 'Ваш тип · ') + ui.cls;
   $('rEmb').innerHTML = EMBLEM[r.primary]();
   $('rName').textContent = t.name;
-  $('rLead').textContent = LEAD_CX[r.primary];
+  $('rLead').textContent = MODE === 'gift' ? LEAD_GIFT[r.primary] : LEAD_CX[r.primary];
+  $('shareCard').classList.toggle('hidden', MODE === 'gift');
+  $('lootTitle').firstChild.textContent = MODE === 'gift' ? 'Что подарить ' : 'Ваша шкатулка ';
   $('rChips').innerHTML = ui.chips.map(([a, b]) => `<span class="chip">${a}: <b>${b}</b></span>`).join('');
   $('rPowers').innerHTML = ui.powers.map(([ic, n, s]) => `<div class="power"><div class="ic" style="color:${ui.ac}">${ic}</div><b>${n}</b><span>${s}</span></div>`).join('');
-  $('rWhy').textContent = whyLine(r);
-  $('rMixed').innerHTML = r.secondary ? `<div class="note">В вашей карте есть и черты типа <b>«${typeById(r.secondary).name}» · ${TYPE_UI[r.secondary].cls}</b> — профиль промежуточный.</div>` : '';
+  $('rWhy').textContent = whyLine(r); // Q-11: только в режиме проверки
+  $('rMixed').innerHTML = r.secondary ? `<div class="note">${MODE === 'gift' ? 'В этом профиле' : 'В вашей карте'} есть и черты типа <b>«${typeById(r.secondary).name}» · ${TYPE_UI[r.secondary].cls}</b> — профиль промежуточный.</div>` : '';
   $('rQuality').innerHTML = r.quality.ok ? '' : '<div class="note warn">' + (r.quality.straight ? 'Все ответы одинаковые — результат может быть неточным. Попробуйте ещё раз, выбирая разные оценки.' : 'В некоторых парах вы согласились с противоположными утверждениями — результат может быть неточным.') + '</div>';
   $('rStyle').textContent = rec.style;
   $('rLoot').innerHTML = rec.items.map(([n, s, art]) => `<div class="item"><div class="pic">${art()}</div><b>${n}</b><span>${s}</span></div>`).join('');
@@ -1189,7 +1239,7 @@ $('storyBtn').onclick = async () => {
   } catch (e) { if (e && e.name !== 'AbortError') toast('Не получилось создать картинку'); }
 };
 $('inviteBtn').onclick = async () => {
-  const nm = $('inviteName').value.trim().slice(0, 20); const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend&ref=' + st.result.primary + (nm ? '&n=' + encodeURIComponent(nm) : ''), text = 'Я — ' + TYPE_UI[st.result.primary].cls + ' («' + typeById(st.result.primary).name + '»). А кто ты? Пройди тест за 2 минуты — узнаем, какая мы пара:';
+  const nm = $('inviteName').value.trim().slice(0, 20); const url = location.origin + location.pathname + '?utm_source=invite&utm_medium=friend&ref=' + st.result.primary + (nm ? '&n=' + encodeURIComponent(nm) : ''), text = 'Я — ' + TYPE_UI[st.result.primary].cls + ' («' + typeById(st.result.primary).name + '»). А кто ты? Пройди тест — узнаем, какая мы пара:';
   st.shared.push('invite');
   try { if (navigator.share) await navigator.share({ title: 'Магия золота — тест', text, url }); else { await navigator.clipboard.writeText(text + ' ' + url); toast('Ссылка скопирована'); } }
   catch (e) { if (e && e.name !== 'AbortError') toast('Скопируйте ссылку из адресной строки'); }
@@ -1199,7 +1249,7 @@ $('inviteBtn').onclick = async () => {
 // ===== DEV =====
 function payload() {
   const r = st.result;
-  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM, wording: WORDING, answers: st.answers, scores: r.scores, levels: r.levels,
+  return { session_id: r.session_id, ts: r.ts, version: VERSION, utm: UTM, mode: MODE, wording: WORDING, answers: st.answers, scores: r.scores, z: r.z, levels: r.levels,
     type: r.primary, secondary: r.secondary, distances: r.distances.map(x => ({ id: x.id, d: x.d })), quality: r.quality, self_rating: st.rating, shared: st.shared, ref: REF, contact: st.contact };
 }
 function renderDev() {
@@ -1209,15 +1259,17 @@ function renderDev() {
   $('devPanel').innerHTML = `<b>Режим проверки</b> · ${VERSION}${r.atypical ? ' · <span style="color:#9a4b2f">нетипичный профиль: до ближайшего прототипа &gt; ' + ATYPICAL_DIST + '</span>' : ''}
     <table><tr><th>№</th><th>Ответ</th><th>После реверса</th></tr>${rows}</table>
     <table><tr><th>Тип</th><th>Название</th><th>Расстояние</th></tr>${dist}</table>
-    <div class="small">Промежуточный, если d₂ − d₁ &lt; ${MIXED_GAP}. Качество: ${JSON.stringify(r.quality)}</div>
+    <div class="small">Режим: ${MODE === 'gift' ? 'подарок' : 'про себя'}. Расстояния — в z-единицах (нормы TIPI-RU, n = 218). Промежуточный, если d₂ − d₁ &lt; ${MIXED_GAP}. Качество: ${JSON.stringify(r.quality)}</div>
+    <div class="small" style="margin-top:6px"><b>«Почему так» (скрыто от пользователя, Q-11):</b> ${whyLine(r)}</div>
+    <table><tr><th>Шкала</th><th>Балл</th><th>z</th><th>Уровень</th></tr>${SCALE_ORDER.map(k => `<tr><td>${SCALE_SHORT[k]}</td><td>${r.scores[k]}</td><td>${r.z[k]}</td><td>${r.levels[k]}</td></tr>`).join('')}</table>
     <pre id="pl">${JSON.stringify(payload(), null, 2)}</pre><button class="btn ghost" id="copyPl" style="font-size:13px;padding:7px 12px;min-height:0">Скопировать JSON</button>`;
   $('copyPl').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('pl').textContent).then(() => $('copyPl').textContent = 'Скопировано').catch(() => {});
 }
 function answersFor(target) { const a = {}; for (const s of SCALES) { const v = Math.round(target[s.key]); const d = s.items.find(i => !s.reversed.includes(i)); a[d] = v; a[s.reversed[0]] = 8 - v; } return a; }
 document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
-  const p = b.dataset.preset;
-  if (/^T\d$/.test(p)) { const t = typeById(p), tg = {}; SCALE_ORDER.forEach(k => tg[k] = ANCHOR[t.matrix[k]]); st.answers = answersFor(tg); }
-  else if (p === 'mix') st.answers = answersFor({ ES: 4, E: 6, O: 3, A: 4, C: 4 });
+  const p = b.dataset.preset; MODE = 'self';
+  if (/^T\d$/.test(p)) { const t = typeById(p), tg = {}; SCALE_ORDER.forEach(k => tg[k] = NORMS[k][0] + ANCHOR[t.matrix[k]] * NORMS[k][1] * 1.6); st.answers = answersFor(tg); }
+  else if (p === 'mix') st.answers = answersFor({ ES: 4, E: 6, O: 4, A: 3, C: 4 });
   else if (p === 'straight') { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 4; }
   else { st.answers = {}; for (let i = 1; i <= 10; i++) st.answers[i] = 1 + Math.floor(Math.random() * 7); }
   finish(true);
